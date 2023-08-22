@@ -1,7 +1,5 @@
 // @ts-ignore
-export * from "../../src/index.mjs";
-// @ts-ignore
-import { act, query, auth } from "../../src/index.mjs";
+import { act, query, auth } from "ec.fdk";
 import useSWR from "swr";
 
 auth.listen((v: any) => {

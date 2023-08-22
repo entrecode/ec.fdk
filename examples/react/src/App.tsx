@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSdk } from "./useSdk";
 // @ts-ignore
-import { loginEcStored, logoutEcStored } from "../../src/storage.mjs";
+import { loginEcStored, logoutEcStored } from "ec.fdk";
 
 const config = {
   env: "stage",

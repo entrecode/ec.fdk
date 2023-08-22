@@ -2,13 +2,12 @@
   "name": "ec.fdk",
   "version": "0.1.0",
   "description": "ec frontend sdk",
-  "main": "index.mjs",
+  "main": "./src/index.mjs",
   "directories": {
     "lib": "lib"
   },
   "scripts": {
     "build": "vite build",
-    "dev": "cd example && npm run dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

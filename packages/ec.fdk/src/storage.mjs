@@ -4,7 +4,7 @@ import {
   logoutPublic,
   loginEc,
   logoutEc,
-} from "./actions/actions.mjs";
+} from "./lib/actions.mjs";
 
 // maybe switch to cookie: https://github.com/nanostores/persistent#persistent-engines
 export const auth = persistentMap(
