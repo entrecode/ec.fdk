@@ -10,19 +10,25 @@ export const auth = persistentMap(
   }
 );
 
-console.log("auth", auth.get());
+function withAuthHeader(options, config) {
+  const { token } = getAuth(config);
+  if (!token) {
+    return options;
+  }
+  return {
+    ...options,
+    headers: { ...(options.headers || {}), Authorization: `Bearer ${token}` },
+  };
+}
 
-// pure functional api
-
-// internals
-
-async function fetcher(url, options, rawRes = false) {
+async function fetcher(url, config = {}, options = {}) {
+  options = withAuthHeader(options, config);
   const res = await fetch(url, options);
   console.log("fetch", url, options);
   if (!res.ok) {
     throw new Error(res.statusText);
   }
-  if (rawRes) {
+  if (config.rawRes) {
     return res;
   }
   return await res.json();
@@ -68,7 +74,7 @@ export async function entryList(config) {
   // name~ = search
   const q = query(options);
   const url = apiURL(`api/${dmShortID}/${model}?${q}`);
-  const { count, total, _embedded } = await fetcher(url);
+  const { count, total, _embedded } = await fetcher(url, config);
 
   const items = _embedded ? _embedded[`${dmShortID}:${model}`] : [];
   return { count, total, items };
@@ -78,7 +84,7 @@ export function getEntry({ dmShortID, model, entryID }) {
   expect({ dmShortID, model, entryID });
   const q = query({ _id: entryID });
   const url = apiURL(`api/${dmShortID}/${model}?${q}`);
-  return fetcher(url);
+  return fetcher(url, { dmShortID });
 }
 
 export async function createEntry({ dmShortID, model, value }) {
@@ -100,7 +106,7 @@ export async function getAsset({ dmShortID, assetGroup, assetID }) {
   expect({ dmShortID, assetGroup, assetID });
   const q = query({ assetID: assetID });
   const url = apiURL(`a/${dmShortID}/${assetGroup}?${q}`);
-  const list = await fetcher(url);
+  const list = await fetcher(url, { dmShortID });
   return list._embedded["ec:dm-asset"];
 }
 
@@ -111,7 +117,7 @@ export async function assetList(config) {
   // name~ = search
   const q = query(options);
   const url = apiURL(`a/${dmShortID}/${assetGroup}?${q}`);
-  const { count, total, _embedded } = await fetcher(url);
+  const { count, total, _embedded } = await fetcher(url, { dmShortID });
   const items = _embedded ? _embedded[`ec:dm-asset`] : [];
   return { count, total, items };
 }
@@ -121,13 +127,17 @@ export async function loginPublic(config) {
   expect({ dmShortID, email, password });
   // TODO: check if already logged in?
   const url = apiURL(`api/${dmShortID}/_auth/login?clientID=rest`);
-  const res = await fetcher(url, {
-    method: "POST",
-    body: JSON.stringify({ email, password }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const res = await fetcher(
+    url,
+    {},
+    {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
   auth.set({ ...auth.get(), [dmShortID]: { token: res.token } });
   return res;
 }
@@ -143,10 +153,10 @@ export async function logoutPublic(config) {
   );
   const res = await fetcher(
     url,
+    { dmShortID, rawRes: true },
     {
       method: "POST",
-    },
-    true
+    }
   );
   auth.set({ ...auth.get(), [dmShortID]: {} });
   return res;
@@ -154,7 +164,9 @@ export async function logoutPublic(config) {
 
 export function getAuth(config) {
   let { dmShortID } = config;
-  expect({ dmShortID });
+  if (!dmShortID) {
+    return {};
+  }
   return auth.get()?.[dmShortID] || {};
 }
 

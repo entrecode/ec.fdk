@@ -48,17 +48,18 @@ press("asset", () =>
 press("assets", () => ecadmin.assetgroup("test").assets().then(console.log));
 
 press("loginPublic", () => {
-  sdk("stage")
-    .dm("38805f53")
-    .login({
-      email: prompt("Mail?", "roos@entrecode.de"),
-      password: prompt("Passwort?"),
-    });
+  ecadmin.login({
+    email: prompt("Mail?", "flix91+3@gmail.com"),
+    password: prompt("Passwort?"),
+  });
 });
 press("logoutPublic", () => {
-  sdk("stage").dm("38805f53").logout();
+  ecadmin.logout();
 });
 press("hasAuth", () => {
-  const hasAuth = sdk("stage").dm("38805f53").hasAuth();
-  console.log("hasAuth", hasAuth);
+  console.log("hasAuth", ecadmin.hasAuth());
+});
+
+press("entriesProtected", () => {
+  ecadmin.model("dingding").entries().then(console.log);
 });
