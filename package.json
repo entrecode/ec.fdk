@@ -1,0 +1,34 @@
+{
+  "name": "ec.fdk",
+  "version": "0.1.0",
+  "description": "ec frontend sdk",
+  "main": "index.mjs",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "build": "vite build",
+    "dev": "cd example && npm run dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/felixroos/ec.fdk.git"
+  },
+  "keywords": [
+    "cool"
+  ],
+  "author": "Felix Roos <roos@entrecode.de>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/felixroos/ec.fdk/issues"
+  },
+  "homepage": "https://github.com/felixroos/ec.fdk#readme",
+  "dependencies": {
+    "@nanostores/persistent": "^0.9.1",
+    "nanostores": "^0.9.3"
+  },
+  "devDependencies": {
+    "vite": "^4.4.9"
+  }
+}
