@@ -13,6 +13,8 @@ const {
   loginEc,
   logoutEc,
   logoutPublic,
+  getEcAuthKey,
+  getPublicAuthKey,
 } = actions;
 
 export function act(config) {
@@ -38,8 +40,9 @@ class Sdk {
     return new Sdk({ ...this.config, ...obj });
   }
 
-  handle(handlers) {
+  async handle(handlers) {
     const keys = Object.keys(this.config);
+    const token = await this.getBestToken();
     const [_, handle] =
       Object.entries(handlers).find(([k, v]) => keys.includes(k)) || [];
     if (!handle) {
@@ -47,17 +50,18 @@ class Sdk {
         `you need to first set ${Object.keys(handlers).join(" | ")}`
       );
     }
-    return handle(this.config);
+    return handle({ ...this.config, token });
   }
 
   ///
-
-  entries(options) {
-    return entryList({ ...this.config, options });
+  async entries(options) {
+    const token = await this.getBestToken();
+    return entryList({ ...this.config, options, token });
   }
 
-  assets(options) {
-    return assetList({ ...this.config, options });
+  async assets(options) {
+    const token = await this.getBestToken();
+    return assetList({ ...this.config, options, token });
   }
 
   get() {
@@ -92,21 +96,85 @@ class Sdk {
 
   //
 
-  loginPublic(config) {
-    //
-    return loginPublic({ ...this.config, ...config });
+  authAdapter(authAdapter) {
+    // is expected to have get, set and remove
+    return this.set({ authAdapter });
   }
 
-  logoutPublic() {
-    return logoutPublic(this.config);
+  setAuth(key) {
+    return (auth) => {
+      if (!this.config.authAdapter) {
+        throw new Error("cannot setAuth: no authAdapter defined!");
+      }
+      const { set } = this.config.authAdapter;
+      set(key, auth.token);
+      return auth;
+    };
+  }
+  unsetAuth(key) {
+    return (auth) => {
+      console.log("unset auth", auth);
+      if (!this.config.authAdapter) {
+        throw new Error("cannot unsetAuth: no authAdapter defined!");
+      }
+      const { remove } = this.config.authAdapter;
+      remove(key);
+      return auth;
+    };
+  }
+  getAuth(key) {
+    if (!this.config.authAdapter) {
+      throw new Error("cannot getAuth: no authAdapter defined!");
+    }
+    const { get } = this.config.authAdapter;
+    return get(key);
   }
 
   loginEc(config) {
-    return loginEc({ ...this.config, ...config });
+    return loginEc({ ...this.config, ...config }).then(
+      this.setAuth(getEcAuthKey(this.config))
+    );
+  }
+  loginPublic(config) {
+    //
+    return loginPublic({ ...this.config, ...config }).then(
+      this.setAuth(getPublicAuthKey(this.config))
+    );
+  }
+
+  logoutPublic() {
+    const token = this.getPublicToken();
+    console.log("token", token);
+    return logoutPublic({ ...this.config, token }).then(
+      this.unsetAuth(getPublicAuthKey(this.config))
+    );
   }
 
   logoutEc() {
-    return logoutEc(this.config);
+    const token = this.getEcToken();
+    console.log("token", token);
+    return logoutEc({ ...this.config, token }).then(
+      this.unsetAuth(getEcAuthKey(this.config))
+    );
+  }
+
+  getPublicToken() {
+    return this.getAuth(getPublicAuthKey(this.config));
+  }
+  hasPublicToken() {
+    return !!this.getPublicToken();
+  }
+  getEcToken() {
+    return this.getAuth(getEcAuthKey(this.config));
+  }
+  hasEcToken() {
+    return !!this.getEcToken();
+  }
+  hasAnyToken() {
+    return !!this.getEcToken() || !!this.getPublicToken();
+  }
+  getBestToken() {
+    return this.getEcToken() || this.getPublicToken();
   }
 }
 

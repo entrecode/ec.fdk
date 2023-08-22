@@ -1,14 +1,11 @@
-import { sdk, auth } from "ec.fdk";
+import { sdk } from "ec.fdk";
+import Cookies from "js-cookie";
+
 // test
-let ecadmin = sdk("stage").dm("83cc6374");
+let ecadmin = sdk("stage").dm("83cc6374").authAdapter(Cookies);
 const muffin = ecadmin.model("muffin");
 
-auth.listen((v) => {
-  const { dmShortID, env } = ecadmin.config;
-  const { token } = v[env] || v[dmShortID] || {};
-  console.log("token", token);
-  ecadmin = ecadmin.token(token);
-});
+console.log("auth", ecadmin.getPublicToken());
 
 const press = (id, fn) =>
   document.getElementById(id).addEventListener("click", fn);

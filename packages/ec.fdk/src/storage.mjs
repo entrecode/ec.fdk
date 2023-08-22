@@ -1,3 +1,4 @@
+/*
 import { persistentMap } from "@nanostores/persistent";
 import {
   loginPublic,
@@ -68,3 +69,10 @@ export async function logoutEcStored(config) {
   auth.setKey(config.env, { token: res.token });
   return res;
 }
+
+ auth.listen((v) => {
+  const { dmShortID, env } = ecadmin.config;
+  const { token } = v[env] || v[dmShortID] || {};
+  console.log("listen token", token);
+  ecadmin = ecadmin.token(token);
+}); */

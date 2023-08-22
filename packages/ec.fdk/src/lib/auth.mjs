@@ -43,7 +43,7 @@ export async function loginEc(config) {
 }
 
 export async function logoutPublic(config) {
-  let { dmShortID, env } = config;
+  let { dmShortID, env, token } = config;
   expect({ dmShortID, env, token });
   const url = apiURL(
     `api/${dmShortID}/_auth/logout?clientID=rest&token=${token}`,
@@ -61,7 +61,7 @@ export async function logoutPublic(config) {
 
 export async function logoutEc(config) {
   let { env, token } = config;
-  expect({ env });
+  expect({ env, token });
   const url = `${accountServer[env]}auth/logout?clientID=rest`;
   const res = await fetcher(
     url,
@@ -74,4 +74,13 @@ export async function logoutEc(config) {
     }
   );
   return res;
+}
+
+export function getPublicAuthKey({ dmShortID }) {
+  expect({ dmShortID });
+  return dmShortID;
+}
+export function getEcAuthKey({ env }) {
+  expect({ env });
+  return env;
 }

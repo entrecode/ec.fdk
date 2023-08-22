@@ -12,6 +12,7 @@
     "vite": "^4.4.5"
   },
   "dependencies": {
-    "ec.fdk": "workspace:*"
+    "ec.fdk": "workspace:*",
+    "js-cookie": "^3.0.5"
   }
 }
