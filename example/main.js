@@ -48,18 +48,37 @@ press("asset", () =>
 press("assets", () => ecadmin.assetgroup("test").assets().then(console.log));
 
 press("loginPublic", () => {
-  ecadmin.login({
-    email: prompt("Mail?", "flix91+3@gmail.com"),
-    password: prompt("Passwort?"),
-  });
+  ecadmin
+    .loginPublic({
+      email: prompt("Mail?", "flix91+3@gmail.com"),
+      password: prompt("Passwort?"),
+    })
+    .then(console.log);
 });
 press("logoutPublic", () => {
-  ecadmin.logout();
+  ecadmin.logoutPublic();
 });
-press("hasAuth", () => {
-  console.log("hasAuth", ecadmin.hasAuth());
+press("hasAnyToken", () => {
+  console.log("hasAnyToken", ecadmin.hasAnyToken());
+});
+press("hasEcToken", () => {
+  console.log("hasEcToken", ecadmin.hasEcToken());
+});
+press("hasPublicToken", () => {
+  console.log("hasPublicToken", ecadmin.hasPublicToken());
 });
 
 press("entriesProtected", () => {
   ecadmin.model("dingding").entries().then(console.log);
+});
+press("loginEc", () => {
+  ecadmin
+    .loginEc({
+      email: prompt("Mail?", "roos@entrecode.de"),
+      password: prompt("Passwort?"),
+    })
+    .then(console.log);
+});
+press("logoutEc", () => {
+  ecadmin.logoutEc().then(console.log);
 });

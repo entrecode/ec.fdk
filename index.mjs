@@ -6,9 +6,13 @@ import {
   createEntry,
   editEntry,
   loginPublic,
-  hasAuth,
+  loginEc,
+  logoutEc,
+  hasAnyToken,
   getAuth,
   logoutPublic,
+  hasEcToken,
+  hasPublicToken,
 } from "./lib.mjs";
 
 export * from "./lib.mjs";
@@ -70,21 +74,35 @@ class Sdk {
 
   //
 
-  login(config) {
+  loginPublic(config) {
     //
     return loginPublic({ ...this.config, ...config });
   }
 
-  logout() {
+  logoutPublic() {
     return logoutPublic(this.config);
+  }
+
+  loginEc(config) {
+    return loginEc({ ...this.config, ...config });
+  }
+
+  logoutEc() {
+    return logoutEc(this.config);
   }
 
   getAuth() {
     return getAuth(this.config);
   }
 
-  hasAuth() {
-    return hasAuth(this.config);
+  hasAnyToken() {
+    return hasAnyToken(this.config);
+  }
+  hasEcToken() {
+    return hasEcToken(this.config);
+  }
+  hasPublicToken() {
+    return hasPublicToken(this.config);
   }
 }
 
