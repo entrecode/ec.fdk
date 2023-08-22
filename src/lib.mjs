@@ -1,7 +1,12 @@
 import { withAuthHeader } from "./auth.mjs";
-export * from "./auth.mjs";
-export * from "./entries.mjs";
-export * from "./assets.mjs";
+export * from "./actions.mjs";
+import * as actions from "./actions.mjs";
+
+export function act(config) {
+  const { action } = config;
+  expect({ action });
+  return actions[action](config);
+}
 
 export async function fetcher(url, config = {}, options = {}) {
   options = withAuthHeader(options, config);
