@@ -1,4 +1,4 @@
-import { sdk, auth } from "../index.mjs";
+import { sdk, auth } from "../src/index.mjs";
 // test
 const ecadmin = sdk("stage").dm("83cc6374");
 const muffin = ecadmin.model("muffin");
