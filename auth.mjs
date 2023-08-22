@@ -8,7 +8,7 @@ const accountServer = {
 
 // maybe switch to cookie: https://github.com/nanostores/persistent#persistent-engines
 export const auth = persistentMap(
-  "ecAuth",
+  "fdk.auth",
   {},
   {
     encode: JSON.stringify,
