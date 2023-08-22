@@ -36,8 +36,9 @@ export function apiURL(route, env = "stage") {
   return base + route;
 }
 
-export function query(params) {
+export function query(params, sort = true) {
   return Object.entries(params)
+    .sort((a, b) => a[0].localeCompare(b[0]))
     .map(([key, value]) => `${key}=${value}`)
     .join("&");
 }
