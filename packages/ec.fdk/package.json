@@ -3,12 +3,16 @@
   "version": "0.1.0",
   "description": "ec frontend sdk",
   "main": "./src/index.mjs",
+  "publishConfig": {
+    "main": "dist/index.cjs",
+    "module": "dist/index.mjs"
+  },
   "directories": {
     "lib": "lib"
   },
   "scripts": {
     "build": "vite build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
