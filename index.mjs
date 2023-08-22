@@ -58,6 +58,13 @@ class Sdk {
 
   del() {}
 
+  createEntry(value) {
+    return createEntry({ ...this.config, value });
+  }
+  editEntry(value) {
+    return editEntry({ ...this.config, value });
+  }
+
   create(value) {
     return this.set({ value }).handle({
       //assetID: createAsset,

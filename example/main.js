@@ -35,8 +35,19 @@ press("entriesExact", () =>
 );
 
 press("entry", () => muffin.entry("fZctZXIeRJ").get().then(console.log));
-press("entryCreate", () => muffin.create({}).then(console.log));
-press("entryEdit", () => muffin.entry("fZctZXIeRJ").edit({}).then(console.log));
+press("createEntryProtected", () =>
+  ecadmin
+    .model("dingding")
+    .create({ text: "ec.fdk", number: 1 })
+    .then(console.log)
+);
+press("createEntry", () =>
+  ecadmin
+    .model("muffin")
+    .create({ name: "hello fdk", amazement_factor: 10 })
+    .then(console.log)
+);
+press("editEntry", () => muffin.entry("fZctZXIeRJ").edit({}).then(console.log));
 
 press("asset", () =>
   ecadmin
