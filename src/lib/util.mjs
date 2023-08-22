@@ -1,21 +1,17 @@
-import { withAuthHeader } from "./auth.mjs";
-export * from "./actions.mjs";
-import * as actions from "./actions.mjs";
-
-export function act(config) {
-  const { action } = config;
-  expect({ action });
-  return actions[action](config);
-}
-
 export async function fetcher(url, config = {}, options = {}) {
-  options = withAuthHeader(options, config);
+  const { token, rawRes } = config;
+  if (token) {
+    options.headers = {
+      ...(options.headers || {}),
+      Authorization: `Bearer ${token}`,
+    };
+  }
   const res = await fetch(url, options);
   console.log("fetch", url, options);
   if (!res.ok) {
     throw new Error(res.statusText);
   }
-  if (config.rawRes) {
+  if (rawRes) {
     return res;
   }
   return await res.json();

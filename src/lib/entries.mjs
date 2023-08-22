@@ -1,4 +1,4 @@
-import { expect, query, apiURL, fetcher } from "./lib.mjs";
+import { expect, query, apiURL, fetcher } from "./util.mjs";
 
 export async function entryList(config) {
   let { env, dmShortID, model, options = {} } = config;
@@ -13,21 +13,21 @@ export async function entryList(config) {
   return { count, total, items };
 }
 
-export function getEntry({ env, dmShortID, model, entryID }) {
+export function getEntry({ env, dmShortID, model, entryID, token }) {
   expect({ env, dmShortID, model, entryID });
   const q = query({ _id: entryID });
   const url = apiURL(`api/${dmShortID}/${model}?${q}`, env);
-  return fetcher(url, { dmShortID });
+  return fetcher(url, { dmShortID, token });
 }
 
-export async function createEntry({ env, dmShortID, model, value }) {
+export async function createEntry({ env, dmShortID, model, value, token }) {
   expect({ env, dmShortID, model, value });
   console.log("create entry", dmShortID, model, value);
   const url = apiURL(`api/${dmShortID}/${model}`, env);
   console.log("url", url);
   const res = await fetcher(
     url,
-    { env, dmShortID },
+    { env, dmShortID, token },
     {
       method: "POST",
       body: JSON.stringify(value),
@@ -39,7 +39,14 @@ export async function createEntry({ env, dmShortID, model, value }) {
   return res;
 }
 
-export async function editEntry({ env, dmShortID, model, entryID, value }) {
+export async function editEntry({
+  env,
+  dmShortID,
+  model,
+  entryID,
+  value,
+  token,
+}) {
   expect({ env, dmShortID, model, entryID, value });
   console.log("edit entry", dmShortID, model, entryID, value);
   return;

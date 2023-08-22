@@ -1,9 +1,15 @@
-import { sdk, auth } from "../src/index.mjs";
+import { sdk } from "../src/index.mjs";
+import { auth } from "../src/storage.mjs";
 // test
-const ecadmin = sdk("stage").dm("83cc6374");
+let ecadmin = sdk("stage").dm("83cc6374");
 const muffin = ecadmin.model("muffin");
 
-auth.listen((v) => console.log("auth changed", v));
+auth.listen((v) => {
+  const { dmShortID, env } = ecadmin.config;
+  const { token } = v[env] || v[dmShortID] || {};
+  console.log("token", token);
+  ecadmin = ecadmin.token(token);
+});
 
 const press = (id, fn) =>
   document.getElementById(id).addEventListener("click", fn);

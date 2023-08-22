@@ -1,4 +1,16 @@
 import {
+  hasAnyToken,
+  getAuth,
+  hasEcToken,
+  hasPublicToken,
+} from "./storage.mjs";
+
+import * as actions from "./lib/actions.mjs";
+import { expect } from "./lib/util.mjs";
+export * from "./lib/util.mjs";
+export * from "./storage.mjs";
+
+const {
   entryList,
   getEntry,
   getAsset,
@@ -8,14 +20,14 @@ import {
   loginPublic,
   loginEc,
   logoutEc,
-  hasAnyToken,
-  getAuth,
   logoutPublic,
-  hasEcToken,
-  hasPublicToken,
-} from "./lib.mjs";
+} = actions;
 
-export * from "./lib.mjs";
+export function act(config) {
+  const { action } = config;
+  expect({ action });
+  return actions[action](config);
+}
 
 class Sdk {
   constructor(config) {
@@ -129,6 +141,7 @@ const addAlias = (a, b) => {
 // define setters with aliases
 addSetter("dmShortID", "dm", "dmshortid");
 addSetter("model");
+addSetter("token");
 addSetter("entryID", "entry");
 addSetter("assetGroup");
 addSetter("assetID", "asset");

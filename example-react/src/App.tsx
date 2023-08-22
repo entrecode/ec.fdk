@@ -1,5 +1,7 @@
 import { useState } from "react";
-import useSdk from "./useSdk";
+import { useSdk } from "./useSdk";
+// @ts-ignore
+import { loginEcStored, logoutEcStored } from "../../src/storage.mjs";
 
 const config = {
   env: "stage",
@@ -35,6 +37,32 @@ function App() {
       {entryList?.items.map((item: any) => (
         <li key={item.id}>{item._entryTitle}</li>
       ))}
+      <h1>Auth</h1>
+      auth
+      <button
+        onClick={async () => {
+          const loginConfig = {
+            ...config,
+            email: "roos@entrecode.de",
+            password: "letmein",
+          };
+          await loginEcStored(loginConfig);
+          console.log("login complete");
+          /* const { token } = await act(loginConfig);
+          console.log("token", token);
+          auth.setKey(config.dmShortID, { token }); */
+        }}
+      >
+        login
+      </button>
+      <button
+        onClick={async () => {
+          await logoutEcStored(config);
+          console.log("logout complete");
+        }}
+      >
+        logout
+      </button>
     </>
   );
 }
