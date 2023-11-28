@@ -70,7 +70,7 @@ export async function deleteEntry({ env, dmShortID, model, entryID, token }) {
   const url = apiURL(`api/${dmShortID}/${model}?_id=${entryID}`, env);
   const res = await fetcher(
     url,
-    { token },
+    { token, rawRes: true },
     {
       method: "DELETE",
       headers: {
