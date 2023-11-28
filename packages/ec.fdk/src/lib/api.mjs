@@ -94,7 +94,7 @@ class Sdk {
     });
   }
 
-  //
+  // TODO: rename authAdapter -> storageAdapter
 
   authAdapter(authAdapter) {
     // is expected to have get, set and remove
@@ -159,13 +159,13 @@ class Sdk {
   }
 
   getPublicToken() {
-    return this.getAuth(getPublicAuthKey(this.config));
+    return this.config.token || this.getAuth(getPublicAuthKey(this.config));
+  }
+  getEcToken() {
+    return this.config.token || this.getAuth(getEcAuthKey(this.config));
   }
   hasPublicToken() {
     return !!this.getPublicToken();
-  }
-  getEcToken() {
-    return this.getAuth(getEcAuthKey(this.config));
   }
   hasEcToken() {
     return !!this.getEcToken();
