@@ -174,7 +174,11 @@ class Sdk {
     return !!this.getEcToken() || !!this.getPublicToken();
   }
   getBestToken() {
-    return this.getEcToken() || this.getPublicToken();
+    try {
+      return this.getEcToken() || this.getPublicToken();
+    } catch (err) {
+      return undefined;
+    }
   }
 }
 
