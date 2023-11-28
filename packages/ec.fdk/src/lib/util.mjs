@@ -7,7 +7,7 @@ export async function fetcher(url, config = {}, options = {}) {
     };
   }
   const res = await fetch(url, options);
-  console.log("fetch", url, options);
+  //console.log("fetch", url, options);
   if (!res.ok) {
     throw new Error(res.statusText);
   }

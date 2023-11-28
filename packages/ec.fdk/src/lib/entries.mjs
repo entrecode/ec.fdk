@@ -48,7 +48,19 @@ export async function editEntry({
   token,
 }) {
   expect({ env, dmShortID, model, entryID, value });
-  console.log("edit entry", dmShortID, model, entryID, value);
-  return;
+  // console.log("edit entry", dmShortID, model, entryID, value);
+  const url = apiURL(`api/${dmShortID}/${model}?_id=${entryID}`, env);
+  const res = await fetcher(
+    url,
+    { token },
+    {
+      method: "PUT",
+      body: JSON.stringify(value),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return res;
   // https://datamanager.cachena.entrecode.de/api/83cc6374/
 }
