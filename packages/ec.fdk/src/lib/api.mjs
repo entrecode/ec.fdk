@@ -9,6 +9,7 @@ const {
   assetList,
   createEntry,
   editEntry,
+  deleteEntry,
   loginPublic,
   loginEc,
   logoutEc,
