@@ -62,5 +62,21 @@ export async function editEntry({
     }
   );
   return res;
-  // https://datamanager.cachena.entrecode.de/api/83cc6374/
+}
+
+export async function deleteEntry({ env, dmShortID, model, entryID, token }) {
+  expect({ env, dmShortID, model, entryID });
+  // console.log("edit entry", dmShortID, model, entryID, value);
+  const url = apiURL(`api/${dmShortID}/${model}?_id=${entryID}`, env);
+  const res = await fetcher(
+    url,
+    { token },
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return res;
 }

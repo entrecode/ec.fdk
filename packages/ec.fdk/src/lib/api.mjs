@@ -71,7 +71,11 @@ class Sdk {
     });
   }
 
-  del() {}
+  del() {
+    return this.handle({
+      entryID: deleteEntry,
+    });
+  }
 
   createEntry(value) {
     return createEntry({ ...this.config, value });
