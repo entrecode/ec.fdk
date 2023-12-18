@@ -42,19 +42,6 @@ class Sdk {
     return new Sdk({ ...this.config, ...obj });
   }
 
-  async handle(handlers) {
-    const keys = Object.keys(this.config);
-    const token = await this.getBestToken();
-    const [_, handle] =
-      Object.entries(handlers).find(([k, v]) => keys.includes(k)) || [];
-    if (!handle) {
-      throw new Error(
-        `you need to first set ${Object.keys(handlers).join(" | ")}`
-      );
-    }
-    return handle({ ...this.config, token });
-  }
-
   /**
    * Loads entry list. Expects `dmShortID` / `model` to be set.
    * If the model is not public, you also need to provide a `token`.
@@ -74,6 +61,19 @@ class Sdk {
   }
   async entryList(options) {
     return this.entries(options);
+  }
+  /**
+   * Loads a single entry. Expects `dmShortID` / `model` to be set.
+   * If the model is not public, you also need to provide a `token`.
+   *
+   * @param {string} entryID
+   * @returns {object}
+   * @example
+   * const muffin = await sdk("stage").dm("83cc6374").model("muffin").getEntry("1gOtzWvrdq")
+   */
+  async getEntry(entryID) {
+    const token = await this.getBestToken();
+    return getEntry({ ...this.config, entryID, token });
   }
   /**
    * Loads asset list. Expects `dmShortID` / `assetGroup` to be set.
@@ -120,39 +120,59 @@ class Sdk {
     const token = await this.getBestToken();
     return createAsset({ ...this.config, file, name, token });
   }
-
-  get() {
-    return this.handle({
-      assetID: getAsset,
-      entryID: getEntry,
-    });
+  /**
+   * Loads a single asset. Expects `dmShortID` / `assetGroup` to be set.
+   * If the asset group is not public, you also need to provide a `token`.
+   *
+   * @param {string} assetID
+   * @returns {object}
+   * @example
+   * const asset = await sdk("stage").dm("83cc6374").assetgroup("test").getAsset("tP-ZxpZZTGmbPnET-wArAQ")
+   */
+  async getAsset(assetID) {
+    const token = await this.getBestToken();
+    return getAsset({ ...this.config, assetID, token });
   }
 
-  del() {
-    return this.handle({
-      entryID: deleteEntry,
-    });
+  /**
+   * Creates a new entry. Expects `dmShortID` / `model` to be set.
+   * If model POST is not public, you also need to provide a `token`.
+   *
+   * @param {object} value values to set.
+   * @returns {object}
+   * @example
+   * const entry = await sdk("stage").dm("83cc6374").model("muffin").createEntry({ name: 'test' })
+   */
+  async createEntry(value) {
+    const token = await this.getBestToken();
+    return createEntry({ ...this.config, token, value });
   }
-
-  createEntry(value) {
-    return createEntry({ ...this.config, value });
+  /**
+   * Edits an entry. Expects `dmShortID` / `model` to be set.
+   * If model PUT is not public, you also need to provide a `token`.
+   *
+   * @param {string} entryID id of entry to edit
+   * @param {object} value values to set. undefined fields are ignored
+   * @returns {object}
+   * @example
+   * const entry = await sdk("stage").dm("83cc6374").model("muffin").editEntry("1gOtzWvrdq", { name: "test" })
+   */
+  async editEntry(entryID, value) {
+    const token = await this.getBestToken();
+    return editEntry({ ...this.config, entryID, token, value });
   }
-  editEntry(value) {
-    return editEntry({ ...this.config, value });
-  }
-
-  create(value) {
-    return this.set({ value }).handle({
-      //assetID: createAsset,
-      model: createEntry,
-    });
-  }
-
-  edit(value) {
-    return this.set({ value }).handle({
-      //assetID: createAsset,
-      entryID: editEntry,
-    });
+  /**
+   * Deletes an entry. Expects `dmShortID` / `model` to be set.
+   * If model DELETE is not public, you also need to provide a `token`.
+   *
+   * @param {string} entryID id of entry to delete
+   * @returns {object}
+   * @example
+   * await sdk("stage").dm("83cc6374").model("muffin").deleteEntry("1gOtzWvrdq")
+   */
+  async deleteEntry(entryID) {
+    const token = await this.getBestToken();
+    return deleteEntry({ ...this.config, token, entryID });
   }
 
   // TODO: rename authAdapter -> storageAdapter
@@ -274,22 +294,6 @@ class Sdk {
     return this.dmShortID(dmShortID);
   }
   /**
-   * Sets the id of the entry to use
-   * @param {string} entryID
-   * @returns Sdk
-   */
-  entryID(entryID) {
-    return this.set({ entryID });
-  }
-  /**
-   * Sets the id of the entry to use. Alias for `entryID`
-   * @param {string} entryID
-   * @returns Sdk
-   */
-  entry(entryID) {
-    return this.entryID(entryID);
-  }
-  /**
    * Sets the name of the asset group to use.
    * @param {string} assetGroup name of the asset group
    * @returns Sdk
@@ -304,22 +308,6 @@ class Sdk {
    */
   assetgroup(assetGroup) {
     return this.assetGroup(assetGroup);
-  }
-  /**
-   * Sets the id of the asset to use
-   * @param {string} assetID
-   * @returns Sdk
-   */
-  assetID(assetID) {
-    return this.set({ assetID });
-  }
-  /**
-   * Sets the id of the asset to use. Alias for `assetID`
-   * @param {string} assetID
-   * @returns Sdk
-   */
-  asset(assetID) {
-    return this.assetID(assetID);
   }
 }
 

@@ -36,26 +36,26 @@ press("entriesExact", () =>
   muffin.entries({ name: "Kiwi King" }).then(console.log)
 );
 
-press("entry", () => muffin.entry("fZctZXIeRJ").get().then(console.log));
+press("entry", () => muffin.getEntry("fZctZXIeRJ").then(console.log));
+
 press("createEntryProtected", () =>
   ecadmin
     .model("dingding")
-    .create({ text: "ec.fdk", number: 1 })
+    .createEntry({ text: "ec.fdk", number: 1 })
     .then(console.log)
 );
 press("createEntry", () =>
   ecadmin
     .model("muffin")
-    .create({ name: "hello fdk", amazement_factor: 10 })
+    .createEntry({ name: "hello fdk", amazement_factor: 10 })
     .then(console.log)
 );
-press("editEntry", () => muffin.entry("fZctZXIeRJ").edit({}).then(console.log));
+press("editEntry", () => muffin.editEntry("fZctZXIeRJ", {}).then(console.log));
 
 press("asset", () =>
   ecadmin
     .assetgroup("test")
-    .asset("tP-ZxpZZTGmbPnET-wArAQ")
-    .get()
+    .getAsset("tP-ZxpZZTGmbPnET-wArAQ")
     .then(console.log)
 );
 press("assets", () => ecadmin.assetgroup("test").assets().then(console.log));
