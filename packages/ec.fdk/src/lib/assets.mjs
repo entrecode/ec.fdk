@@ -20,11 +20,18 @@ export async function assetList(config) {
   return { count, total, items };
 }
 
-export async function createAsset({ env, dmShortID, assetGroup, token, file }) {
+export async function createAsset({
+  env,
+  dmShortID,
+  assetGroup,
+  token,
+  file,
+  name,
+}) {
   expect({ env, dmShortID, assetGroup, file });
   const url = apiURL(`a/${dmShortID}/${assetGroup}`, env);
   const formData = new FormData();
-  formData.append("file", file);
+  formData.append("file", file, name);
   const list = await fetcher(
     url,
     { token },

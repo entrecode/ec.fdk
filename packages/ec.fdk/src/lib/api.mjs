@@ -66,9 +66,9 @@ class Sdk {
     return assetList({ ...this.config, options, token });
   }
 
-  async createAsset({ file } = {}) {
+  async createAsset({ file, name } = {}) {
     const token = await this.getBestToken();
-    return createAsset({ ...this.config, file, token });
+    return createAsset({ ...this.config, file, name, token });
   }
 
   get() {

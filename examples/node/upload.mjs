@@ -8,7 +8,7 @@ async function run() {
   const upload = await sdk("stage")
     .dm("83cc6374")
     .assetgroup("test")
-    .createAsset({ file });
+    .createAsset({ file, name: "venndiagram.png" });
   console.log("upload", upload);
 }
 
