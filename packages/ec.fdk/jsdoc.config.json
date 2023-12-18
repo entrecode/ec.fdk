@@ -1,0 +1,11 @@
+{
+  "source": {
+    "includePattern": ".+\\.(js(doc|x)?|mjs)$",
+    "excludePattern": "node_modules|dist"
+  },
+  "plugins": ["plugins/markdown"],
+  "opts": {
+    "destination": "./out/",
+    "recurse": true
+  }
+}

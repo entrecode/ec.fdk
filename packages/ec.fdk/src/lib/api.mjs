@@ -1,3 +1,6 @@
+/**
+ * @module api
+ */
 import * as actions from "./actions.mjs";
 import { expect } from "./util.mjs";
 export * from "./util.mjs";
@@ -32,7 +35,10 @@ export function act(config) {
   return actions[action](config);
 }
 
-class Sdk {
+/**
+ * SDK
+ */
+export class Sdk {
   constructor(config) {
     this.config = config;
   }
