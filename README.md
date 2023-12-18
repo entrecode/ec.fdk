@@ -64,7 +64,7 @@ const assets = await testdm.assets();
 ```sh
 cd examples/vanilla && pnpm dev # vanilla js example
 cd examples/react && pnpm dev # react js example
-cd examples/node && pnpm dev # node example
+cd examples/node && pnpm start # node example, see package.json for more
 ```
 
 [Codesandbox](https://codesandbox.io/s/ec-fdk-demo-lmzsl4?file=/src/index.mjs)

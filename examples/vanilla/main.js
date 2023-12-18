@@ -60,6 +60,15 @@ press("asset", () =>
 );
 press("assets", () => ecadmin.assetgroup("test").assets().then(console.log));
 
+document.getElementById("file").addEventListener("input", (e) => {
+  const [file] = e.target.files;
+  console.log("file input", file);
+  ecadmin.assetgroup("test").createAsset({ file }).then(console.log);
+});
+press("createAsset", () => {
+  document.getElementById("file").click();
+});
+
 press("loginPublic", () => {
   ecadmin
     .loginPublic({

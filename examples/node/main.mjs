@@ -20,7 +20,7 @@ async function run() {
     model: "muffin",
   }); */
 
-  console.log("engtries", entries.items);
+  console.log("entries", entries.items);
 }
 
 run();

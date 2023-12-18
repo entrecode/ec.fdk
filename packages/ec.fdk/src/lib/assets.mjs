@@ -19,3 +19,19 @@ export async function assetList(config) {
   const items = _embedded ? _embedded[`ec:dm-asset`] : [];
   return { count, total, items };
 }
+
+export async function createAsset({ env, dmShortID, assetGroup, token, file }) {
+  expect({ env, dmShortID, assetGroup, file });
+  const url = apiURL(`a/${dmShortID}/${assetGroup}`, env);
+  const formData = new FormData();
+  formData.append("file", file);
+  const list = await fetcher(
+    url,
+    { token },
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
+  return list._embedded["ec:dm-asset"];
+}

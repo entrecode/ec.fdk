@@ -7,6 +7,7 @@ const {
   getEntry,
   getAsset,
   assetList,
+  createAsset,
   createEntry,
   editEntry,
   deleteEntry,
@@ -63,6 +64,11 @@ class Sdk {
   async assets(options) {
     const token = await this.getBestToken();
     return assetList({ ...this.config, options, token });
+  }
+
+  async createAsset({ file } = {}) {
+    const token = await this.getBestToken();
+    return createAsset({ ...this.config, file, token });
   }
 
   get() {
