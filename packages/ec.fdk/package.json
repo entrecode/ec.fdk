@@ -1,6 +1,6 @@
 {
   "name": "ec.fdk",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "ec frontend sdk",
   "main": "./src/index.mjs",
   "publishConfig": {
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/felixroos/ec.fdk.git"
+    "url": "git+https://github.com/entrecode/ec.fdk.git"
   },
   "keywords": [
     "cool"
@@ -26,9 +26,9 @@
   "author": "Felix Roos <roos@entrecode.de>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/felixroos/ec.fdk/issues"
+    "url": "https://github.com/entrecode/ec.fdk/issues"
   },
-  "homepage": "https://github.com/felixroos/ec.fdk#readme",
+  "homepage": "https://github.com/entrecode/ec.fdk#readme",
   "dependencies": {
     "@nanostores/persistent": "^0.9.1",
     "jsdoc-json": "^2.0.2",
