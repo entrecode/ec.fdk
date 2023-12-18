@@ -11,7 +11,7 @@
     "lib": "lib"
   },
   "scripts": {
-    "build": "vite build",
+    "build": "vite build && tsc",
     "prepublishOnly": "npm run build"
   },
   "repository": {
@@ -32,6 +32,7 @@
     "nanostores": "^0.9.3"
   },
   "devDependencies": {
+    "typescript": "^5.3.3",
     "vite": "^4.4.9"
   }
 }

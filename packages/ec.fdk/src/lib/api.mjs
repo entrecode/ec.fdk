@@ -60,10 +60,16 @@ class Sdk {
     const token = await this.getBestToken();
     return entryList({ ...this.config, options, token });
   }
+  async entryList(options) {
+    return this.entries(options);
+  }
 
   async assets(options) {
     const token = await this.getBestToken();
     return assetList({ ...this.config, options, token });
+  }
+  async assetList(options) {
+    return this.assets(options);
   }
 
   async createAsset({ file, name } = {}) {
@@ -191,30 +197,86 @@ class Sdk {
       return undefined;
     }
   }
+  /**
+   * Sets the given model to use
+   * @param {string} model name of the model
+   * @returns Sdk
+   */
+  model(model) {
+    return this.set({ model });
+  }
+  /**
+   * Sets the token to use in requests
+   * @param {string} token
+   * @returns Sdk
+   */
+  token(token) {
+    return this.set({ token });
+  }
+  /**
+   * Sets the short ID of the datamanager to use
+   * @param {string} dmShortID
+   * @returns Sdk
+   */
+  dmShortID(dmShortID) {
+    return this.set({ dmShortID });
+  }
+  /**
+   * Sets the short ID of the datamanager to use. Alias for `dmShortID`
+   * @param {string} dmShortID
+   * @returns Sdk
+   */
+  dm(dmShortID) {
+    return this.dmShortID(dmShortID);
+  }
+  /**
+   * Sets the id of the entry to use
+   * @param {string} entryID
+   * @returns Sdk
+   */
+  entryID(entryID) {
+    return this.set({ entryID });
+  }
+  /**
+   * Sets the id of the entry to use. Alias for `entryID`
+   * @param {string} entryID
+   * @returns Sdk
+   */
+  entry(entryID) {
+    return this.entryID(entryID);
+  }
+  /**
+   * Sets the name of the asset group to use.
+   * @param {string} assetGroup name of the asset group
+   * @returns Sdk
+   */
+  assetGroup(assetGroup) {
+    return this.set({ assetGroup });
+  }
+  /**
+   * Sets the name of the asset group to use. Alias for `assetGroup`
+   * @param {string} assetGroup name of the asset group
+   * @returns Sdk
+   */
+  assetgroup(assetGroup) {
+    return this.assetGroup(assetGroup);
+  }
+  /**
+   * Sets the id of the asset to use
+   * @param {string} assetID
+   * @returns Sdk
+   */
+  assetID(assetID) {
+    return this.set({ assetID });
+  }
+  /**
+   * Sets the id of the asset to use. Alias for `assetID`
+   * @param {string} assetID
+   * @returns Sdk
+   */
+  asset(assetID) {
+    return this.assetID(assetID);
+  }
 }
-
-const addSetter = (...args) => {
-  const [main] = args;
-
-  args.forEach((alias) => {
-    Sdk.prototype[alias] = function (value) {
-      return this.set({ [main]: value });
-    };
-  });
-};
-
-const addAlias = (a, b) => {
-  Sdk.prototype[a] = Sdk.prototype[b];
-};
-// define setters with aliases
-addSetter("dmShortID", "dm", "dmshortid");
-addSetter("model");
-addSetter("token");
-addSetter("entryID", "entry");
-addSetter("assetGroup");
-addSetter("assetID", "asset");
-addAlias("assetgroup", "assetGroup");
-addAlias("entryList", "entries");
-addAlias("assetList", "assets");
 
 export const sdk = (env) => new Sdk({ env });
