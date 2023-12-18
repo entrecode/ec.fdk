@@ -2,3 +2,4 @@ src
 vite.config.js
 tsconfig.json
 README.hbs
+jsdoc.config.json
