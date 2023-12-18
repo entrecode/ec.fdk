@@ -55,15 +55,39 @@ class Sdk {
     return handle({ ...this.config, token });
   }
 
-  ///
-  async entries(options) {
+  /**
+   * Loads entry list. Expects `dmShortID` / `model` to be set.
+   * If the model is not public, you also need to provide a `token`.
+   *
+   * @param {object=} options options for entry list request.
+   * @returns {{ count: number, total: number, items: object[] }}
+   * @example
+   * // public model
+   * const muffins = await sdk("stage").dm("83cc6374").model("muffin").entries()
+   * @example
+   * // non-public model
+   * const secrets = await sdk("stage").token(token).dm("83cc6374").model("secret").entries()
+   */
+  async entries(options = {}) {
     const token = await this.getBestToken();
     return entryList({ ...this.config, options, token });
   }
   async entryList(options) {
     return this.entries(options);
   }
-
+  /**
+   * Loads asset list. Expects `dmShortID` / `assetGroup` to be set.
+   * If the assetGroup is not public, you also need to provide a `token`.
+   *
+   * @param {object=} options options for entry list request.
+   * @returns {{ count: number, total: number, items: object[] }}
+   * @example
+   * // public assetGroup
+   * const files = await sdk("stage").dm("83cc6374").assetGroup("avatars").assets()
+   * @example
+   * // non-public assetGroup
+   * const files = await sdk("stage").token(token).dm("83cc6374").assetGroup("avatars").assets()
+   */
   async assets(options) {
     const token = await this.getBestToken();
     return assetList({ ...this.config, options, token });
@@ -71,7 +95,27 @@ class Sdk {
   async assetList(options) {
     return this.assets(options);
   }
-
+  /**
+   * Uploads an asset. Expects `dmShortID` / `assetGroup` / `file` to be set.
+   * If the assetGroup is not public, you also need to provide a `token`.
+   *
+   * @param {object=} options options for entry list request.
+   * @returns {{ count: number, total: number, items: object[] }}
+   * @example
+   * // browser example
+   * document.getElementById("file").addEventListener("input", async (e) => {
+   *   const [file] = e.target.files;
+   *   const asset = await ecadmin.assetgroup("test").createAsset({ file })
+   * });
+   * @example
+   * // node example
+   * const buf = fs.readFileSync("venndiagram.png");
+   * const file = new Blob([buf]);
+   * const upload = await sdk("stage")
+   * .dm("83cc6374")
+   * .assetgroup("test")
+   * .createAsset({ file, name: "venndiagram.png" });
+   */
   async createAsset({ file, name } = {}) {
     const token = await this.getBestToken();
     return createAsset({ ...this.config, file, name, token });
