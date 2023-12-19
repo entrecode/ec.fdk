@@ -82,9 +82,6 @@ importers:
       '@nanostores/persistent':
         specifier: ^0.9.1
         version: 0.9.1(nanostores@0.9.3)
-      jsdoc-json:
-        specifier: ^2.0.2
-        version: 2.0.2
       nanostores:
         specifier: ^0.9.3
         version: 0.9.3
@@ -92,6 +89,9 @@ importers:
       jsdoc:
         specifier: ^4.0.2
         version: 4.0.2
+      jsdoc-json:
+        specifier: ^2.0.2
+        version: 2.0.2
       jsdoc-to-markdown:
         specifier: ^8.0.0
         version: 8.0.0
@@ -1643,7 +1643,7 @@ packages:
 
   /jsdoc-json@2.0.2:
     resolution: {integrity: sha512-n0vVkWvBMHFNUsW6HUhMrVCk+nJZwW3kpd9/JiCgdYvjjZV3NcP5fV3+lTgOkOA/bTKJxbCKT8Au92FHII3pnA==}
-    dev: false
+    dev: true
 
   /jsdoc-parse@6.2.0:
     resolution: {integrity: sha512-Afu1fQBEb7QHt6QWX/6eUWvYHJofB90Fjx7FuJYF7mnG9z5BkAIpms1wsnvYLytfmqpEENHs/fax9p8gvMj7dw==}
