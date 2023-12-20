@@ -320,6 +320,13 @@ export class Sdk {
 export const sdk = (env) => new Sdk({ env });
 
 /**
+ * @typedef {Object} AssetFile
+ * @property {string} url
+ * @property {number} size
+ * @property {Object} resolution
+ */
+
+/**
  * @typedef {Object} AssetResource
  * @property {string} assetID
  * @property {Date} created
@@ -327,6 +334,7 @@ export const sdk = (env) => new Sdk({ env });
  * @property {Array<string | any>} tags
  * @property {string} title
  * @property {string} type
+ * @property {AssetFile} file
  */
 
 /**

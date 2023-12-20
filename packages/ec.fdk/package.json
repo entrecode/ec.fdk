@@ -1,6 +1,6 @@
 {
   "name": "ec.fdk",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "ec frontend sdk",
   "main": "./src/index.mjs",
   "publishConfig": {
