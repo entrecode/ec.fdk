@@ -131,7 +131,7 @@ export class Sdk {
    * If the asset group is not public, you also need to provide a `token`.
    *
    * @param {string} assetID
-   * @returns {object}
+   * @returns {Promise<AssetResource>}
    * @example
    * const asset = await sdk("stage").dm("83cc6374").assetgroup("test").getAsset("tP-ZxpZZTGmbPnET-wArAQ")
    */
@@ -318,3 +318,13 @@ export class Sdk {
 }
 
 export const sdk = (env) => new Sdk({ env });
+
+/**
+ * @typedef {Object} AssetResource
+ * @property {string} assetID
+ * @property {Date} created
+ * @property {Array<any>} files
+ * @property {Array<string | any>} tags
+ * @property {string} title
+ * @property {string} type
+ */
