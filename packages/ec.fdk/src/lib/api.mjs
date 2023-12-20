@@ -105,7 +105,7 @@ export class Sdk {
    * Uploads an asset. Expects `dmShortID` / `assetGroup` / `file` to be set.
    * If the assetGroup is not public, you also need to provide a `token`.
    *
-   * @param {{ file: File, name: string }} options options for entry list request.
+   * @param {{ file: File | Blob, name: string }} options options for entry list request.
    * @returns {Promise<AssetResource>}
    * @example
    * // browser example
