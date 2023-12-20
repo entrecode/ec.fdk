@@ -2,7 +2,7 @@ import { expect, apiURL, fetcher } from "./util.mjs";
 
 const accountServer = {
   stage: "https://accounts.cachena.entrecode.de/",
-  production: "https://accounts.cachena.entrecode.de/",
+  live: "https://accounts.entrecode.de/",
 };
 
 export async function loginPublic(config) {

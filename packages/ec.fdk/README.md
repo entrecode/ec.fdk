@@ -11,7 +11,7 @@ npm i ec.fdk
 
 # API
 
-Start by calling `sdk` with your environment (`stage` | `production`), then method chain your way to success:
+Start by calling `sdk` with your environment (`stage` | `live`), then method chain your way to success:
 
 ```js
 import { sdk } from "ec.fdk";

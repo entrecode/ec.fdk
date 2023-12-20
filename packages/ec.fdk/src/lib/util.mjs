@@ -18,7 +18,7 @@ export async function fetcher(url, config = {}, options = {}) {
 }
 
 const apis = {
-  production: "https://datamanager.entrecode.de/",
+  live: "https://datamanager.entrecode.de/",
   stage: "https://datamanager.cachena.entrecode.de/",
 };
 
