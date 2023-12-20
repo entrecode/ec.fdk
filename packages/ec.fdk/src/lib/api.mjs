@@ -53,7 +53,7 @@ export class Sdk {
    * If the model is not public, you also need to provide a `token`.
    *
    * @param {object=} options options for entry list request.
-   * @returns {{ count: number, total: number, items: object[] }}
+   * @returns {Promise<EntryList>}
    * @example
    * // public model
    * const muffins = await sdk("stage").dm("83cc6374").model("muffin").entries()
@@ -73,7 +73,7 @@ export class Sdk {
    * If the model is not public, you also need to provide a `token`.
    *
    * @param {string} entryID
-   * @returns {object}
+   * @returns {Promise<EntryResource>}
    * @example
    * const muffin = await sdk("stage").dm("83cc6374").model("muffin").getEntry("1gOtzWvrdq")
    */
@@ -86,7 +86,7 @@ export class Sdk {
    * If the assetGroup is not public, you also need to provide a `token`.
    *
    * @param {object=} options options for entry list request.
-   * @returns {{ count: number, total: number, items: object[] }}
+   * @returns {Promise<AssetList>}
    * @example
    * // public assetGroup
    * const files = await sdk("stage").dm("83cc6374").assetGroup("avatars").assets()
@@ -106,7 +106,7 @@ export class Sdk {
    * If the assetGroup is not public, you also need to provide a `token`.
    *
    * @param {object=} options options for entry list request.
-   * @returns {{ count: number, total: number, items: object[] }}
+   * @returns {Promise<AssetResource>}
    * @example
    * // browser example
    * document.getElementById("file").addEventListener("input", async (e) => {
@@ -145,7 +145,7 @@ export class Sdk {
    * If model POST is not public, you also need to provide a `token`.
    *
    * @param {object} value values to set.
-   * @returns {object}
+   * @returns {Promise<EntryResource>}
    * @example
    * const entry = await sdk("stage").dm("83cc6374").model("muffin").createEntry({ name: 'test' })
    */
@@ -159,7 +159,7 @@ export class Sdk {
    *
    * @param {string} entryID id of entry to edit
    * @param {object} value values to set. undefined fields are ignored
-   * @returns {object}
+   * @returns {Promise<EntryResource>}
    * @example
    * const entry = await sdk("stage").dm("83cc6374").model("muffin").editEntry("1gOtzWvrdq", { name: "test" })
    */
@@ -172,7 +172,7 @@ export class Sdk {
    * If model DELETE is not public, you also need to provide a `token`.
    *
    * @param {string} entryID id of entry to delete
-   * @returns {object}
+   * @returns {void}
    * @example
    * await sdk("stage").dm("83cc6374").model("muffin").deleteEntry("1gOtzWvrdq")
    */
@@ -327,4 +327,32 @@ export const sdk = (env) => new Sdk({ env });
  * @property {Array<string | any>} tags
  * @property {string} title
  * @property {string} type
+ */
+
+/**
+ * @typedef {Object} EntryResource
+ * @property {Date} _created - The creation date.
+ * @property {string} _creator - The creator's string representation.
+ * @property {any} _embedded - Any embedded resource.
+ * @property {any} _links - Any associated links.
+ * @property {string} _modelTitle - The title of the model.
+ * @property {string} _modelTitleField - The field representing the model title.
+ * @property {Date} _modified - The last modification date.
+ * @property {Date} created - The creation date.
+ * @property {Date} modified - The last modification date.
+ * @property {any} [key] - Any additional properties can be added dynamically.
+ */
+
+/**
+ * @typedef {Object} EntryList
+ * @property {number} count
+ * @property {number} total
+ * @property {EntryResource[]} items
+ */
+
+/**
+ * @typedef {Object} AssetList
+ * @property {number} count
+ * @property {number} total
+ * @property {AssetResource[]} items
  */

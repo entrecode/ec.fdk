@@ -68,7 +68,7 @@ export async function deleteEntry({ env, dmShortID, model, entryID, token }) {
   expect({ env, dmShortID, model, entryID });
   // console.log("edit entry", dmShortID, model, entryID, value);
   const url = apiURL(`api/${dmShortID}/${model}?_id=${entryID}`, env);
-  const res = await fetcher(
+  await fetcher(
     url,
     { token, rawRes: true },
     {
@@ -78,5 +78,4 @@ export async function deleteEntry({ env, dmShortID, model, entryID, token }) {
       },
     }
   );
-  return res;
 }
