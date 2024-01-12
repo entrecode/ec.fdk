@@ -31,10 +31,15 @@ export async function createAsset({
 }) {
   expect({ env, dmShortID, assetGroup, file });
 
-  const q = query(options || {});
-  const url = apiURL(`a/${dmShortID}/${assetGroup}${q ? `?${q}` : ""}`, env);
+  const url = apiURL(`a/${dmShortID}/${assetGroup}`, env);
   const formData = new FormData();
   formData.append("file", file, name);
+  if (options) {
+    Object.keys(options).forEach((key) => {
+      formData.append(key, options[key]);
+    });
+  }
+
   const list = await fetcher(
     url,
     { token },
