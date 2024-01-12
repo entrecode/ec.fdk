@@ -122,9 +122,9 @@ export class Sdk {
    * .assetgroup("test")
    * .createAsset({ file, name: "venndiagram.png" });
    */
-  async createAsset({ file, name } = {}) {
+  async createAsset({ file, name, options } = {}) {
     const token = await this.getBestToken();
-    return createAsset({ ...this.config, file, name, token });
+    return createAsset({ ...this.config, file, name, options, token });
   }
   /**
    * Loads a single asset. Expects `dmShortID` / `assetGroup` to be set.
