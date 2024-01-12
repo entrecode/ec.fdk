@@ -27,9 +27,12 @@ export async function createAsset({
   token,
   file,
   name,
+  options,
 }) {
   expect({ env, dmShortID, assetGroup, file });
-  const url = apiURL(`a/${dmShortID}/${assetGroup}`, env);
+
+  const q = query(options || {});
+  const url = apiURL(`a/${dmShortID}/${assetGroup}${q ? `?${q}` : ""}`, env);
   const formData = new FormData();
   formData.append("file", file, name);
   const list = await fetcher(
@@ -38,7 +41,7 @@ export async function createAsset({
     {
       method: "POST",
       body: formData,
-    }
+    },
   );
   return list._embedded["ec:dm-asset"];
 }
