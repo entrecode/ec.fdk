@@ -9,7 +9,12 @@ export async function fetcher(url, config = {}, options = {}) {
   const res = await fetch(url, options);
   //console.log("fetch", url, options);
   if (!res.ok) {
-    throw new Error(res.statusText);
+    if (res.headers.get("content-type")?.includes("application/json")) {
+      const error = await res.json();
+      const message = `${error.title}\n${error.detail}\n${error.verbose}`;
+      throw new Error(message);
+    }
+    throw new Error(`unexpected fetch error: ${res.statusText}`);
   }
   if (rawRes) {
     return res;

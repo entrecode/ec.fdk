@@ -38,6 +38,10 @@ press("entriesExact", () =>
 
 press("entry", () => muffin.getEntry("fZctZXIeRJ").then(console.log));
 
+press("entriesError", () =>
+  ecadmin.model("muffin").getEntry("nonexisting").then(console.log)
+);
+
 press("createEntryProtected", () =>
   ecadmin
     .model("dingding")
