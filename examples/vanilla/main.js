@@ -35,6 +35,11 @@ press("entriesExactEmpty", () =>
 press("entriesExact", () =>
   muffin.entries({ name: "Kiwi King" }).then(console.log)
 );
+press("entriesAny", () =>
+  muffin
+    .entryList({ id: ["frcjP1xMmi3", "SCRpMiiboM", "jHHoIpL1YmR"].join(",") })
+    .then(console.log)
+);
 
 press("entry", () => muffin.getEntry("fZctZXIeRJ").then(console.log));
 
