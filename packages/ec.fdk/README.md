@@ -9,6 +9,14 @@ Currently supports only most common PublicAPI functions.
 npm i ec.fdk
 ```
 
+## Publish
+
+0. `cd packages/ec.fdk`
+1. bump version in `packages/ec.fdk/package.json`
+2. run `pnpm readme`
+3. commit + push
+4. run `pnpm publish`
+
 # API
 
 Start by calling `sdk` with your environment (`stage` | `live`), then method chain your way to success:
