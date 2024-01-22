@@ -10,6 +10,7 @@ export async function entryList(config) {
   const { count, total, _embedded } = await fetcher(url, config);
 
   const items = _embedded ? _embedded[`${dmShortID}:${model}`] : [];
+  items = !Array.isArray(items) ? [items] : items;
   return { count, total, items };
 }
 
