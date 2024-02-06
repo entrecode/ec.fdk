@@ -11,6 +11,7 @@ const {
   getAsset,
   assetList,
   createAsset,
+  deleteAsset,
   createEntry,
   editEntry,
   deleteEntry,
@@ -125,6 +126,19 @@ export class Sdk {
   async createAsset({ file, name, options } = {}) {
     const token = await this.getBestToken();
     return createAsset({ ...this.config, file, name, options, token });
+  }
+  /**
+   * Deletes an asset. Expects `dmShortID` / `assetGroup` / `assetID` to be set.
+   * You probably also need to provide a `token`.
+   *
+   * @param {string} assetID
+   * @returns {Promise<void>}
+   * @example
+   * await ecadmin.assetgroup("test").deleteAsset('xxxx');
+   */
+  async deleteAsset({ assetID } = {}) {
+    const token = await this.getBestToken();
+    return deleteAsset({ ...this.config, token, assetID });
   }
   /**
    * Loads a single asset. Expects `dmShortID` / `assetGroup` to be set.

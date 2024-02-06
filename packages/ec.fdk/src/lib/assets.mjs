@@ -51,3 +51,22 @@ export async function createAsset({
   );
   return list._embedded["ec:dm-asset"];
 }
+
+export async function deleteAsset({
+  env,
+  dmShortID,
+  assetGroup,
+  assetID,
+  token,
+}) {
+  expect({ env, dmShortID, assetGroup, assetID });
+  const url = apiURL(`a/${dmShortID}/${assetGroup}/${assetID}`, env);
+  const list = await fetcher(
+    url,
+    { token },
+    {
+      method: "DELETE",
+    }
+  );
+  return list._embedded["ec:dm-asset"];
+}
