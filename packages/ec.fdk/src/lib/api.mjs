@@ -136,7 +136,7 @@ export class Sdk {
    * @example
    * await ecadmin.assetgroup("test").deleteAsset('xxxx');
    */
-  async deleteAsset({ assetID } = {}) {
+  async deleteAsset(assetID) {
     const token = await this.getBestToken();
     return deleteAsset({ ...this.config, token, assetID });
   }
