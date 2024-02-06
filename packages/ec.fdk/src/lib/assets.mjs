@@ -63,7 +63,7 @@ export async function deleteAsset({
   const url = apiURL(`a/${dmShortID}/${assetGroup}/${assetID}`, env);
   const list = await fetcher(
     url,
-    { token },
+    { token, rawRes: true },
     {
       method: "DELETE",
     }
