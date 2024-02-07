@@ -108,8 +108,14 @@ press("loginEc", () => {
       email: prompt("Mail?", "roos@entrecode.de"),
       password: prompt("Passwort?"),
     })
-    .then(console.log);
+    .then((data) => {
+      console.log("data", data);
+    });
 });
 press("logoutEc", () => {
   ecadmin.logoutEc().then(console.log);
+});
+
+press("dmList", () => {
+  sdk("stage").dmList().then(console.log);
 });

@@ -21,6 +21,7 @@ const {
   logoutPublic,
   getEcAuthKey,
   getPublicAuthKey,
+  dmList,
 } = actions;
 
 export function act(config) {
@@ -329,6 +330,23 @@ export class Sdk {
   assetgroup(assetGroup) {
     return this.assetGroup(assetGroup);
   }
+
+  /**
+   * Loads datamanager list. Make sure to provide an ec.admin `token` intercept one.
+   *
+   * @param {object=} options options for entry list request.
+   * @returns {Promise<DatamanagerList>}
+   * @example
+   * // public model
+   * const muffins = await sdk("stage").dm("83cc6374").model("muffin").entries()
+   * @example
+   * // non-public model
+   * const secrets = await sdk("stage").token(token).dm("83cc6374").model("secret").entries()
+   */
+  async dmList(options = {}) {
+    const token = await this.getBestToken();
+    return dmList({ ...this.config, options, token });
+  }
 }
 
 export const sdk = (env) => new Sdk({ env });
@@ -371,6 +389,29 @@ export const sdk = (env) => new Sdk({ env });
  * @property {number} count
  * @property {number} total
  * @property {EntryResource[]} items
+ */
+
+/**
+ * @typedef {Object} DatamanagerResource
+ * @property {string} created
+ * @property {string} dataManagerID
+ * @property {string} defaultLocale
+ * @property {string} description
+ * @property {any} config
+ * @property {string} hexColor
+ * @property {string[]} locales
+ * @property {string[]} rights
+ * @property {string[]} publicAssetRights
+ * @property {string} shortID
+ * @property {string} title
+ * @property {any} _links - Any associated links.
+ */
+
+/**
+ * @typedef {Object} DatamanagerList
+ * @property {number} count
+ * @property {number} total
+ * @property {DatamanagerResource[]} items
  */
 
 /**
