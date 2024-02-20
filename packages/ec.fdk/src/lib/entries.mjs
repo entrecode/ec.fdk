@@ -1,4 +1,4 @@
-import { expect, query, apiURL, fetcher } from "./util.mjs";
+import { apiURL, expect, fetcher, query } from "./util.mjs";
 
 export async function entryList(config) {
   let { env, dmShortID, model, options = {} } = config;
@@ -23,9 +23,7 @@ export function getEntry({ env, dmShortID, model, entryID, token }) {
 
 export async function createEntry({ env, dmShortID, model, value, token }) {
   expect({ env, dmShortID, model, value });
-  console.log("create entry", dmShortID, model, value);
   const url = apiURL(`api/${dmShortID}/${model}`, env);
-  console.log("url", url);
   const res = await fetcher(
     url,
     { env, dmShortID, token },
