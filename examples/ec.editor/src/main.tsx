@@ -1,14 +1,10 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
 import * as axaPackage from "@axa-fr/oidc-client/package.json";
 import { OidcProvider, OidcSecure } from "@axa-fr/react-oidc";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { Router } from "./Router.tsx";
 import { PageLoader } from "./components/PageLoader.tsx";
-import { Dms } from "./routes/Dms.tsx";
-import { Models } from "./routes/Models.tsx";
 import "./index.css";
-import { Entries } from "./routes/Entries.tsx";
-import { Entry } from "./routes/Entry.tsx";
 
 const environment = import.meta.env;
 
@@ -23,25 +19,6 @@ const configuration = {
   service_worker_only: true,
 };
 
-export const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Dms />,
-  },
-  {
-    path: "/dm/:shortID/model",
-    element: <Models />,
-  },
-  {
-    path: "/dm/:shortID/model/:model/entry",
-    element: <Entries />,
-  },
-  {
-    path: "/dm/:shortID/model/:model/entry/:entryID",
-    element: <Entry />,
-  },
-]);
-
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <OidcProvider
@@ -51,7 +28,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       callbackSuccessComponent={PageLoader}
     >
       <OidcSecure>
-        <RouterProvider router={router} />
+        <Router />
       </OidcSecure>
     </OidcProvider>
   </React.StrictMode>
