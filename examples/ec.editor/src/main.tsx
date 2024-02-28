@@ -7,6 +7,8 @@ import { PageLoader } from "./components/PageLoader.tsx";
 import { Dms } from "./routes/Dms.tsx";
 import { Models } from "./routes/Models.tsx";
 import "./index.css";
+import { Entries } from "./routes/Entries.tsx";
+import { Entry } from "./routes/Entry.tsx";
 
 const environment = import.meta.env;
 
@@ -27,8 +29,16 @@ export const router = createBrowserRouter([
     element: <Dms />,
   },
   {
-    path: "/dm/:dmID",
+    path: "/dm/:shortID/model",
     element: <Models />,
+  },
+  {
+    path: "/dm/:shortID/model/:model/entry",
+    element: <Entries />,
+  },
+  {
+    path: "/dm/:shortID/model/:model/entry/:entryID",
+    element: <Entry />,
   },
 ]);
 

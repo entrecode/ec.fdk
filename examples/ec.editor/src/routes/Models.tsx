@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 export function Models() {
   const { logout } = useOidc();
-  const { dmID } = useParams();
+  const { shortID } = useParams();
   const navigate = useNavigate();
   return (
     <div>
@@ -12,7 +12,10 @@ export function Models() {
         <button onClick={() => navigate("/")}>dmList</button>
         <button onClick={() => logout("/")}>Logout</button>
       </div>
-      {dmID && <ModelTable dmID={dmID} />}
+      <ModelTable
+        shortID={shortID}
+        onClick={(model) => navigate(`/dm/${shortID}/model/${model}/entry`)}
+      />
     </div>
   );
 }
