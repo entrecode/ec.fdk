@@ -12,3 +12,16 @@ export async function dmList(config) {
   items = !Array.isArray(items) ? [items] : items;
   return { count, total, items };
 }
+
+export async function modelList(config) {
+  let { env, dmID, options = {} } = config;
+  expect({ env, dmID });
+  options = { size: 25, dataManagerID: dmID, page: 1, _list: true, ...options };
+  const q = query(options);
+  // https://datamanager.cachena.entrecode.de/model?dataManagerID=254a03f1-cb76-4f1e-a52a-bbd4180ca10c&_list=true&size=0
+  const url = apiURL(`model?${q}`, env);
+  const { count, total, _embedded } = await fetcher(url, config);
+  let items = _embedded ? _embedded[`ec:model`] : [];
+  items = !Array.isArray(items) ? [items] : items;
+  return { count, total, items };
+}

@@ -117,5 +117,13 @@ press("logoutEc", () => {
 });
 
 press("dmList", () => {
-  sdk("stage").dmList().then(console.log);
+  sdk("stage").authAdapter(Cookies).dmList().then(console.log);
+});
+
+press("modelList", () => {
+  sdk("stage")
+    .authAdapter(Cookies)
+    .dmID("254a03f1-cb76-4f1e-a52a-bbd4180ca10c")
+    .modelList()
+    .then(console.log);
 });

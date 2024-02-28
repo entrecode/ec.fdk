@@ -22,6 +22,7 @@ const {
   getEcAuthKey,
   getPublicAuthKey,
   dmList,
+  modelList,
 } = actions;
 
 export function act(config) {
@@ -307,6 +308,14 @@ export class Sdk {
     return this.set({ dmShortID });
   }
   /**
+   * Sets the (long) ID of the datamanager to use
+   * @param {string} dmID
+   * @returns Sdk
+   */
+  dmID(dmID) {
+    return this.set({ dmID });
+  }
+  /**
    * Sets the short ID of the datamanager to use. Alias for `dmShortID`
    * @param {string} dmShortID
    * @returns Sdk
@@ -337,15 +346,23 @@ export class Sdk {
    * @param {object=} options options for entry list request.
    * @returns {Promise<DatamanagerList>}
    * @example
-   * // public model
-   * const muffins = await sdk("stage").dm("83cc6374").model("muffin").entries()
-   * @example
-   * // non-public model
-   * const secrets = await sdk("stage").token(token).dm("83cc6374").model("secret").entries()
+   * const dms = await sdk("stage").dmList()
    */
   async dmList(options = {}) {
     const token = await this.getBestToken();
     return dmList({ ...this.config, options, token });
+  }
+  /**
+   * Loads model list. Expects dmID to be set. Make sure to provide an ec.admin `token` intercept one.
+   *
+   * @param {object=} options options for entry list request.
+   * @returns {Promise<DatamanagerList>}
+   * @example
+   * const models = await sdk("stage").dmID("254a03f1-cb76-4f1e-a52a-bbd4180ca10c").modelList()
+   */
+  async modelList(options = {}) {
+    const token = await this.getBestToken();
+    return modelList({ ...this.config, options, token });
   }
 }
 
