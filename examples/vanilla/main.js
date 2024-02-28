@@ -127,3 +127,34 @@ press("modelList", () => {
     .modelList()
     .then(console.log);
 });
+
+press("publicApi", async () => {
+  const res = await sdk("stage").dm("83cc6374").publicApi();
+  console.log("res", res);
+});
+press("getDatamanager", async () => {
+  console.log("getDatamanager");
+  const res = await sdk("stage")
+    .authAdapter(Cookies)
+    .getDatamanager("254a03f1-cb76-4f1e-a52a-bbd4180ca10c");
+  console.log("res", res);
+});
+
+press("fetch-test", () => {
+  console.log("test");
+  const token = sdk("stage").authAdapter(Cookies).getBestToken();
+  fetch(
+    //`https://datamanager.cachena.entrecode.de/api/83cc6374`,
+    `https://datamanager.cachena.entrecode.de/?dataManagerID=254a03f1-cb76-4f1e-a52a-bbd4180ca10c`,
+    //`https://datamanager.cachena.entrecode.de/model?dataManagerID=254a03f1-cb76-4f1e-a52a-bbd4180ca10c&_list=true&size=0`,
+    { headers: { Authorization: `Bearer ${token}` } }
+  ).then(async (res) => {
+    if (!res.ok) {
+      console.log("err", res.status);
+    }
+    const json = await res.json();
+    console.log("res", json);
+  });
+  console.log("token", token);
+  // https://datamanager.cachena.entrecode.de/model?dataManagerID=254a03f1-cb76-4f1e-a52a-bbd4180ca10c&_list=true&size=0
+});

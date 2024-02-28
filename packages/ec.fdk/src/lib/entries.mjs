@@ -1,5 +1,13 @@
 import { apiURL, expect, fetcher, query } from "./util.mjs";
 
+export async function publicApi(config) {
+  let { env, dmShortID } = config;
+  expect({ env, dmShortID });
+  // name~ = search
+  const url = apiURL(`api/${dmShortID}`, env);
+  return fetcher(url, config);
+}
+
 export async function entryList(config) {
   let { env, dmShortID, model, options = {} } = config;
   expect({ env, dmShortID, model });

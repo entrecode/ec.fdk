@@ -1,5 +1,12 @@
 import { expect, query, apiURL, fetcher } from "./util.mjs";
 
+export async function getDatamanager(config) {
+  let { env, dmID, token } = config;
+  expect({ env, dmID });
+  const url = apiURL(`?dataManagerID=${dmID}`, env); // https://datamanager.cachena.entrecode.de/?_list=true&page=1&size=25
+  return fetcher(url, { token });
+}
+
 export async function dmList(config) {
   let { env, options = {} } = config;
   expect({ env });

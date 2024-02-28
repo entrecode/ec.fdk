@@ -23,6 +23,8 @@ const {
   getPublicAuthKey,
   dmList,
   modelList,
+  publicApi,
+  getDatamanager,
 } = actions;
 
 export function act(config) {
@@ -338,6 +340,23 @@ export class Sdk {
    */
   assetgroup(assetGroup) {
     return this.assetGroup(assetGroup);
+  }
+
+  /**
+   * Returns the public api root endpoint. Expects dmShortID to be set.
+   * @returns any
+   */
+  publicApi() {
+    return publicApi(this.config);
+  }
+
+  /**
+   * Loads a DatamanagerResource by its long id. Requires token.
+   * @returns any
+   */
+  async getDatamanager(dmID) {
+    const token = await this.getBestToken();
+    return getDatamanager({ ...this.config, dmID, token });
   }
 
   /**
