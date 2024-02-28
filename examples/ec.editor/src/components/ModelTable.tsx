@@ -3,10 +3,9 @@ import { format } from "date-fns";
 import { DataTable } from "@/components/ui/data-table";
 
 import { useFdk } from "@/useFdk";
-import type { DatamanagerResource } from "ec.fdk/dist/index.d.mts";
-import { useNavigate } from "react-router-dom";
+import type { ModelResource } from "ec.fdk/dist/index.d.mts";
 
-export const columns: ColumnDef<DatamanagerResource>[] = [
+export const columns: ColumnDef<ModelResource>[] = [
   {
     accessorKey: "hexColor",
     header: "",
@@ -37,18 +36,20 @@ export const columns: ColumnDef<DatamanagerResource>[] = [
   },
 ];
 
-export function DatamanagerTable() {
-  const { data: dmList } = useFdk({
+export function ModelTable({ dmID }: { dmID: string }) {
+  const { data: modelList } = useFdk({
     env: "stage",
-    action: "dmList",
+    dmID,
+    action: "modelList",
   });
-  const navigate = useNavigate();
   return (
     <div className="container mx-auto py-10">
       <DataTable
         columns={columns}
-        data={dmList?.items || []}
-        onClick={(row) => navigate(`/dm/${row.original.dataManagerID}`)}
+        data={modelList?.items || []}
+        onClick={(row) => {
+          console.log("tbd", row.original);
+        }}
       />
     </div>
   );

@@ -4,7 +4,8 @@ import * as axaPackage from "@axa-fr/oidc-client/package.json";
 import { OidcProvider, OidcSecure } from "@axa-fr/react-oidc";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { PageLoader } from "./components/PageLoader.tsx";
-import { Hello } from "./routes/Hello.tsx";
+import { Dms } from "./routes/Dms.tsx";
+import { Models } from "./routes/Models.tsx";
 import "./index.css";
 
 const environment = import.meta.env;
@@ -23,11 +24,11 @@ const configuration = {
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <OidcSecure>
-        <Hello />
-      </OidcSecure>
-    ),
+    element: <Dms />,
+  },
+  {
+    path: "/dm/:dmID",
+    element: <Models />,
   },
 ]);
 
@@ -39,7 +40,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       authenticatingComponent={PageLoader}
       callbackSuccessComponent={PageLoader}
     >
-      <RouterProvider router={router} />
+      <OidcSecure>
+        <RouterProvider router={router} />
+      </OidcSecure>
     </OidcProvider>
   </React.StrictMode>
 );
