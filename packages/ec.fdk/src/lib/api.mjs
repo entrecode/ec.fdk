@@ -356,7 +356,7 @@ export class Sdk {
    * Loads model list. Expects dmID to be set. Make sure to provide an ec.admin `token` intercept one.
    *
    * @param {object=} options options for entry list request.
-   * @returns {Promise<DatamanagerList>}
+   * @returns {Promise<ModelList>}
    * @example
    * const models = await sdk("stage").dmID("254a03f1-cb76-4f1e-a52a-bbd4180ca10c").modelList()
    */
@@ -436,4 +436,47 @@ export const sdk = (env) => new Sdk({ env });
  * @property {number} count
  * @property {number} total
  * @property {AssetResource[]} items
+ */
+
+/**
+ * @typedef {Object} ModelFieldConfig
+ * // config: {} ?
+ * @property {any} default
+ * @property {string} description
+ * @property {boolean} localizable
+ * @property {boolean} mutable
+ * @property {boolean} readOnly
+ * @property {boolean} required
+ * @property {boolean} unique
+ * @property {string} title
+ * @property {string} type
+ * @property {string | null} validation
+ */
+
+/**
+ * @typedef {Object} ModelResource
+ * @property {any} config
+ * @property {string} created
+ * @property {string} description
+ * @property {ModelFieldConfig[]} fields
+ * @property {boolean} hasEntries
+ * @property {string} hexColor
+ * @property {any[]} hooks
+ * @property {any[]} lastSyncs
+ * @property {string[]} locales
+ * @property {string} modelID
+ * @property {string} modified
+ * @property {any[]} policies
+ * @property {any} sync
+ * @property {string} title
+ * @property {string} titleField
+ * @property {any} _links
+ *
+ */
+
+/**
+ * @typedef {Object} ModelList
+ * @property {number} count
+ * @property {number} total
+ * @property {ModelResource[]} items
  */
