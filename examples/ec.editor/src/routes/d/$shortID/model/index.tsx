@@ -1,10 +1,12 @@
+import { Outlet, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ColumnDef } from "@tanstack/react-table";
 // import { format } from "date-fns";
 import { DataTable } from "@/components/ui/data-table";
-
 import { useFdk } from "@/useFdk";
-// import type { ModelResource } from "ec.fdk/dist/index.d.mts";
-import { useNavigate } from "react-router-dom";
+
+export const Route = createFileRoute("/d/$shortID/model/")({
+  component: ModelTable,
+});
 
 declare interface PublicModelResource {
   config: any;
@@ -48,13 +50,8 @@ export const columns: ColumnDef<PublicModelResource>[] = [
   },
 ];
 
-export function ModelTable({
-  shortID,
-  onClick,
-}: {
-  shortID?: string;
-  onClick: (model: string) => void;
-}) {
+export function ModelTable() {
+  const { shortID } = Route.useParams();
   const { data: api } = useFdk(
     shortID
       ? {
@@ -75,13 +72,21 @@ export function ModelTable({
       : null
   );
   console.log("modelList", modelList); */
+  const navigate = useNavigate();
   return (
     <div className="container mx-auto py-10">
+      <Outlet />
       <DataTable
         columns={columns}
         //data={modelList?.items || []}
         data={api?.models || []}
-        onClick={(row) => onClick(row.original.title)}
+        onClick={(row) =>
+          navigate({
+            from: "/d/$shortID/model",
+            to: `$model/entry`,
+            params: { model: row.original.title },
+          })
+        }
       />
     </div>
   );

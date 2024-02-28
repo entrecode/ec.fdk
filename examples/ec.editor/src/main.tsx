@@ -2,9 +2,18 @@ import * as axaPackage from "@axa-fr/oidc-client/package.json";
 import { OidcProvider, OidcSecure } from "@axa-fr/react-oidc";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { Router } from "./Router.tsx";
 import { PageLoader } from "./components/PageLoader.tsx";
 import "./index.css";
+
+import { RouterProvider, createRouter } from "@tanstack/react-router";
+
+import { routeTree } from "./routeTree.gen";
+const router = createRouter({ routeTree });
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router;
+  }
+}
 
 const environment = import.meta.env;
 
@@ -28,7 +37,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       callbackSuccessComponent={PageLoader}
     >
       <OidcSecure>
-        <Router />
+        <RouterProvider router={router} />
       </OidcSecure>
     </OidcProvider>
   </React.StrictMode>

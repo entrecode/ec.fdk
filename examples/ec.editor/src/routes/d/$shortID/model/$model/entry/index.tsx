@@ -1,3 +1,10 @@
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+// import { format } from "date-fns";
+
+export const Route = createFileRoute("/d/$shortID/model/$model/entry/")({
+  component: EntryTable,
+});
+
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { DataTable } from "@/components/ui/data-table";
@@ -22,15 +29,9 @@ export const columns: ColumnDef<EntryResource>[] = [
   },
 ];
 
-export function EntryTable({
-  shortID,
-  model,
-  onClick,
-}: {
-  shortID?: string;
-  model?: string;
-  onClick: (entryID: string) => void;
-}) {
+export function EntryTable() {
+  const { shortID, model } = Route.useParams();
+  const navigate = useNavigate();
   const { data: entryList } = useFdk(
     shortID && model
       ? {
@@ -46,7 +47,13 @@ export function EntryTable({
       <DataTable
         columns={columns}
         data={entryList?.items || []}
-        onClick={(row) => onClick(row.original.id)}
+        onClick={(row) =>
+          navigate({
+            from: "/d/$shortID/model/$model/entry/",
+            to: `$entryID`,
+            params: { entryID: row.original.id },
+          })
+        }
       />
     </div>
   );
