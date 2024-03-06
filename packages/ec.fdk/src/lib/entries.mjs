@@ -86,3 +86,59 @@ export async function deleteEntry({ env, dmShortID, model, entryID, token }) {
     }
   );
 }
+
+export async function getSchema({ env, dmShortID, model }) {
+  // https://datamanager.cachena.entrecode.de/api/schema/fb5dbaab/addon_config
+  expect({ env, dmShortID, model });
+  const url = apiURL(`api/schema/${dmShortID}/${model}`, env);
+  const res = await fetcher(url);
+  const schema = res?.allOf?.[1];
+  if (typeof schema.properties !== "object") {
+    throw new Error(
+      `getSchema: ${url} returned unexpected format: ${JSON.stringify(res)}`
+    );
+  }
+  const { properties } = schema;
+  // *_asset
+  let system = [
+    "created",
+    "creator",
+    "id",
+    "modified",
+    "private",
+    "_created",
+    "_creator",
+    "_embedded",
+    "_entryTitle",
+    "_id",
+    "_links",
+    "_modelTitle",
+    "_modelTitleField",
+    "_modified",
+  ];
+  for (let prop in properties) {
+    let p = properties[prop];
+    p.required = schema.required.includes(prop);
+    if (system.includes(prop)) {
+      delete properties[prop];
+      continue;
+    }
+    if (properties[prop]?.oneOf) {
+      delete properties[prop]?.oneOf;
+    }
+    if (p.title?.includes("<") && p.title?.includes(">")) {
+      const resource = p.title.split("<")[1].slice(0, -1);
+      const type = p.title.split("<")[0];
+      p.type = type;
+      p.resource = resource;
+      delete properties[prop].title;
+    }
+    if (["asset", "entry", "assets", "entries"].includes(p.title)) {
+      // previous did not match -> resource is not specified!
+      p.type = p.title;
+      p.resource = null;
+      delete properties[prop].title;
+    }
+  }
+  return properties;
+}

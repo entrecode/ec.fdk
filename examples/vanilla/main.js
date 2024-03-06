@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 
 // test
 let ecadmin = sdk("stage").dm("83cc6374").authAdapter(Cookies);
+const field_test = ecadmin.model("field_test");
 const muffin = ecadmin.model("muffin");
 
 console.log("auth", ecadmin.getPublicToken());
@@ -60,6 +61,7 @@ press("createEntry", () =>
     .then(console.log)
 );
 press("editEntry", () => muffin.editEntry("fZctZXIeRJ", {}).then(console.log));
+press("getSchema", () => field_test.getSchema().then(console.log));
 
 press("asset", () =>
   ecadmin

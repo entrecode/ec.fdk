@@ -15,6 +15,7 @@ const {
   createEntry,
   editEntry,
   deleteEntry,
+  getSchema,
   loginPublic,
   loginEc,
   logoutEc,
@@ -85,6 +86,17 @@ export class Sdk {
   async getEntry(entryID) {
     const token = await this.getBestToken();
     return getEntry({ ...this.config, entryID, token });
+  }
+  /**
+   * Loads the schema of a model. Expects `dmShortID` / `model` to be set.
+   *
+   * @param {string} entryID
+   * @returns {Promise<EntrySchema>}
+   * @example
+   * const muffin = await sdk("stage").dm("83cc6374").model("muffin").getSchema()
+   */
+  async getSchema() {
+    return getSchema(this.config);
   }
   /**
    * Loads asset list. Expects `dmShortID` / `assetGroup` to be set.
@@ -418,6 +430,20 @@ export const sdk = (env) => new Sdk({ env });
  * @property {Date} created - The creation date.
  * @property {Date} modified - The last modification date.
  * @property {any} [key] - Any additional properties can be added dynamically.
+ */
+
+/**
+ * @typedef {Object} EntryFieldSchema
+ * @property {any} default - The default value or null
+ * @property {string} description - The field description
+ * @property {boolean} readOnly - If true, the field cannot be changed on PUT
+ * @property {boolean} required - If true, the field has to be set on POST
+ * @property {string} type - field type
+ * @property {string} resource - If field type is one of entry | entries | asset | assets, this field contains the name of the expected resource or null if all are valid
+ */
+
+/**
+ * @typedef {Object.<string, EntryFieldSchema>} EntrySchema
  */
 
 /**
