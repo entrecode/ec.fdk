@@ -144,7 +144,7 @@ export async function getSchema({ env, dmShortID, model }) {
       const resource = p.title.split("<")[1].slice(0, -1);
       const type = p.title.split("<")[0];
       p.type = type;
-      if (p.resource.includes(":")) {
+      if (resource.includes(":")) {
         p.resource = resource.split(":")[1];
       } else {
         p.resource = resource;
