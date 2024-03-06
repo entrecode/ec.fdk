@@ -1,5 +1,36 @@
 import { apiURL, expect, fetcher, query } from "./util.mjs";
 
+let systemFields = [
+  "created",
+  "creator",
+  "id",
+  "modified",
+  "private",
+  "_created",
+  "_creator",
+  "_embedded",
+  "_entryTitle",
+  "_id",
+  "_links",
+  "_modelTitle",
+  "_modelTitleField",
+  "_modified",
+];
+
+function withoutSystemFields(entryLike) {
+  let clean = {};
+  for (let prop in entryLike) {
+    if (!systemFields.includes(prop)) {
+      clean[prop] = entryLike[prop];
+    }
+  }
+  return clean;
+}
+
+function withoutUndefinedValues(entryLike) {
+  return JSON.parse(JSON.stringify(entryLike));
+}
+
 export async function publicApi(config) {
   let { env, dmShortID } = config;
   expect({ env, dmShortID });
@@ -57,6 +88,9 @@ export async function editEntry({
   expect({ env, dmShortID, model, entryID, value });
   // console.log("edit entry", dmShortID, model, entryID, value);
   const url = apiURL(`api/${dmShortID}/${model}?_id=${entryID}`, env);
+  value = withoutUndefinedValues(value);
+  value = withoutSystemFields(value);
+
   const res = await fetcher(
     url,
     { token },
@@ -99,32 +133,12 @@ export async function getSchema({ env, dmShortID, model }) {
     );
   }
   const { properties } = schema;
-  // *_asset
-  let system = [
-    "created",
-    "creator",
-    "id",
-    "modified",
-    "private",
-    "_created",
-    "_creator",
-    "_embedded",
-    "_entryTitle",
-    "_id",
-    "_links",
-    "_modelTitle",
-    "_modelTitleField",
-    "_modified",
-  ];
-  for (let prop in properties) {
-    let p = properties[prop];
+  const props = withoutSystemFields(properties);
+  for (let prop in props) {
+    let p = props[prop];
     p.required = schema.required.includes(prop);
-    if (system.includes(prop)) {
-      delete properties[prop];
-      continue;
-    }
-    if (properties[prop]?.oneOf) {
-      delete properties[prop]?.oneOf;
+    if (props[prop]?.oneOf) {
+      delete props[prop]?.oneOf;
     }
     if (p.title?.includes("<") && p.title?.includes(">")) {
       const resource = p.title.split("<")[1].slice(0, -1);
@@ -138,7 +152,7 @@ export async function getSchema({ env, dmShortID, model }) {
     } else {
       p.type = p.title;
     }
-    delete properties[prop].title;
+    delete props[prop].title;
   }
-  return properties;
+  return props;
 }
