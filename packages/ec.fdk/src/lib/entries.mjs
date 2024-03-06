@@ -131,14 +131,14 @@ export async function getSchema({ env, dmShortID, model }) {
       const type = p.title.split("<")[0];
       p.type = type;
       p.resource = resource;
-      delete properties[prop].title;
-    }
-    if (["asset", "entry", "assets", "entries"].includes(p.title)) {
-      // previous did not match -> resource is not specified!
+    } else if (["asset", "entry", "assets", "entries"].includes(p.title)) {
+      // resource is not specified!
       p.type = p.title;
       p.resource = null;
-      delete properties[prop].title;
+    } else {
+      p.type = p.title;
     }
+    delete properties[prop].title;
   }
   return properties;
 }
