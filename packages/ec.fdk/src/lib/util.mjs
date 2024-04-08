@@ -23,15 +23,31 @@ export async function fetcher(url, config = {}, options = {}) {
 }
 
 const apis = {
-  live: "https://datamanager.entrecode.de/",
-  stage: "https://datamanager.cachena.entrecode.de/",
+  datamanager: {
+    live: "https://datamanager.entrecode.de/",
+    stage: "https://datamanager.cachena.entrecode.de/",
+  },
+  accounts: {
+    live: "https://accounts.entrecode.de/",
+    stage: "https://accounts.cachena.entrecode.de/",
+  },
+  appserver: {
+    live: "https://appserver.entrecode.de/",
+    stage: "https://appserver.cachena.entrecode.de/",
+  },
 };
 
-export function apiURL(route, env = "stage") {
-  const base = apis[env];
+export function apiURL(route, env = "stage", subdomain = "datamanager") {
+  const api = apis[subdomain];
+  if (!api) {
+    throw new Error(
+      `subdomain "${subdomain}" not found. Try one of ${Object.keys(apis).join(", ")}`
+    );
+  }
+  const base = api[env];
   if (!base) {
     throw new Error(
-      `env "${env}" not found. Try one of ${Object.keys(apis).join(", ")}`
+      `env "${env}" not found. Try one of ${Object.keys(api[env]).join(", ")}`
     );
   }
   return base + route;

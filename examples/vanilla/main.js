@@ -160,3 +160,22 @@ press("fetch-test", () => {
   console.log("token", token);
   // https://datamanager.cachena.entrecode.de/model?dataManagerID=254a03f1-cb76-4f1e-a52a-bbd4180ca10c&_list=true&size=0
 });
+
+press("templates", () =>
+  sdk("stage")
+    .authAdapter(Cookies)
+    .resource("template")
+    .resourceList()
+    .then(console.log)
+);
+
+press("stats", () =>
+  sdk("stage").authAdapter(Cookies).route("stats").raw().then(console.log)
+);
+press("clients", () =>
+  sdk("stage")
+    .authAdapter(Cookies)
+    .resource("client")
+    .resourceList({ dataManagerID: "50d2fe55-7e8f-4302-be4f-b816cad02b01" })
+    .then(console.log)
+);

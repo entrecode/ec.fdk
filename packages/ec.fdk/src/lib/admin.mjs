@@ -34,3 +34,26 @@ export async function modelList(config) {
   items = !Array.isArray(items) ? [items] : items;
   return { count, total, items };
 }
+
+export async function resourceList(config) {
+  // https://<subdomain>.cachena.entrecode.de/<resource>?_list=true&size=0
+  let { env, resource, options = {}, subdomain = "datamanager" } = config;
+  expect({ env, subdomain, resource });
+  options = { size: 25, page: 1, _list: true, ...options };
+  const q = query(options);
+  const url = apiURL(`${resource}?${q}`, env, subdomain);
+  const { count, total, _embedded } = await fetcher(url, config);
+  let items = _embedded ? _embedded[Object.keys(_embedded)[0]] : [];
+  items = !Array.isArray(items) ? [items] : items;
+  return { count, total, items };
+}
+
+export async function raw(config) {
+  // https://<subdomain>.cachena.entrecode.de/<route>?<options>
+  let { env, route, options = {}, subdomain = "datamanager" } = config;
+  expect({ env, subdomain, route });
+  options = { ...options };
+  const q = query(options);
+  const url = apiURL(`${route}?${q}`, env, subdomain);
+  return fetcher(url, config);
+}

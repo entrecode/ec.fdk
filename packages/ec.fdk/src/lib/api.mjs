@@ -26,6 +26,8 @@ const {
   modelList,
   publicApi,
   getDatamanager,
+  resourceList,
+  raw,
 } = actions;
 
 export function act(config) {
@@ -211,6 +213,35 @@ export class Sdk {
     return deleteEntry({ ...this.config, token, entryID });
   }
 
+  /**
+   * Fetches resource list. Expects `resource` to be set. `subdomain` defaults to "datamanager".
+   * Fetches `https://<subdomain>.entrecode.de/<resource>?_list=true&size=<options.size ?? 25>`
+   *
+   * @param {object=} options options for list request.
+   * @returns {Promise<ResourceList>}
+   * @example
+   * const res = await sdk("stage").resource("template").resourceList()
+   */
+  async resourceList(options) {
+    const token = await this.getBestToken();
+    return resourceList({ ...this.config, options, token });
+  }
+
+  /**
+   * Fetches raw route. Expects `route` to be set. `subdomain` defaults to "datamanager".
+   * Fetches `https://<subdomain>.entrecode.de/<route>?<options>`
+   * Use this when no other fdk method can give you your request.
+   *
+   * @param {object=} options options for list request.
+   * @returns {Promise<any>}
+   * @example
+   * const res = await sdk("stage").route("stats").raw()
+   */
+  async raw(options) {
+    const token = await this.getBestToken();
+    return raw({ ...this.config, options, token });
+  }
+
   // TODO: rename authAdapter -> storageAdapter
 
   authAdapter(authAdapter) {
@@ -353,6 +384,30 @@ export class Sdk {
   assetgroup(assetGroup) {
     return this.assetGroup(assetGroup);
   }
+  /**
+   * Sets the subdomain to use.
+   * @param {string} subdomain subdomain
+   * @returns Sdk
+   */
+  subdomain(subdomain) {
+    return this.set({ subdomain });
+  }
+  /**
+   * Sets the name of the resource to use.
+   * @param {string} resource name of the resource
+   * @returns Sdk
+   */
+  resource(resource) {
+    return this.set({ resource });
+  }
+  /**
+   * Sets the route to use.
+   * @param {string} route route
+   * @returns Sdk
+   */
+  route(route) {
+    return this.set({ route });
+  }
 
   /**
    * Returns the public api root endpoint. Expects dmShortID to be set.
@@ -481,6 +536,13 @@ export const sdk = (env) => new Sdk({ env });
  * @property {number} count
  * @property {number} total
  * @property {AssetResource[]} items
+ */
+
+/**
+ * @typedef {Object} ResourceList
+ * @property {number} count
+ * @property {number} total
+ * @property {any[]} items
  */
 
 /**
