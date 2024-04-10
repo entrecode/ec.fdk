@@ -48,12 +48,12 @@ export async function resourceList(config) {
   return { count, total, items };
 }
 
-export async function raw(config) {
+export async function raw(config, fetchOptions = {}) {
   // https://<subdomain>.cachena.entrecode.de/<route>?<options>
   let { env, route, options = {}, subdomain = "datamanager" } = config;
   expect({ env, subdomain, route });
   options = { ...options };
   const q = query(options);
   const url = apiURL(`${route}?${q}`, env, subdomain);
-  return fetcher(url, config);
+  return fetcher(url, config, fetchOptions);
 }

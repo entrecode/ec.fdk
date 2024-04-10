@@ -233,13 +233,14 @@ export class Sdk {
    * Use this when no other fdk method can give you your request.
    *
    * @param {object=} options options for list request.
+   * @param {object=} fetchOptions (optional) options passed to fetch.
    * @returns {Promise<any>}
    * @example
    * const res = await sdk("stage").route("stats").raw()
    */
-  async raw(options) {
+  async raw(options, fetchOptions) {
     const token = await this.getBestToken();
-    return raw({ ...this.config, options, token });
+    return raw({ ...this.config, options, token }, fetchOptions);
   }
 
   // TODO: rename authAdapter -> storageAdapter
