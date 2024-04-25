@@ -81,7 +81,7 @@ export class Sdk {
    * If the model is not public, you also need to provide a `token`.
    *
    * @param {string} entryID
-   * @returns {Promise<EntryResource & Record<string, any>>}
+   * @returns {Promise<EntryResource>}
    * @example
    * const muffin = await sdk("stage").dm("83cc6374").model("muffin").getEntry("1gOtzWvrdq")
    */
@@ -485,6 +485,8 @@ export const sdk = (env) => new Sdk({ env });
  * @property {Date} created - The creation date.
  * @property {Date} modified - The last modification date.
  * @property {any} [key] - Any additional properties can be added dynamically.
+ * 
+ * @extends {Record<string, any>}
  */
 
 /**
