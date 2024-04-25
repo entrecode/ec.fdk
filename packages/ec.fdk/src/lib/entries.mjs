@@ -84,8 +84,18 @@ export async function editEntry({
   entryID,
   value,
   token,
+  safePut = false,
 }) {
   expect({ env, dmShortID, model, entryID, value });
+  const headers = {
+    "Content-Type": "application/json",
+  }
+  if (safePut) {
+    if(!('_modified' in value)){
+      throw new Error("expected _modified to be set!")
+    }
+    headers["If-Unmodified-Since"] = new Date(value._modified).toUTCString();
+  }
   // console.log("edit entry", dmShortID, model, entryID, value);
   const url = apiURL(`api/${dmShortID}/${model}?_id=${entryID}`, env);
   value = withoutUndefinedValues(value);
@@ -96,10 +106,8 @@ export async function editEntry({
     { token },
     {
       method: "PUT",
+      headers,
       body: JSON.stringify(value),
-      headers: {
-        "Content-Type": "application/json",
-      },
     }
   );
   return res;
