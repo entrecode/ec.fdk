@@ -81,13 +81,31 @@ export class Sdk {
    * If the model is not public, you also need to provide a `token`.
    *
    * @param {string} entryID
-   * @returns {Promise<EntryResource & Record<string, any>>}
+   * @returns {Promise<EntryResource>}
    * @example
    * const muffin = await sdk("stage").dm("83cc6374").model("muffin").getEntry("1gOtzWvrdq")
    */
   async getEntry(entryID) {
     const token = await this.getBestToken();
     return getEntry({ ...this.config, entryID, token });
+  }
+  /**
+   * Edits an entry with safe put. Expects `dmShortID` / `model` to be set.
+   * Expects a `_modified` field in the value. Will only update if the entry has not been changed since.
+   * If model PUT is not public, you also need to provide a `token`.
+   *
+   * @param {string} entryID id of entry to edit
+   * @param {object} value values to set. undefined fields are ignored
+   * @returns {Promise<EntryResource>}
+   * @example
+   * const entry = await sdk("stage")
+   *  .dm("83cc6374")
+   *  .model("muffin")
+   *  .editEntrySafe("1gOtzWvrdq", { name: "test", _modified: "2020-01-01T00:00:00.000Z"})
+   */
+  async editEntrySafe(entryID, value) {
+    const token = await this.getBestToken();
+    return editEntry({ ...this.config, entryID, token, value, safePut: true });
   }
   /**
    * Loads the schema of a model. Expects `dmShortID` / `model` to be set.
@@ -486,6 +504,8 @@ export const sdk = (env) => new Sdk({ env });
  * @property {Date} created - The creation date.
  * @property {Date} modified - The last modification date.
  * @property {any} [key] - Any additional properties can be added dynamically.
+ * 
+ * @extends {Record<string, any>}
  */
 
 /**
