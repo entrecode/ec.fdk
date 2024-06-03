@@ -61,7 +61,9 @@ press("createEntry", () =>
     .then(console.log)
 );
 press("editEntry", () => muffin.editEntry("fZctZXIeRJ", {}).then(console.log));
-press("getSchema", () => field_test.getSchema().then(console.log));
+press("getSchema", () =>
+  field_test.set({ withMetadata: true }).getSchema().then(console.log)
+);
 
 press("asset", () =>
   ecadmin

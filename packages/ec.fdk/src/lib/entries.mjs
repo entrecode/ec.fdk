@@ -89,10 +89,10 @@ export async function editEntry({
   expect({ env, dmShortID, model, entryID, value });
   const headers = {
     "Content-Type": "application/json",
-  }
+  };
   if (safePut) {
-    if(!('_modified' in value)){
-      throw new Error("expected _modified to be set!")
+    if (!("_modified" in value)) {
+      throw new Error("expected _modified to be set!");
     }
     headers["If-Unmodified-Since"] = new Date(value._modified).toUTCString();
   }
@@ -129,7 +129,7 @@ export async function deleteEntry({ env, dmShortID, model, entryID, token }) {
   );
 }
 
-export async function getSchema({ env, dmShortID, model }) {
+export async function getSchema({ env, dmShortID, model, withMetadata }) {
   // https://datamanager.cachena.entrecode.de/api/schema/fb5dbaab/addon_config
   expect({ env, dmShortID, model });
   const url = apiURL(`api/schema/${dmShortID}/${model}`, env);
@@ -165,6 +165,12 @@ export async function getSchema({ env, dmShortID, model }) {
       p.type = p.title;
     }
     delete props[prop].title;
+  }
+  if (withMetadata) {
+    const modelTitle = properties._modelTitle.title;
+    const modelTitleField = properties._modelTitleField.title;
+    // feature flag for testing
+    return { properties: props, meta: { modelTitleField, modelTitle } };
   }
   return props;
 }
