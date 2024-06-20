@@ -174,3 +174,71 @@ export async function getSchema({ env, dmShortID, model, withMetadata }) {
   }
   return props;
 }
+
+/**
+ * @typedef {Object} SdkFilter
+ * @property {string | string[]} sort
+ * @property {string} search
+ * @property {boolean} notNull
+ * @property {boolean} null
+ * @property {Array[]} any
+ * @property {string} from
+ * @property {string} to
+ *
+ */
+/**
+ * @typedef {Object} SdkFilterOptions
+ * @property {SdkFilter} sort
+ * @property {number} _count
+ * @property {number} page
+ * @property {Record<string, SdkFilter> | string | boolean} [key]
+ *
+ */
+
+/**
+ * Takes [ec.sdk filterOptions](https://entrecode.github.io/ec.sdk/#filteroptions), outputs an [entrecode filter](https://doc.entrecode.de/api-basics/#filtering)
+ *
+ * @param {SdkFilterOptions} options sdk filterOptions
+ * @returns {Record<string, string>}
+ *
+ */
+export function sdkOptions(options) {
+  return Object.entries(options)
+    .map(([key, o]) => {
+      if (typeof o !== "object") {
+        return { [key]: String(o) };
+      }
+      return {
+        ...(o.sort && { sort: Array.isArray(o) ? o.join(",") : o }),
+        ...(o.search && { [key + "~"]: o.search }),
+        ...(o.notNull && { [key + "!"]: "" }),
+        ...(o.null && { [key]: "" }),
+        ...(o.any && { [key]: o.any.join(",") }),
+        ...(o.from && { [key + "From"]: o.from }),
+        ...(o.to && { [key + "To"]: o.to }),
+      };
+    })
+    .reduce((acc, o) => ({ ...acc, ...o }), {});
+}
+/**
+ * Returns the shortID of the given EntryResource
+ *
+ * @param {EntryResource} entry EntryResource
+ * @returns {string}
+ *
+ */
+export function getEntryShortID(entry) {
+  return entry._links.collection.href.split("/").slice(-2)[0];
+}
+
+/**
+ * Returns the embedded asset from the given field name and EntryResource
+ *
+ * @param {EntryResource} entry EntryResource
+ * @returns {string}
+ *
+ */
+export function getEntryAsset(field, entry) {
+  const shortID = getEntryShortID(entry);
+  return entry._embedded[`${shortID}:${entry._modelTitle}/${field}/asset`];
+}

@@ -69,23 +69,3 @@ export function expect(obj) {
     }
   });
 }
-
-/**
- * @typedef {Object} SdkFilter
- * @property {string | string[]} sort
- * @property {string} search
- * @property {boolean} notNull
- * @property {boolean} null
- * @property {Array[]} any
- * @property {string} from
- * @property {string} to
- *
- */
-/**
- * @typedef {Object} SdkFilterOptions
- * @property {SdkFilter} sort
- * @property {number} _count
- * @property {number} page
- * @property {Record<string, SdkFilter> | string | boolean} [key]
- *
- */
