@@ -1,4 +1,4 @@
-import { sdk } from "ec.fdk";
+import { sdk, sdkOptions } from "ec.fdk";
 import Cookies from "js-cookie";
 
 // test
@@ -12,6 +12,20 @@ const press = (id, fn) =>
   document.getElementById(id).addEventListener("click", fn);
 
 press("entries", () => muffin.entries().then(console.log));
+press("entriesSdk", () =>
+  muffin
+    .entries(
+      sdkOptions({
+        /* _created: {
+          from: "2024-01-20T10:32:32.358Z",
+          to: "2024-05-20T10:32:32.358Z",
+        }, */
+        page: 1,
+        size: 5,
+      })
+    )
+    .then(console.log)
+);
 press("entriesSize", () => muffin.entries({ size: 25 }).then(console.log));
 // sort asc
 press("entriesAsc", () =>
