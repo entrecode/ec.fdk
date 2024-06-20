@@ -113,11 +113,11 @@ export async function editEntry({
   return res;
 }
 
-export async function deleteEntry({ env, dmShortID, model, entryID, token }) {
+export function deleteEntry({ env, dmShortID, model, entryID, token }) {
   expect({ env, dmShortID, model, entryID });
   // console.log("edit entry", dmShortID, model, entryID, value);
   const url = apiURL(`api/${dmShortID}/${model}?_id=${entryID}`, env);
-  await fetcher(
+  return fetcher(
     url,
     { token, rawRes: true },
     {

@@ -222,7 +222,7 @@ export class Sdk {
    * If model DELETE is not public, you also need to provide a `token`.
    *
    * @param {string} entryID id of entry to delete
-   * @returns {void}
+   * @returns {Promise<void>}
    * @example
    * await sdk("stage").dm("83cc6374").model("muffin").deleteEntry("1gOtzWvrdq")
    */
