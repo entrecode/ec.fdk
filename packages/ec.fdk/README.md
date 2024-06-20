@@ -493,18 +493,3 @@ const dms = await sdk("stage").dmList()
 ```js
 const models = await sdk("stage").dmID("254a03f1-cb76-4f1e-a52a-bbd4180ca10c").modelList()
 ```
-<a name="module_api.sdkOptions"></a>
-
-### api.sdkOptions(options) ⇒ <code>Promise.&lt;any&gt;</code>
-<p>Takes <a href="https://entrecode.github.io/ec.sdk/#filteroptions">ec.sdk filterOptions</a>, outputs an <a href="https://doc.entrecode.de/api-basics/#filtering">entrecode filter</a></p>
-
-**Kind**: static method of [<code>api</code>](#module_api)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| options | <code>SdkFilterOptions</code> | <p>sdk filterOptions</p> |
-
-**Example**  
-```js
-const res = await sdk("stage").route("stats").raw()
-```
