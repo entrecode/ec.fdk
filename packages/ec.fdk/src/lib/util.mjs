@@ -41,7 +41,9 @@ export function apiURL(route, env = "stage", subdomain = "datamanager") {
   const api = apis[subdomain];
   if (!api) {
     throw new Error(
-      `subdomain "${subdomain}" not found. Try one of ${Object.keys(apis).join(", ")}`
+      `subdomain "${subdomain}" not found. Try one of ${Object.keys(apis).join(
+        ", "
+      )}`
     );
   }
   const base = api[env];
@@ -66,4 +68,51 @@ export function expect(obj) {
       throw new Error(`expected ${key} to be set!`);
     }
   });
+}
+
+/**
+ * @typedef {Object} SdkFilter
+ * @property {string | string[]} sort
+ * @property {string} search
+ * @property {boolean} notNull
+ * @property {boolean} null
+ * @property {Array[]} any
+ * @property {string} from
+ * @property {string} to
+ *
+ */
+/**
+ * @typedef {Object} SdkFilterOptions
+ * @property {SdkFilter} sort
+ * @property {number} _count
+ * @property {number} page
+ * @property {Record<string, SdkFilter> | string | boolean} [key]
+ *
+ */
+
+/**
+ * Takes [ec.sdk filterOptions](https://entrecode.github.io/ec.sdk/#filteroptions), outputs an [entrecode filter](https://doc.entrecode.de/api-basics/#filtering)
+ *
+ * @param {SdkFilterOptions} options sdk filterOptions
+ * @returns {Promise<any>}
+ * @example
+ * const res = await sdk("stage").route("stats").raw()
+ */
+export function sdkOptions(options) {
+  return Object.entries(options)
+    .map(([key, o]) => {
+      if (typeof o !== "object") {
+        return { [key]: o };
+      }
+      return {
+        ...(o.sort && { sort: Array.isArray(o) ? o.join(",") : o }),
+        ...(o.search && { [key + "~"]: o.search }),
+        ...(o.notNull && { [key + "!"]: "" }),
+        ...(o.null && { [key]: "" }),
+        ...(o.any && { [key]: o.any.join(",") }),
+        ...(o.from && { [key + "From"]: o.from }),
+        ...(o.to && { [key + "To"]: o.to }),
+      };
+    })
+    .reduce((acc, o) => ({ ...acc, ...o }), {});
 }

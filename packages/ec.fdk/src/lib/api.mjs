@@ -488,6 +488,8 @@ export const sdk = (env) => new Sdk({ env });
  * @property {Array<string | any>} tags
  * @property {string} title
  * @property {string} type
+ * @property {string} mimetype
+ * @property {number} duplicates
  * @property {AssetFile} file
  */
 
@@ -504,7 +506,7 @@ export const sdk = (env) => new Sdk({ env });
  * @property {Date} created - The creation date.
  * @property {Date} modified - The last modification date.
  * @property {any} [key] - Any additional properties can be added dynamically.
- * 
+ *
  * @extends {Record<string, any>}
  */
 
