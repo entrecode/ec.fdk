@@ -474,6 +474,33 @@ export class Sdk {
 export const sdk = (env) => new Sdk({ env });
 
 /**
+ * Takes [ec.sdk filterOptions](https://entrecode.github.io/ec.sdk/#filteroptions), outputs an [entrecode filter](https://doc.entrecode.de/api-basics/#filtering)
+ *
+ * @param {SdkFilterOptions} options sdk filterOptions
+ * @returns {Record<string, string>}
+ * @example
+ * const res = await sdk("stage").route("stats").raw()
+ */
+export function sdkOptions(options) {
+  return Object.entries(options)
+    .map(([key, o]) => {
+      if (typeof o !== "object") {
+        return { [key]: String(o) };
+      }
+      return {
+        ...(o.sort && { sort: Array.isArray(o) ? o.join(",") : o }),
+        ...(o.search && { [key + "~"]: o.search }),
+        ...(o.notNull && { [key + "!"]: "" }),
+        ...(o.null && { [key]: "" }),
+        ...(o.any && { [key]: o.any.join(",") }),
+        ...(o.from && { [key + "From"]: o.from }),
+        ...(o.to && { [key + "To"]: o.to }),
+      };
+    })
+    .reduce((acc, o) => ({ ...acc, ...o }), {});
+}
+
+/**
  * @typedef {Object} AssetFile
  * @property {string} url
  * @property {number} size
