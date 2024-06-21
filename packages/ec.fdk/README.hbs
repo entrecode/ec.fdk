@@ -62,7 +62,7 @@ const muffins = await act({
 ```
 
 The object passed to `act` expects an `action` ([available actions](https://github.com/entrecode/ec.fdk/blob/main/packages/ec.fdk/src/lib/api.mjs)) 
-+ additional keys that are required to perform the action. 
+and additional keys that are required to perform the action. 
 If you don't know the required keys for an action, either call `act` without additional keys or look it up in the source. 
 For example, this is how the `entryList` function looks:
 
