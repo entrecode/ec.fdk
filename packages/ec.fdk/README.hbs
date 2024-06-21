@@ -16,7 +16,7 @@ npm i ec.fdk
 3. commit + push
 4. run `pnpm publish`
 
-## API
+## Getting Started
 
 There are 2 ways to use ec.fdk:
 
