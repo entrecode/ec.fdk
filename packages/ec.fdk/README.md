@@ -1,6 +1,6 @@
 # ec.fdk
 
-Lightweight SDK for entrecode APIs.
+*F*eatherweight *D*evelopment *K*it for entrecode APIs.
 
 ## Install
 
@@ -17,12 +17,12 @@ There are 2 ways to use ec.fdk:
 
 ### Method Chaining
 
-Start by calling `sdk` with your environment (`stage` | `live`), then method chain your way to success:
+Start by calling `fdk` with your environment (`stage` | `live`), then method chain your way to success:
 
 ```js
-import { sdk } from "ec.fdk";
+import { fdk } from "ec.fdk";
 
-sdk("stage") // choose stage environment
+fdk("stage") // choose stage environment
 .dm("83cc6374") // select datamanager via short id
 .model("muffin") // select model muffin
 .entries() // load entry list
@@ -35,7 +35,7 @@ You can also reuse parts of the chain with variables:
 
 ```js
 // we want to do stuff with model muffin here
-const muffin = sdk("stage").dm("83cc6374").model("muffin");
+const muffin = fdk("stage").dm("83cc6374").model("muffin");
 // load entry list
 const { items } = await muffin.entries();
 // edit first entry
@@ -84,7 +84,7 @@ The act function is good to be used with swr or react-query:
 import { act } from "ec.fdk";
 import useSWR from "swr";
 
-export function useSdk(config) {
+export function useFdk(config) {
   const key = config ? JSON.stringify(config) : null;
   return useSWR([key], () => act(config));
 }
@@ -99,7 +99,7 @@ const config = {
 };
 
 function App() {
-  const { data: entryList } = useSdk({
+  const { data: entryList } = useFdk({
     ...config,
     action: "entryList",
     model: "muffin",
@@ -174,12 +174,12 @@ const entryList = await api.entryList(model);
 const items = entryList.getAllItems();
 const first = entryList.getFirstItem();
 // ec.fdk
-const api = sdk(env).dm(shortID);
+const api = fdk(env).dm(shortID);
 const entryList = await api.entryList(model);
 const items = entryList.items; // <------- change
 const first = entryList.items[0]; // <------- change
 // or in one line:
-const entryList = await sdk(env).dm(shortID).entryList(model);
+const entryList = await fdk(env).dm(shortID).entryList(model);
 ```
 
 ### Entry List Filter Options
@@ -187,7 +187,7 @@ const entryList = await sdk(env).dm(shortID).entryList(model);
 By default, the second param of ec.fdk `entryList` will just convert the object to url params:
 
 ```js
-const entryList = await sdk("stage")
+const entryList = await fdk("stage")
   .dm("83cc6374")
   .entryList({ createdTo: "2021-01-18T09:13:47.605Z" });
 /* 
@@ -204,7 +204,7 @@ Read more in the [entrecode filtering doc](https://doc.entrecode.de/api-basics/#
 There is some syntax sugar you can use to get the same behavior as [ec.sdk filterOptions](https://entrecode.github.io/ec.sdk/#filteroptions):
 
 ```js
-const entryList = await sdk("stage")
+const entryList = await fdk("stage")
   .dm("83cc6374")
   .entryList(filterOptions({ created: { to: "2021-01-18T09:13:47.605Z" } }));
 ```

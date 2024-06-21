@@ -472,6 +472,7 @@ export class Sdk {
 }
 
 export const sdk = (env) => new Sdk({ env });
+export const fdk = sdk;
 
 /**
  * @typedef {Object} AssetFile
