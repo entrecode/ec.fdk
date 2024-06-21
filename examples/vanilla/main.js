@@ -1,4 +1,4 @@
-import { sdk, sdkOptions } from "ec.fdk";
+import { sdk, filterOptions } from "ec.fdk";
 import Cookies from "js-cookie";
 
 // test
@@ -12,20 +12,19 @@ const press = (id, fn) =>
   document.getElementById(id).addEventListener("click", fn);
 
 press("entries", () => muffin.entries().then(console.log));
-press("entriesSdk", () =>
-  muffin
-    .entries(
-      sdkOptions({
-        /* _created: {
-          from: "2024-01-20T10:32:32.358Z",
-          to: "2024-05-20T10:32:32.358Z",
-        }, */
-        page: 1,
-        size: 5,
-      })
-    )
-    .then(console.log)
-);
+press("entriesSdk", async () => {
+  const muffinList = await muffin.entries(
+    filterOptions({
+      _created: {
+        from: "2024-01-20T10:32:32.358Z",
+        to: "2024-05-20T10:32:32.358Z",
+      },
+      page: 1,
+      size: 5,
+    })
+  );
+  console.log(muffinList);
+});
 press("entriesSize", () => muffin.entries({ size: 25 }).then(console.log));
 // sort asc
 press("entriesAsc", () =>
@@ -44,6 +43,9 @@ press("entriesSearch", () =>
 // exact without results, old: { name: 'king' } or {name:{exact:'king'}}
 press("entriesExactEmpty", () =>
   muffin.entries({ name: "king" }).then(console.log)
+);
+press("entriesCreatedTo", () =>
+  muffin.entryList({ createdTo: "2021-01-18T09:13:47.605Z" }).then(console.log)
 );
 
 // exact with results

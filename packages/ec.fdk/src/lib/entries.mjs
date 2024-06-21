@@ -1,4 +1,4 @@
-import { apiURL, expect, fetcher, query } from "./util.mjs";
+import { apiURL, apis, expect, fetcher, query } from "./util.mjs";
 
 let systemFields = [
   "created",
@@ -220,6 +220,7 @@ export function sdkOptions(options) {
     })
     .reduce((acc, o) => ({ ...acc, ...o }), {});
 }
+export const filterOptions = sdkOptions;
 /**
  * Returns the shortID of the given EntryResource
  *
@@ -230,12 +231,42 @@ export function sdkOptions(options) {
 export function getEntryShortID(entry) {
   return entry._links.collection.href.split("/").slice(-2)[0];
 }
+/**
+ * Returns the env of the given EntryResource
+ *
+ * @param {EntryResource} entry EntryResource
+ * @returns {string}
+ *
+ */
+export function getEntryEnv(entry) {
+  const baseUrl = entry._links.collection.href.split("api/")[0];
+  const env = Object.keys(apis.datamanager).find(
+    (key) => apis.datamanager[key] === baseUrl
+  );
+  return env;
+}
+
+const getEntryConfig = (entry) => {
+  const dmShortID = getEntryShortID(entry);
+  const env = getEntryEnv(entry);
+  const model = entry._modelTitle;
+  const entryID = entry.id;
+  return { dmShortID, env, model, entryID };
+};
+
+export const deleteEntryObject = (entry) => deleteEntry(getEntryConfig(entry));
+
+export const editEntryObject = (entry, value) =>
+  editEntry({
+    ...getEntryConfig(entry),
+    value,
+  });
 
 /**
  * Returns the embedded asset from the given field name and EntryResource
  *
  * @param {EntryResource} entry EntryResource
- * @returns {string}
+ * @returns {AssetResource}
  *
  */
 export function getEntryAsset(field, entry) {

@@ -22,7 +22,7 @@ export async function fetcher(url, config = {}, options = {}) {
   return await res.json();
 }
 
-const apis = {
+export const apis = {
   datamanager: {
     live: "https://datamanager.entrecode.de/",
     stage: "https://datamanager.cachena.entrecode.de/",
