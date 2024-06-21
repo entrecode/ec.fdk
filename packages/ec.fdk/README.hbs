@@ -1,7 +1,6 @@
 # ec.fdk
 
 Lightweight SDK for entrecode APIs.
-Currently supports only most common PublicAPI functions.
 
 ## Install
 
