@@ -19,6 +19,13 @@ npm i ec.fdk
 
 ## API
 
+There are 2 ways to use ec.fdk:
+
+- method chaining
+- act
+
+### Method Chaining
+
 Start by calling `sdk` with your environment (`stage` | `live`), then method chain your way to success:
 
 ```js
@@ -50,6 +57,65 @@ await muffin.createEntry({ name: "new muffin" });
 await muffin.editEntrySafe(items[2].id, { _modified: items[2]._modified, name: "safePut!" });
 ```
 
+### act
+
+The act function converts a single object param into a fetch request:
+
+```js
+const muffins = await act({
+  action: "entryList",
+  env: "stage",
+  dmShortID: "83cc6374",
+  model: "muffin",
+})
+```
+
+The object passed to `act` expects an `action` ([available actions](https://github.com/entrecode/ec.fdk/blob/main/packages/ec.fdk/src/lib/api.mjs)) 
++ additional keys that are required to perform the action. 
+If you don't know the required keys for an action, either call `act` without additional keys or look it up in the source. 
+For example, this is how the `entryList` function looks:
+
+```js
+export async function entryList(config) {
+  let { env, dmShortID, model, options = {} } = config;
+  expect({ env, dmShortID, model });
+  /* more stuff */
+}
+```
+
+here you can clearly see the available params.
+
+### Using act with swr / react-query
+
+The act function is good to be used with swr or react-query:
+
+```js
+import { act } from "ec.fdk";
+import useSWR from "swr";
+
+export function useSdk(config) {
+  const key = config ? JSON.stringify(config) : null;
+  return useSWR([key], () => act(config));
+}
+```
+
+Then use the hook:
+
+```js
+const config = {
+  env: "stage",
+  dmShortID: "83cc6374",
+};
+
+function App() {
+  const { data: entryList } = useSdk({
+    ...config,
+    action: "entryList",
+    model: "muffin",
+  });
+  /* more stuff */
+}
+```
 
 ## migration from ec.sdk
 
