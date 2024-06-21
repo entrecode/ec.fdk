@@ -129,7 +129,7 @@ await editEntryObject(entry, value); // <- DO
 // alternatively:
 await fdk.env(env).dm(dmShortID).model(model).updateEntry(entryID, value);
 // or:
-await editEntry({ env, dmShortID, model, entryID, value });
+await act({ action: 'editEntry', env, dmShortID, model, entryID, value });
 ```
 
 ### Entry delete
@@ -143,6 +143,8 @@ await entry.del(); // <- DONT
 await deleteEntryObject(entry); // <- DO
 // alternatively:
 await fdk.dm("shortID").model("model").deleteEntry("entryID");
+// or:
+await act({ action: 'deleteEntry', env, dmShortID, model, entryID });
 ```
 
 ### Entry Asset Fields
