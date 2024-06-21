@@ -2,7 +2,7 @@ import { sdk, filterOptions } from "ec.fdk";
 import Cookies from "js-cookie";
 
 // test
-let ecadmin = sdk("stage").dm("83cc6374").authAdapter(Cookies);
+let ecadmin = sdk("stage").dm("83cc6374").storageAdapter(Cookies);
 const field_test = ecadmin.model("field_test");
 const muffin = ecadmin.model("muffin");
 
@@ -137,12 +137,12 @@ press("logoutEc", () => {
 });
 
 press("dmList", () => {
-  sdk("stage").authAdapter(Cookies).dmList().then(console.log);
+  sdk("stage").storageAdapter(Cookies).dmList().then(console.log);
 });
 
 press("modelList", () => {
   sdk("stage")
-    .authAdapter(Cookies)
+    .storageAdapter(Cookies)
     .dmID("254a03f1-cb76-4f1e-a52a-bbd4180ca10c")
     .modelList()
     .then(console.log);
@@ -155,14 +155,14 @@ press("publicApi", async () => {
 press("getDatamanager", async () => {
   console.log("getDatamanager");
   const res = await sdk("stage")
-    .authAdapter(Cookies)
+    .storageAdapter(Cookies)
     .getDatamanager("254a03f1-cb76-4f1e-a52a-bbd4180ca10c");
   console.log("res", res);
 });
 
 press("fetch-test", () => {
   console.log("test");
-  const token = sdk("stage").authAdapter(Cookies).getBestToken();
+  const token = sdk("stage").storageAdapter(Cookies).getBestToken();
   fetch(
     //`https://datamanager.cachena.entrecode.de/api/83cc6374`,
     `https://datamanager.cachena.entrecode.de/?dataManagerID=254a03f1-cb76-4f1e-a52a-bbd4180ca10c`,
@@ -181,18 +181,18 @@ press("fetch-test", () => {
 
 press("templates", () =>
   sdk("stage")
-    .authAdapter(Cookies)
+    .storageAdapter(Cookies)
     .resource("template")
     .resourceList()
     .then(console.log)
 );
 
 press("stats", () =>
-  sdk("stage").authAdapter(Cookies).route("stats").raw().then(console.log)
+  sdk("stage").storageAdapter(Cookies).route("stats").raw().then(console.log)
 );
 press("clients", () =>
   sdk("stage")
-    .authAdapter(Cookies)
+    .storageAdapter(Cookies)
     .resource("client")
     .resourceList({ dataManagerID: "50d2fe55-7e8f-4302-be4f-b816cad02b01" })
     .then(console.log)

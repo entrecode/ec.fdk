@@ -261,39 +261,36 @@ export class Sdk {
     return raw({ ...this.config, options, token }, fetchOptions);
   }
 
-  // TODO: rename authAdapter -> storageAdapter
-
-  authAdapter(authAdapter) {
+  storageAdapter(storageAdapter) {
     // is expected to have get, set and remove
-    return this.set({ authAdapter });
+    return this.set({ storageAdapter });
   }
 
   setAuth(key) {
     return (auth) => {
-      if (!this.config.authAdapter) {
-        throw new Error("cannot setAuth: no authAdapter defined!");
+      if (!this.config.storageAdapter) {
+        throw new Error("cannot setAuth: no storageAdapter defined!");
       }
-      const { set } = this.config.authAdapter;
+      const { set } = this.config.storageAdapter;
       set(key, auth.token);
       return auth;
     };
   }
   unsetAuth(key) {
     return (auth) => {
-      console.log("unset auth", auth);
-      if (!this.config.authAdapter) {
-        throw new Error("cannot unsetAuth: no authAdapter defined!");
+      if (!this.config.storageAdapter) {
+        throw new Error("cannot unsetAuth: no storageAdapter defined!");
       }
-      const { remove } = this.config.authAdapter;
+      const { remove } = this.config.storageAdapter;
       remove(key);
       return auth;
     };
   }
   getAuth(key) {
-    if (!this.config.authAdapter) {
-      throw new Error("cannot getAuth: no authAdapter defined!");
+    if (!this.config.storageAdapter) {
+      throw new Error("cannot getAuth: no storageAdapter defined!");
     }
-    const { get } = this.config.authAdapter;
+    const { get } = this.config.storageAdapter;
     return get(key);
   }
 
@@ -311,7 +308,6 @@ export class Sdk {
 
   logoutPublic() {
     const token = this.getPublicToken();
-    console.log("token", token);
     return logoutPublic({ ...this.config, token }).then(
       this.unsetAuth(getPublicAuthKey(this.config))
     );
@@ -319,7 +315,6 @@ export class Sdk {
 
   logoutEc() {
     const token = this.getEcToken();
-    console.log("token", token);
     return logoutEc({ ...this.config, token }).then(
       this.unsetAuth(getEcAuthKey(this.config))
     );
