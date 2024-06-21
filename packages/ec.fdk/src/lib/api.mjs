@@ -7,6 +7,7 @@ export * from "./util.mjs";
 
 const {
   entryList,
+  mapEntries,
   getEntry,
   getAsset,
   assetList,
@@ -75,6 +76,22 @@ export class Sdk {
   }
   async entryList(options) {
     return this.entries(options);
+  }
+
+  /**
+   * Maps over entry list.
+   *
+   * @param {object=} options options for entry list request.
+   * @returns {Promise<EntryList>}
+   * @example
+   * // public model
+   * const muffins = sdk("stage").dm("83cc6374").model("muffin")
+   * const res = await muffin.mapEntries((entry) => muffin.editEntry(entry.id, { name: entry.name + "!" }));
+   * console.log("res", res);
+   */
+  async mapEntries(fn, options = {}) {
+    const token = await this.getBestToken();
+    return mapEntries({ ...this.config, options, token }, fn);
   }
   /**
    * Loads a single entry. Expects `dmShortID` / `model` to be set.

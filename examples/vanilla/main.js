@@ -6,7 +6,7 @@ let ecadmin = sdk("stage").dm("83cc6374").storageAdapter(Cookies);
 const field_test = ecadmin.model("field_test");
 const muffin = ecadmin.model("muffin");
 
-console.log("auth", ecadmin.getPublicToken());
+// console.log("auth", ecadmin.getEcToken());
 
 const press = (id, fn) =>
   document.getElementById(id).addEventListener("click", fn);
@@ -47,6 +47,14 @@ press("entriesExactEmpty", () =>
 press("entriesCreatedTo", () =>
   muffin.entryList({ createdTo: "2021-01-18T09:13:47.605Z" }).then(console.log)
 );
+
+press("mapEntries", async () => {
+  console.log("go..");
+  const res = await muffin.mapEntries((entry) =>
+    muffin.editEntry(entry.id, { name: entry.name + "!" })
+  );
+  console.log("res", res);
+});
 
 // exact with results
 press("entriesExact", () =>

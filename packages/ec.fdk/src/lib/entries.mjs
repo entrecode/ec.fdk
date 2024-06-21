@@ -129,6 +129,30 @@ export function deleteEntry({ env, dmShortID, model, entryID, token }) {
   );
 }
 
+export async function mapEntries(config, fn) {
+  let { env, dmShortID, model, options = {} } = config;
+  expect({ env, dmShortID, model });
+  config.options = { size: 50, page: 1, _list: true, ...options };
+  let processed = 0,
+    total;
+  let res = [];
+  while (total === undefined || processed < total) {
+    const list = await entryList(config);
+    for (let entry of list.items) {
+      res.push(await fn(entry));
+    }
+    processed += list.items.length;
+    total = list.total;
+    config.options.page++;
+    // console.log(`processed ${processed}/${total}`);
+  }
+  return res;
+}
+
+// TBD:
+// checkPermission,
+// error handling problems detail etc.. alles in message werfen oder ec.errors nehmen?
+
 export async function getSchema({ env, dmShortID, model, withMetadata }) {
   // https://datamanager.cachena.entrecode.de/api/schema/fb5dbaab/addon_config
   expect({ env, dmShortID, model });
