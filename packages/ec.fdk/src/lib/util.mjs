@@ -35,6 +35,10 @@ export const apis = {
     live: "https://appserver.entrecode.de/",
     stage: "https://appserver.cachena.entrecode.de/",
   },
+  "dm-history": {
+    live: "https://dm-history.entrecode.de/",
+    stage: "https://dm-history.cachena.entrecode.de/",
+  },
 };
 
 export function apiURL(route, env = "stage", subdomain = "datamanager") {
