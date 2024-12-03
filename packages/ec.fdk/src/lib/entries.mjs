@@ -1,6 +1,7 @@
 import { apiURL, apis, expect, fetcher, query } from "./util.mjs";
 
-/**
+// https://github.com/microsoft/TypeScript/issues/46011
+/* <-- add star here when ^ is fixed
  * @typedef {import('./api.mjs').AssetResource} AssetResource
  * @typedef {import('./api.mjs').EntryResource} EntryResource
  */
@@ -253,7 +254,7 @@ export const filterOptions = sdkOptions;
 /**
  * Returns the shortID of the given EntryResource
  *
- * @param {EntryResource} entry EntryResource
+ * @param {@type {import('./api.mjs').EntryResource}} entry EntryResource
  * @returns {string}
  *
  */
@@ -263,7 +264,7 @@ export function getEntryShortID(entry) {
 /**
  * Returns the env of the given EntryResource
  *
- * @param {EntryResource} entry EntryResource
+ * @param {@type {import('./api.mjs').EntryResource}} entry EntryResource
  * @returns {string}
  *
  */
@@ -294,8 +295,8 @@ export const editEntryObject = (entry, value) =>
 /**
  * Returns the embedded asset from the given field name and EntryResource
  *
- * @param {EntryResource} entry EntryResource
- * @returns {AssetResource}
+ * @param {@type {import('./api.mjs').EntryResource}} entry EntryResource
+ * @returns {@type {import('./api.mjs').AssetResource}}
  *
  */
 export function getEntryAsset(field, entry) {
