@@ -1,5 +1,10 @@
 import { apiURL, apis, expect, fetcher, query } from "./util.mjs";
 
+/**
+ * @typedef {import('./api.mjs').AssetResource} AssetResource
+ * @typedef {import('./api.mjs').EntryResource} EntryResource
+ */
+
 let systemFields = [
   "created",
   "creator",
