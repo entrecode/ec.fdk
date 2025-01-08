@@ -212,26 +212,22 @@ export async function getSchema({ env, dmShortID, model, withMetadata }) {
   }
   return props;
 }
+export type SdkFilter = {
+  sort: string | string[];
+  search: string;
+  notNull: boolean;
+  null: boolean;
+  any: any[]; // Use `any[]` to represent an array with unspecified types
+  from: string;
+  to: string;
+};
 
-/**
- * @typedef {Object} SdkFilter
- * @property {string | string[]} sort
- * @property {string} search
- * @property {boolean} notNull
- * @property {boolean} null
- * @property {Array[]} any
- * @property {string} from
- * @property {string} to
- *
- */
-/**
- * @typedef {Object} SdkFilterOptions
- * @property {SdkFilter} sort
- * @property {number} _count
- * @property {number} page
- * @property {Record<string, SdkFilter> | string | boolean} [key]
- *
- */
+export type SdkFilterOptions = {
+  sort: SdkFilter;
+  _count: number;
+  page: number;
+  key?: Record<string, SdkFilter> | string | boolean; // Optional property using `?`
+};
 
 /**
  * Takes [ec.sdk filterOptions](https://entrecode.github.io/ec.sdk/#filteroptions), outputs an [entrecode filter](https://doc.entrecode.de/api-basics/#filtering)

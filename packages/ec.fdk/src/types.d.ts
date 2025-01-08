@@ -1,10 +1,10 @@
-type AssetFile = {
+export type AssetFile = {
   url: string;
   size: number;
   resolution: Record<string, any>;
 };
 
-type AssetResource = {
+export type AssetResource = {
   assetID: string;
   created: Date;
   files: any[];
@@ -16,7 +16,7 @@ type AssetResource = {
   file: AssetFile;
 };
 
-type EntryResource = Record<string, any> & {
+export type EntryResource = Record<string, any> & {
   id: string;
   _created: Date;
   _creator: string;
@@ -30,7 +30,7 @@ type EntryResource = Record<string, any> & {
   [key: string]: any; // Dynamic properties
 };
 
-type EntryFieldSchema = {
+export type EntryFieldSchema = {
   default: any;
   description: string;
   readOnly: boolean;
@@ -39,15 +39,15 @@ type EntryFieldSchema = {
   resource: string | null;
 };
 
-type EntrySchema = Record<string, EntryFieldSchema>;
+export type EntrySchema = Record<string, EntryFieldSchema>;
 
-type EntryList = {
+export type EntryList = {
   count: number;
   total: number;
   items: EntryResource[];
 };
 
-type DatamanagerResource = {
+export type DatamanagerResource = {
   created: string;
   dataManagerID: string;
   defaultLocale: string;
@@ -62,25 +62,25 @@ type DatamanagerResource = {
   _links: any;
 };
 
-type DatamanagerList = {
+export type DatamanagerList = {
   count: number;
   total: number;
   items: DatamanagerResource[];
 };
 
-type AssetList = {
+export type AssetList = {
   count: number;
   total: number;
   items: AssetResource[];
 };
 
-type ResourceList = {
+export type ResourceList = {
   count: number;
   total: number;
   items: any[];
 };
 
-type ModelFieldConfig = {
+export type ModelFieldConfig = {
   default: any;
   description: string;
   localizable: boolean;
@@ -93,7 +93,7 @@ type ModelFieldConfig = {
   validation: string | null;
 };
 
-type ModelResource = {
+export type ModelResource = {
   config: any;
   created: string;
   description: string;
@@ -112,7 +112,7 @@ type ModelResource = {
   _links: any;
 };
 
-type ModelList = {
+export type ModelList = {
   count: number;
   total: number;
   items: ModelResource[];
