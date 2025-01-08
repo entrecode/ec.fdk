@@ -1,4 +1,4 @@
-import { apiURL, expect, fetcher, query } from "./util.js";
+import { apiURL, expect, fetcher, query } from "./util";
 
 export async function getAsset({ env, dmShortID, assetGroup, assetID, token }) {
   expect({ env, dmShortID, assetGroup, assetID });

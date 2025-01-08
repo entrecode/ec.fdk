@@ -1,4 +1,4 @@
-import { expect, query, apiURL, fetcher } from "./util.js";
+import { expect, query, apiURL, fetcher } from "./util";
 
 export async function getDatamanager(config) {
   // https://datamanager.cachena.entrecode.de/?_list=true&page=1&size=25

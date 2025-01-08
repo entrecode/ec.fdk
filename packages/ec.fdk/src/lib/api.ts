@@ -1,9 +1,9 @@
 /**
  * @module api
  */
-import * as actions from "./actions.js";
-import { expect } from "./util.js";
-export * from "./util.js";
+import * as actions from "./actions";
+import { expect } from "./util";
+export * from "./util";
 
 const {
   entryList,

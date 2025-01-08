@@ -1,4 +1,4 @@
-import { apiURL, apis, expect, fetcher, query } from "./util.js";
+import { apiURL, apis, expect, fetcher, query } from "./util";
 
 let systemFields = [
   "created",

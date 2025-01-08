@@ -1,4 +1,4 @@
-import { expect, apiURL, fetcher } from "./util.js";
+import { expect, apiURL, fetcher } from "./util";
 
 const accountServer = {
   stage: "https://accounts.cachena.entrecode.de/",
