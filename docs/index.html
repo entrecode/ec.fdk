@@ -20,7 +20,7 @@
 <pre><code class="js"><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">muffins</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">act</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-4">action:</span><span class="hl-1"> </span><span class="hl-2">&quot;entryList&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">env:</span><span class="hl-1"> </span><span class="hl-2">&quot;stage&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">dmShortID:</span><span class="hl-1"> </span><span class="hl-2">&quot;83cc6374&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">model:</span><span class="hl-1"> </span><span class="hl-2">&quot;muffin&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">});</span>
 </code><button type="button">Copy</button></pre>
 
-<p>The object passed to <code>act</code> expects an <code>action</code> (<a href="https://github.com/entrecode/ec.fdk/blob/main/packages/ec.fdk/src/lib/api.mjs">available actions</a>)
+<p>The object passed to <code>act</code> expects an <code>action</code> (<a href="https://github.com/entrecode/ec.fdk/blob/main/packages/ec.fdk/src/lib/api.ts">available actions</a>)
 and additional keys that are required to perform the action.
 If you don't know the required keys for an action, either call <code>act</code> without additional keys or look it up in the source.
 For example, this is how the <code>entryList</code> function looks:</p>

@@ -14,7 +14,7 @@
   "scripts": {
     "build": "vite build && tsc",
     "prepublishOnly": "npm run build",
-    "docs": "typedoc && mv docs ../../docs"
+    "docs": "typedoc --out ../../docs"
   },
   "repository": {
     "type": "git",
