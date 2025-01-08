@@ -1,4 +1,8 @@
-export async function fetcher(url, config = {}, options = {}) {
+export async function fetcher(
+  url,
+  config: { token?: string; rawRes?: boolean } = {},
+  options: RequestInit = {}
+) {
   const { token, rawRes } = config;
   if (token) {
     options.headers = {
