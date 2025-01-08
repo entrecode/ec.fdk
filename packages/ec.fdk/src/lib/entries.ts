@@ -258,7 +258,7 @@ export const filterOptions = sdkOptions;
 /**
  * Returns the shortID of the given EntryResource
  *
- * @param {@type {import('./api.mjs').EntryResource}} entry EntryResource
+ * @param {EntryResource}} entry EntryResource
  * @returns {string}
  *
  */
@@ -268,7 +268,7 @@ export function getEntryShortID(entry) {
 /**
  * Returns the env of the given EntryResource
  *
- * @param {@type {import('./api.mjs').EntryResource}} entry EntryResource
+ * @param {EntryResource}} entry EntryResource
  * @returns {string}
  *
  */
@@ -299,8 +299,8 @@ export const editEntryObject = (entry, value) =>
 /**
  * Returns the embedded asset from the given field name and EntryResource
  *
- * @param {@type {import('./api.mjs').EntryResource}} entry EntryResource
- * @returns {@type {import('./api.mjs').AssetResource}}
+ * @param {EntryResource}} entry EntryResource
+ * @returns {AssetResource}}
  *
  */
 export function getEntryAsset(field, entry) {
