@@ -130,10 +130,6 @@ importers:
         version: 4.4.9
 
   packages/ec.fdk:
-    dependencies:
-      typedoc:
-        specifier: ^0.27.6
-        version: 0.27.6(typescript@5.3.3)
     devDependencies:
       jsdoc:
         specifier: ^4.0.2
@@ -144,6 +140,9 @@ importers:
       jsdoc-to-markdown:
         specifier: ^8.0.0
         version: 8.0.0
+      typedoc:
+        specifier: ^0.27.6
+        version: 0.27.6(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
