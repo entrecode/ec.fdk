@@ -2,4 +2,5 @@
 
 This is a monorepo for packages around ec.fdk
 
-[just get me to ec.fdk docs](./packages/ec.fdk#ecfdk)
+- [ec.fdk docs](https://entrecode.github.io/ec.fdk)
+- [ec.fdk package source](./packages/ec.fdk)

@@ -1,0 +1,718 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="."><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>ec.fdk</title><meta name="description" content="Documentation for ec.fdk"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><div class="table-cell" id="tsd-search"><div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><use href="assets/icons.svg#icon-search"></use></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div><div class="field"><div id="tsd-toolbar-links"></div></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">ec.fdk</a></div><div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><h1>ec.fdk</h1></div><div class="tsd-panel tsd-typography"><a id="ecfdk" class="tsd-anchor"></a><h1 class="tsd-anchor-link">ec.fdk<a href="#ecfdk" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1><p><em>F</em>eatherweight <em>D</em>evelopment <em>K</em>it for entrecode APIs.</p>
+<a id="install" class="tsd-anchor"></a><h2 class="tsd-anchor-link">Install<a href="#install" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><pre><code class="sh"><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">i</span><span class="hl-1"> </span><span class="hl-2">ec.fdk</span>
+</code><button type="button">Copy</button></pre>
+
+<a id="getting-started" class="tsd-anchor"></a><h2 class="tsd-anchor-link">Getting Started<a href="#getting-started" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>There are 2 ways to use ec.fdk:</p>
+<ul>
+<li>method chaining</li>
+<li>act</li>
+</ul>
+<a id="method-chaining" class="tsd-anchor"></a><h3 class="tsd-anchor-link">Method Chaining<a href="#method-chaining" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Start by calling <code>fdk</code> with your environment (<code>stage</code> | <code>live</code>), then method chain your way to success:</p>
+<pre><code class="js"><span class="hl-3">import</span><span class="hl-1"> { </span><span class="hl-4">fdk</span><span class="hl-1"> } </span><span class="hl-3">from</span><span class="hl-1"> </span><span class="hl-2">&quot;ec.fdk&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-0">fdk</span><span class="hl-1">(</span><span class="hl-2">&quot;stage&quot;</span><span class="hl-1">) </span><span class="hl-5">// choose stage environment</span><br/><span class="hl-1">.</span><span class="hl-0">dm</span><span class="hl-1">(</span><span class="hl-2">&quot;83cc6374&quot;</span><span class="hl-1">) </span><span class="hl-5">// select datamanager via short id</span><br/><span class="hl-1">.</span><span class="hl-0">model</span><span class="hl-1">(</span><span class="hl-2">&quot;muffin&quot;</span><span class="hl-1">) </span><span class="hl-5">// select model muffin</span><br/><span class="hl-1">.</span><span class="hl-0">entries</span><span class="hl-1">() </span><span class="hl-5">// load entry list</span><br/><span class="hl-1">.</span><span class="hl-0">then</span><span class="hl-1">(</span><span class="hl-4">list</span><span class="hl-1"> </span><span class="hl-6">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-4">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-4">list</span><span class="hl-1">);</span><br/><span class="hl-1">})</span>
+</code><button type="button">Copy</button></pre>
+
+<p>You can also reuse parts of the chain with variables:</p>
+<pre><code class="js"><span class="hl-5">// we want to do stuff with model muffin here</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">muffin</span><span class="hl-1"> = </span><span class="hl-0">fdk</span><span class="hl-1">(</span><span class="hl-2">&quot;stage&quot;</span><span class="hl-1">).</span><span class="hl-0">dm</span><span class="hl-1">(</span><span class="hl-2">&quot;83cc6374&quot;</span><span class="hl-1">).</span><span class="hl-0">model</span><span class="hl-1">(</span><span class="hl-2">&quot;muffin&quot;</span><span class="hl-1">);</span><br/><span class="hl-5">// load entry list</span><br/><span class="hl-6">const</span><span class="hl-1"> { </span><span class="hl-7">items</span><span class="hl-1"> } = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-4">muffin</span><span class="hl-1">.</span><span class="hl-0">entries</span><span class="hl-1">();</span><br/><span class="hl-5">// edit first entry</span><br/><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-4">muffin</span><span class="hl-1">.</span><span class="hl-0">editEntry</span><span class="hl-1">(</span><span class="hl-4">items</span><span class="hl-1">[</span><span class="hl-8">0</span><span class="hl-1">].</span><span class="hl-4">id</span><span class="hl-1">, { </span><span class="hl-4">name:</span><span class="hl-1"> </span><span class="hl-2">&quot;edit!&quot;</span><span class="hl-1"> });</span><br/><span class="hl-5">// delete second entry</span><br/><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-4">muffin</span><span class="hl-1">.</span><span class="hl-0">deleteEntry</span><span class="hl-1">(</span><span class="hl-4">items</span><span class="hl-1">[</span><span class="hl-8">1</span><span class="hl-1">].</span><span class="hl-4">id</span><span class="hl-1">);</span><br/><span class="hl-5">// create a new muffin</span><br/><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-4">muffin</span><span class="hl-1">.</span><span class="hl-0">createEntry</span><span class="hl-1">({ </span><span class="hl-4">name:</span><span class="hl-1"> </span><span class="hl-2">&quot;new muffin&quot;</span><span class="hl-1"> });</span><br/><span class="hl-5">// edit third entry with safePut</span><br/><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-4">muffin</span><span class="hl-1">.</span><span class="hl-0">editEntrySafe</span><span class="hl-1">(</span><span class="hl-4">items</span><span class="hl-1">[</span><span class="hl-8">2</span><span class="hl-1">].</span><span class="hl-4">id</span><span class="hl-1">, { </span><span class="hl-4">_modified:</span><span class="hl-1"> </span><span class="hl-4">items</span><span class="hl-1">[</span><span class="hl-8">2</span><span class="hl-1">].</span><span class="hl-4">_modified</span><span class="hl-1">, </span><span class="hl-4">name:</span><span class="hl-1"> </span><span class="hl-2">&quot;safePut!&quot;</span><span class="hl-1"> });</span>
+</code><button type="button">Copy</button></pre>
+
+<a id="act-1" class="tsd-anchor"></a><h3 class="tsd-anchor-link">act<a href="#act-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>The act function converts a single object param into a fetch request:</p>
+<pre><code class="js"><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">muffins</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">act</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-4">action:</span><span class="hl-1"> </span><span class="hl-2">&quot;entryList&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">env:</span><span class="hl-1"> </span><span class="hl-2">&quot;stage&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">dmShortID:</span><span class="hl-1"> </span><span class="hl-2">&quot;83cc6374&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">model:</span><span class="hl-1"> </span><span class="hl-2">&quot;muffin&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">})</span>
+</code><button type="button">Copy</button></pre>
+
+<p>The object passed to <code>act</code> expects an <code>action</code> (<a href="https://github.com/entrecode/ec.fdk/blob/main/packages/ec.fdk/src/lib/api.mjs">available actions</a>)
+and additional keys that are required to perform the action.
+If you don't know the required keys for an action, either call <code>act</code> without additional keys or look it up in the source.
+For example, this is how the <code>entryList</code> function looks:</p>
+<pre><code class="js"><span class="hl-3">export</span><span class="hl-1"> </span><span class="hl-6">async</span><span class="hl-1"> </span><span class="hl-6">function</span><span class="hl-1"> </span><span class="hl-0">entryList</span><span class="hl-1">(</span><span class="hl-4">config</span><span class="hl-1">) {</span><br/><span class="hl-1">  </span><span class="hl-6">let</span><span class="hl-1"> { </span><span class="hl-4">env</span><span class="hl-1">, </span><span class="hl-4">dmShortID</span><span class="hl-1">, </span><span class="hl-4">model</span><span class="hl-1">, </span><span class="hl-4">options</span><span class="hl-1"> = {} } = </span><span class="hl-4">config</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-0">expect</span><span class="hl-1">({ </span><span class="hl-4">env</span><span class="hl-1">, </span><span class="hl-4">dmShortID</span><span class="hl-1">, </span><span class="hl-4">model</span><span class="hl-1"> });</span><br/><span class="hl-1">  </span><span class="hl-5">/* more stuff */</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p>here you can clearly see the available params.</p>
+<a id="using-act-with-swr--react-query" class="tsd-anchor"></a><h3 class="tsd-anchor-link">Using act with swr / react-query<a href="#using-act-with-swr--react-query" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>The act function is good to be used with swr or react-query:</p>
+<pre><code class="js"><span class="hl-3">import</span><span class="hl-1"> { </span><span class="hl-4">act</span><span class="hl-1"> } </span><span class="hl-3">from</span><span class="hl-1"> </span><span class="hl-2">&quot;ec.fdk&quot;</span><span class="hl-1">;</span><br/><span class="hl-3">import</span><span class="hl-1"> </span><span class="hl-4">useSWR</span><span class="hl-1"> </span><span class="hl-3">from</span><span class="hl-1"> </span><span class="hl-2">&quot;swr&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-3">export</span><span class="hl-1"> </span><span class="hl-6">function</span><span class="hl-1"> </span><span class="hl-0">useFdk</span><span class="hl-1">(</span><span class="hl-4">config</span><span class="hl-1">) {</span><br/><span class="hl-1">  </span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">key</span><span class="hl-1"> = </span><span class="hl-4">config</span><span class="hl-1"> ? </span><span class="hl-7">JSON</span><span class="hl-1">.</span><span class="hl-0">stringify</span><span class="hl-1">(</span><span class="hl-4">config</span><span class="hl-1">) : </span><span class="hl-6">null</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-3">return</span><span class="hl-1"> </span><span class="hl-0">useSWR</span><span class="hl-1">([</span><span class="hl-4">key</span><span class="hl-1">], () </span><span class="hl-6">=&gt;</span><span class="hl-1"> </span><span class="hl-0">act</span><span class="hl-1">(</span><span class="hl-4">config</span><span class="hl-1">));</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Then use the hook:</p>
+<pre><code class="js"><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">config</span><span class="hl-1"> = {</span><br/><span class="hl-1">  </span><span class="hl-4">env:</span><span class="hl-1"> </span><span class="hl-2">&quot;stage&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-4">dmShortID:</span><span class="hl-1"> </span><span class="hl-2">&quot;83cc6374&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">};</span><br/><br/><span class="hl-6">function</span><span class="hl-1"> </span><span class="hl-0">App</span><span class="hl-1">() {</span><br/><span class="hl-1">  </span><span class="hl-6">const</span><span class="hl-1"> { </span><span class="hl-4">data</span><span class="hl-1">: </span><span class="hl-7">entryList</span><span class="hl-1"> } = </span><span class="hl-0">useFdk</span><span class="hl-1">({</span><br/><span class="hl-1">    ...</span><span class="hl-4">config</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">action:</span><span class="hl-1"> </span><span class="hl-2">&quot;entryList&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-4">model:</span><span class="hl-1"> </span><span class="hl-2">&quot;muffin&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  });</span><br/><span class="hl-1">  </span><span class="hl-5">/* more stuff */</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<a id="migration-from-ecsdk" class="tsd-anchor"></a><h2 class="tsd-anchor-link">migration from ec.sdk<a href="#migration-from-ecsdk" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>ec.fdk won't change / decorate data returned from ec APIs. For example, an entry returned from the datamanager will be returned as is.
+Advantages:</p>
+<ul>
+<li>The network tab shows what goes into the frontend</li>
+<li>Resources have the same shape everywhere</li>
+<li>Resources are serializable</li>
+</ul>
+<a id="entry-save" class="tsd-anchor"></a><h3 class="tsd-anchor-link">Entry save<a href="#entry-save" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Instead of mutating an EntryResource and calling <code>.save()</code>, we now pass the new <code>value</code> directly:</p>
+<pre><code class="js"><span class="hl-5">// this does not exist anymore:</span><br/><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-4">entry</span><span class="hl-1">.</span><span class="hl-0">save</span><span class="hl-1">(); </span><span class="hl-5">// &lt;- DONT</span><br/><span class="hl-5">// use this to update an entry:</span><br/><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">editEntryObject</span><span class="hl-1">(</span><span class="hl-4">entry</span><span class="hl-1">, </span><span class="hl-4">value</span><span class="hl-1">); </span><span class="hl-5">// &lt;- DO</span><br/><span class="hl-5">// alternatively:</span><br/><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-4">fdk</span><span class="hl-1">.</span><span class="hl-0">env</span><span class="hl-1">(</span><span class="hl-4">env</span><span class="hl-1">).</span><span class="hl-0">dm</span><span class="hl-1">(</span><span class="hl-4">dmShortID</span><span class="hl-1">).</span><span class="hl-0">model</span><span class="hl-1">(</span><span class="hl-4">model</span><span class="hl-1">).</span><span class="hl-0">updateEntry</span><span class="hl-1">(</span><span class="hl-4">entryID</span><span class="hl-1">, </span><span class="hl-4">value</span><span class="hl-1">);</span><br/><span class="hl-5">// or:</span><br/><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">act</span><span class="hl-1">({ </span><span class="hl-4">action:</span><span class="hl-1"> </span><span class="hl-2">&#39;editEntry&#39;</span><span class="hl-1">, </span><span class="hl-4">env</span><span class="hl-1">, </span><span class="hl-4">dmShortID</span><span class="hl-1">, </span><span class="hl-4">model</span><span class="hl-1">, </span><span class="hl-4">entryID</span><span class="hl-1">, </span><span class="hl-4">value</span><span class="hl-1"> });</span>
+</code><button type="button">Copy</button></pre>
+
+<a id="entry-delete" class="tsd-anchor"></a><h3 class="tsd-anchor-link">Entry delete<a href="#entry-delete" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Similar to save:</p>
+<pre><code class="js"><span class="hl-5">// this does not exist anymore:</span><br/><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-4">entry</span><span class="hl-1">.</span><span class="hl-0">del</span><span class="hl-1">(); </span><span class="hl-5">// &lt;- DONT</span><br/><span class="hl-5">// use this to delete an entry:</span><br/><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">deleteEntryObject</span><span class="hl-1">(</span><span class="hl-4">entry</span><span class="hl-1">); </span><span class="hl-5">// &lt;- DO</span><br/><span class="hl-5">// alternatively:</span><br/><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-4">fdk</span><span class="hl-1">.</span><span class="hl-0">dm</span><span class="hl-1">(</span><span class="hl-2">&quot;shortID&quot;</span><span class="hl-1">).</span><span class="hl-0">model</span><span class="hl-1">(</span><span class="hl-2">&quot;model&quot;</span><span class="hl-1">).</span><span class="hl-0">deleteEntry</span><span class="hl-1">(</span><span class="hl-2">&quot;entryID&quot;</span><span class="hl-1">);</span><br/><span class="hl-5">// or:</span><br/><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">act</span><span class="hl-1">({ </span><span class="hl-4">action:</span><span class="hl-1"> </span><span class="hl-2">&#39;deleteEntry&#39;</span><span class="hl-1">, </span><span class="hl-4">env</span><span class="hl-1">, </span><span class="hl-4">dmShortID</span><span class="hl-1">, </span><span class="hl-4">model</span><span class="hl-1">, </span><span class="hl-4">entryID</span><span class="hl-1"> });</span>
+</code><button type="button">Copy</button></pre>
+
+<a id="entry-asset-fields" class="tsd-anchor"></a><h3 class="tsd-anchor-link">Entry Asset Fields<a href="#entry-asset-fields" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>In ec.fdk, entry asset fields are plain ids:</p>
+<pre><code class="js"><span class="hl-5">// assuming &quot;photo&quot; is an asset field:</span><br/><span class="hl-4">entry</span><span class="hl-1">.</span><span class="hl-4">photo</span><span class="hl-1">; </span><span class="hl-5">// &lt;-- this used to be an AssetResource. Now it&#39;s a plain id string.</span><br/><span class="hl-5">// use this to get the embedded AssetResource:</span><br/><span class="hl-0">getEntryAsset</span><span class="hl-1">(</span><span class="hl-2">&quot;photo&quot;</span><span class="hl-1">, </span><span class="hl-4">entry</span><span class="hl-1">); </span><span class="hl-5">// (no request goes out)</span>
+</code><button type="button">Copy</button></pre>
+
+<a id="entry-date-fields" class="tsd-anchor"></a><h3 class="tsd-anchor-link">Entry Date Fields<a href="#entry-date-fields" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><pre><code class="js"><span class="hl-5">// assuming &quot;lastSeen&quot; is a datetime field:</span><br/><span class="hl-4">entry</span><span class="hl-1">.</span><span class="hl-4">lastSeen</span><span class="hl-1">; </span><span class="hl-5">// &lt;-- this used to be an instance of Date. Now it&#39;s a date ISO string</span><br/><span class="hl-5">// use this to get a Date instance:</span><br/><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">Date</span><span class="hl-1">(</span><span class="hl-4">entry</span><span class="hl-1">.</span><span class="hl-4">lastSeen</span><span class="hl-1">);</span>
+</code><button type="button">Copy</button></pre>
+
+<a id="entry-list" class="tsd-anchor"></a><h3 class="tsd-anchor-link">Entry List<a href="#entry-list" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><pre><code class="js"><span class="hl-5">// ec.sdk</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">api</span><span class="hl-1"> = </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">PublicAPI</span><span class="hl-1">(</span><span class="hl-4">shortID</span><span class="hl-1">, </span><span class="hl-4">env</span><span class="hl-1">, </span><span class="hl-6">true</span><span class="hl-1">);</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">entryList</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-4">api</span><span class="hl-1">.</span><span class="hl-0">entryList</span><span class="hl-1">(</span><span class="hl-4">model</span><span class="hl-1">);</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">items</span><span class="hl-1"> = </span><span class="hl-4">entryList</span><span class="hl-1">.</span><span class="hl-0">getAllItems</span><span class="hl-1">();</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">first</span><span class="hl-1"> = </span><span class="hl-4">entryList</span><span class="hl-1">.</span><span class="hl-0">getFirstItem</span><span class="hl-1">();</span><br/><span class="hl-5">// ec.fdk</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">api</span><span class="hl-1"> = </span><span class="hl-0">fdk</span><span class="hl-1">(</span><span class="hl-4">env</span><span class="hl-1">).</span><span class="hl-0">dm</span><span class="hl-1">(</span><span class="hl-4">shortID</span><span class="hl-1">);</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">entryList</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-4">api</span><span class="hl-1">.</span><span class="hl-0">entryList</span><span class="hl-1">(</span><span class="hl-4">model</span><span class="hl-1">);</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">items</span><span class="hl-1"> = </span><span class="hl-4">entryList</span><span class="hl-1">.</span><span class="hl-4">items</span><span class="hl-1">; </span><span class="hl-5">// &lt;------- change</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">first</span><span class="hl-1"> = </span><span class="hl-4">entryList</span><span class="hl-1">.</span><span class="hl-4">items</span><span class="hl-1">[</span><span class="hl-8">0</span><span class="hl-1">]; </span><span class="hl-5">// &lt;------- change</span><br/><span class="hl-5">// or in one line:</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">entryList</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">fdk</span><span class="hl-1">(</span><span class="hl-4">env</span><span class="hl-1">).</span><span class="hl-0">dm</span><span class="hl-1">(</span><span class="hl-4">shortID</span><span class="hl-1">).</span><span class="hl-0">entryList</span><span class="hl-1">(</span><span class="hl-4">model</span><span class="hl-1">);</span>
+</code><button type="button">Copy</button></pre>
+
+<a id="entry-list-filter-options" class="tsd-anchor"></a><h3 class="tsd-anchor-link">Entry List Filter Options<a href="#entry-list-filter-options" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>By default, the second param of ec.fdk <code>entryList</code> will just convert the object to url params:</p>
+<pre><code class="js"><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">entryList</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">fdk</span><span class="hl-1">(</span><span class="hl-2">&quot;stage&quot;</span><span class="hl-1">)</span><br/><span class="hl-1">  .</span><span class="hl-0">dm</span><span class="hl-1">(</span><span class="hl-2">&quot;83cc6374&quot;</span><span class="hl-1">)</span><br/><span class="hl-1">  .</span><span class="hl-0">entryList</span><span class="hl-1">({ </span><span class="hl-4">createdTo:</span><span class="hl-1"> </span><span class="hl-2">&quot;2021-01-18T09:13:47.605Z&quot;</span><span class="hl-1"> });</span><br/><span class="hl-5">/* </span><br/><span class="hl-5">https://datamanager.cachena.entrecode.de/api/83cc6374/muffin?</span><br/><span class="hl-5">_list=true&amp;</span><br/><span class="hl-5">createdTo=2021-01-18T09:13:47.605Z&amp;</span><br/><span class="hl-5">page=1&amp;</span><br/><span class="hl-5">size=50</span><br/><span class="hl-5">*/</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Read more in the <a href="https://doc.entrecode.de/api-basics/#filtering">entrecode filtering doc</a></p>
+<p>There is some syntax sugar you can use to get the same behavior as <a href="https://entrecode.github.io/ec.sdk/#filteroptions">ec.sdk filterOptions</a>:</p>
+<pre><code class="js"><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">entryList</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">fdk</span><span class="hl-1">(</span><span class="hl-2">&quot;stage&quot;</span><span class="hl-1">)</span><br/><span class="hl-1">  .</span><span class="hl-0">dm</span><span class="hl-1">(</span><span class="hl-2">&quot;83cc6374&quot;</span><span class="hl-1">)</span><br/><span class="hl-1">  .</span><span class="hl-0">entryList</span><span class="hl-1">(</span><span class="hl-0">filterOptions</span><span class="hl-1">({ </span><span class="hl-4">created:</span><span class="hl-1"> { </span><span class="hl-4">to:</span><span class="hl-1"> </span><span class="hl-2">&quot;2021-01-18T09:13:47.605Z&quot;</span><span class="hl-1"> } }));</span>
+</code><button type="button">Copy</button></pre>
+
+<a id="publish" class="tsd-anchor"></a><h2 class="tsd-anchor-link">Publish<a href="#publish" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><ol start="0">
+<li><code>cd packages/ec.fdk</code></li>
+<li>bump version in <code>packages/ec.fdk/package.json</code></li>
+<li>run <code>pnpm readme</code></li>
+<li>commit + push</li>
+<li>run <code>pnpm publish</code></li>
+</ol>
+<a id="api-reference" class="tsd-anchor"></a><h2 class="tsd-anchor-link">API Reference<a href="#api-reference" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>Now what follows is the autogenerated doc from source:</p>
+<p><a name="module_api.Sdk"></a></p>
+<a id="apisdk" class="tsd-anchor"></a><h3 class="tsd-anchor-link">api.Sdk<a href="#apisdk" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>SDK</p>
+<p><strong>Kind</strong>: static class of <a href="#module_api"><code>api</code></a></p>
+<ul>
+<li><a href="#module_api.Sdk">.Sdk</a>
+<ul>
+<li><a href="#module_api.Sdk+entries">.entries([options])</a> ⇒ <a href="#EntryList"><code>Promise.&lt;EntryList&gt;</code></a></li>
+<li><a href="#module_api.Sdk+mapEntries">.mapEntries([options])</a> ⇒ <a href="#EntryList"><code>Promise.&lt;EntryList&gt;</code></a></li>
+<li><a href="#module_api.Sdk+getEntry">.getEntry(entryID)</a> ⇒ <a href="#EntryResource"><code>Promise.&lt;EntryResource&gt;</code></a></li>
+<li><a href="#module_api.Sdk+editEntrySafe">.editEntrySafe(entryID, value)</a> ⇒ <a href="#EntryResource"><code>Promise.&lt;EntryResource&gt;</code></a></li>
+<li><a href="#module_api.Sdk+getSchema">.getSchema(entryID)</a> ⇒ <a href="#EntrySchema"><code>Promise.&lt;EntrySchema&gt;</code></a></li>
+<li><a href="#module_api.Sdk+assets">.assets([options])</a> ⇒ <a href="#AssetList"><code>Promise.&lt;AssetList&gt;</code></a></li>
+<li><a href="#module_api.Sdk+createAsset">.createAsset(options)</a> ⇒ <a href="#AssetResource"><code>Promise.&lt;AssetResource&gt;</code></a></li>
+<li><a href="#module_api.Sdk+deleteAsset">.deleteAsset(assetID)</a> ⇒ <code>Promise.&lt;void&gt;</code></li>
+<li><a href="#module_api.Sdk+getAsset">.getAsset(assetID)</a> ⇒ <a href="#AssetResource"><code>Promise.&lt;AssetResource&gt;</code></a></li>
+<li><a href="#module_api.Sdk+createEntry">.createEntry(value)</a> ⇒ <a href="#EntryResource"><code>Promise.&lt;EntryResource&gt;</code></a></li>
+<li><a href="#module_api.Sdk+editEntry">.editEntry(entryID, value)</a> ⇒ <a href="#EntryResource"><code>Promise.&lt;EntryResource&gt;</code></a></li>
+<li><a href="#module_api.Sdk+deleteEntry">.deleteEntry(entryID)</a> ⇒ <code>Promise.&lt;void&gt;</code></li>
+<li><a href="#module_api.Sdk+resourceList">.resourceList([options])</a> ⇒ <a href="#ResourceList"><code>Promise.&lt;ResourceList&gt;</code></a></li>
+<li><a href="#module_api.Sdk+raw">.raw([options], [fetchOptions])</a> ⇒ <code>Promise.&lt;any&gt;</code></li>
+<li><a href="#module_api.Sdk+model">.model(model)</a> ⇒</li>
+<li><a href="#module_api.Sdk+token">.token(token)</a> ⇒</li>
+<li><a href="#module_api.Sdk+dmShortID">.dmShortID(dmShortID)</a> ⇒</li>
+<li><a href="#module_api.Sdk+dmID">.dmID(dmID)</a> ⇒</li>
+<li><a href="#module_api.Sdk+dm">.dm(dmShortID)</a> ⇒</li>
+<li><a href="#module_api.Sdk+assetGroup">.assetGroup(assetGroup)</a> ⇒</li>
+<li><a href="#module_api.Sdk+assetgroup">.assetgroup(assetGroup)</a> ⇒</li>
+<li><a href="#module_api.Sdk+subdomain">.subdomain(subdomain)</a> ⇒</li>
+<li><a href="#module_api.Sdk+resource">.resource(resource)</a> ⇒</li>
+<li><a href="#module_api.Sdk+route">.route(route)</a> ⇒</li>
+<li><a href="#module_api.Sdk+publicApi">.publicApi()</a> ⇒</li>
+<li><a href="#module_api.Sdk+getDatamanager">.getDatamanager()</a> ⇒</li>
+<li><a href="#module_api.Sdk+dmList">.dmList([options])</a> ⇒ <a href="#DatamanagerList"><code>Promise.&lt;DatamanagerList&gt;</code></a></li>
+<li><a href="#module_api.Sdk+modelList">.modelList([options])</a> ⇒ <a href="#ModelList"><code>Promise.&lt;ModelList&gt;</code></a></li>
+</ul>
+</li>
+</ul>
+<p><a name="module_api.Sdk+entries"></a></p>
+<a id="sdkentriesoptions-⇒-promise" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.entries([options]) ⇒ <a href="#EntryList"><code>Promise.&lt;EntryList&gt;</code></a><a href="#sdkentriesoptions-⇒-promise" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Loads entry list. Expects <code>dmShortID</code> / <code>model</code> to be set.
+If the model is not public, you also need to provide a <code>token</code>.</p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[options]</td>
+<td><code>object</code></td>
+<td><p>options for entry list request.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre><code class="js"><span class="hl-5">// public model</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">muffins</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">sdk</span><span class="hl-1">(</span><span class="hl-2">&quot;stage&quot;</span><span class="hl-1">).</span><span class="hl-0">dm</span><span class="hl-1">(</span><span class="hl-2">&quot;83cc6374&quot;</span><span class="hl-1">).</span><span class="hl-0">model</span><span class="hl-1">(</span><span class="hl-2">&quot;muffin&quot;</span><span class="hl-1">).</span><span class="hl-0">entries</span><span class="hl-1">()</span>
+</code><button type="button">Copy</button></pre>
+
+<p><strong>Example</strong></p>
+<pre><code class="js"><span class="hl-5">// non-public model</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">secrets</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">sdk</span><span class="hl-1">(</span><span class="hl-2">&quot;stage&quot;</span><span class="hl-1">).</span><span class="hl-0">token</span><span class="hl-1">(</span><span class="hl-4">token</span><span class="hl-1">).</span><span class="hl-0">dm</span><span class="hl-1">(</span><span class="hl-2">&quot;83cc6374&quot;</span><span class="hl-1">).</span><span class="hl-0">model</span><span class="hl-1">(</span><span class="hl-2">&quot;secret&quot;</span><span class="hl-1">).</span><span class="hl-0">entries</span><span class="hl-1">()</span>
+</code><button type="button">Copy</button></pre>
+
+<p><a name="module_api.Sdk+mapEntries"></a></p>
+<a id="sdkmapentriesoptions-⇒-promise" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.mapEntries([options]) ⇒ <a href="#EntryList"><code>Promise.&lt;EntryList&gt;</code></a><a href="#sdkmapentriesoptions-⇒-promise" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Maps over entry list.</p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[options]</td>
+<td><code>object</code></td>
+<td><p>options for entry list request.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre><code class="js"><span class="hl-5">// public model</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">muffins</span><span class="hl-1"> = </span><span class="hl-0">sdk</span><span class="hl-1">(</span><span class="hl-2">&quot;stage&quot;</span><span class="hl-1">).</span><span class="hl-0">dm</span><span class="hl-1">(</span><span class="hl-2">&quot;83cc6374&quot;</span><span class="hl-1">).</span><span class="hl-0">model</span><span class="hl-1">(</span><span class="hl-2">&quot;muffin&quot;</span><span class="hl-1">)</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">res</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-4">muffin</span><span class="hl-1">.</span><span class="hl-0">mapEntries</span><span class="hl-1">((</span><span class="hl-4">entry</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> </span><span class="hl-4">muffin</span><span class="hl-1">.</span><span class="hl-0">editEntry</span><span class="hl-1">(</span><span class="hl-4">entry</span><span class="hl-1">.</span><span class="hl-4">id</span><span class="hl-1">, { </span><span class="hl-4">name:</span><span class="hl-1"> </span><span class="hl-4">entry</span><span class="hl-1">.</span><span class="hl-4">name</span><span class="hl-1"> + </span><span class="hl-2">&quot;!&quot;</span><span class="hl-1"> }));</span><br/><span class="hl-4">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-2">&quot;res&quot;</span><span class="hl-1">, </span><span class="hl-4">res</span><span class="hl-1">);</span>
+</code><button type="button">Copy</button></pre>
+
+<p><a name="module_api.Sdk+getEntry"></a></p>
+<a id="sdkgetentryentryid-⇒-promise" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.getEntry(entryID) ⇒ <a href="#EntryResource"><code>Promise.&lt;EntryResource&gt;</code></a><a href="#sdkgetentryentryid-⇒-promise" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Loads a single entry. Expects <code>dmShortID</code> / <code>model</code> to be set.
+If the model is not public, you also need to provide a <code>token</code>.</p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>entryID</td>
+<td><code>string</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre><code class="js"><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">muffin</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">sdk</span><span class="hl-1">(</span><span class="hl-2">&quot;stage&quot;</span><span class="hl-1">).</span><span class="hl-0">dm</span><span class="hl-1">(</span><span class="hl-2">&quot;83cc6374&quot;</span><span class="hl-1">).</span><span class="hl-0">model</span><span class="hl-1">(</span><span class="hl-2">&quot;muffin&quot;</span><span class="hl-1">).</span><span class="hl-0">getEntry</span><span class="hl-1">(</span><span class="hl-2">&quot;1gOtzWvrdq&quot;</span><span class="hl-1">)</span>
+</code><button type="button">Copy</button></pre>
+
+<p><a name="module_api.Sdk+editEntrySafe"></a></p>
+<a id="sdkeditentrysafeentryid-value-⇒-promise" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.editEntrySafe(entryID, value) ⇒ <a href="#EntryResource"><code>Promise.&lt;EntryResource&gt;</code></a><a href="#sdkeditentrysafeentryid-value-⇒-promise" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Edits an entry with safe put. Expects <code>dmShortID</code> / <code>model</code> to be set.
+Expects a <code>_modified</code> field in the value. Will only update if the entry has not been changed since.
+If model PUT is not public, you also need to provide a <code>token</code>.</p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>entryID</td>
+<td><code>string</code></td>
+<td><p>id of entry to edit</p></td>
+</tr>
+<tr>
+<td>value</td>
+<td><code>object</code></td>
+<td><p>values to set. undefined fields are ignored</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre><code class="js"><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">entry</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">sdk</span><span class="hl-1">(</span><span class="hl-2">&quot;stage&quot;</span><span class="hl-1">)</span><br/><span class="hl-1"> .</span><span class="hl-0">dm</span><span class="hl-1">(</span><span class="hl-2">&quot;83cc6374&quot;</span><span class="hl-1">)</span><br/><span class="hl-1"> .</span><span class="hl-0">model</span><span class="hl-1">(</span><span class="hl-2">&quot;muffin&quot;</span><span class="hl-1">)</span><br/><span class="hl-1"> .</span><span class="hl-0">editEntrySafe</span><span class="hl-1">(</span><span class="hl-2">&quot;1gOtzWvrdq&quot;</span><span class="hl-1">, { </span><span class="hl-4">name:</span><span class="hl-1"> </span><span class="hl-2">&quot;test&quot;</span><span class="hl-1">, </span><span class="hl-4">_modified:</span><span class="hl-1"> </span><span class="hl-2">&quot;2020-01-01T00:00:00.000Z&quot;</span><span class="hl-1">})</span>
+</code><button type="button">Copy</button></pre>
+
+<p><a name="module_api.Sdk+getSchema"></a></p>
+<a id="sdkgetschemaentryid-⇒-promise" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.getSchema(entryID) ⇒ <a href="#EntrySchema"><code>Promise.&lt;EntrySchema&gt;</code></a><a href="#sdkgetschemaentryid-⇒-promise" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Loads the schema of a model. Expects <code>dmShortID</code> / <code>model</code> to be set.</p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>entryID</td>
+<td><code>string</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre><code class="js"><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">muffin</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">sdk</span><span class="hl-1">(</span><span class="hl-2">&quot;stage&quot;</span><span class="hl-1">).</span><span class="hl-0">dm</span><span class="hl-1">(</span><span class="hl-2">&quot;83cc6374&quot;</span><span class="hl-1">).</span><span class="hl-0">model</span><span class="hl-1">(</span><span class="hl-2">&quot;muffin&quot;</span><span class="hl-1">).</span><span class="hl-0">getSchema</span><span class="hl-1">()</span>
+</code><button type="button">Copy</button></pre>
+
+<p><a name="module_api.Sdk+assets"></a></p>
+<a id="sdkassetsoptions-⇒-promise" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.assets([options]) ⇒ <a href="#AssetList"><code>Promise.&lt;AssetList&gt;</code></a><a href="#sdkassetsoptions-⇒-promise" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Loads asset list. Expects <code>dmShortID</code> / <code>assetGroup</code> to be set.
+If the assetGroup is not public, you also need to provide a <code>token</code>.</p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[options]</td>
+<td><code>object</code></td>
+<td><p>options for entry list request.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre><code class="js"><span class="hl-5">// public assetGroup</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">files</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">sdk</span><span class="hl-1">(</span><span class="hl-2">&quot;stage&quot;</span><span class="hl-1">).</span><span class="hl-0">dm</span><span class="hl-1">(</span><span class="hl-2">&quot;83cc6374&quot;</span><span class="hl-1">).</span><span class="hl-0">assetGroup</span><span class="hl-1">(</span><span class="hl-2">&quot;avatars&quot;</span><span class="hl-1">).</span><span class="hl-0">assets</span><span class="hl-1">()</span>
+</code><button type="button">Copy</button></pre>
+
+<p><strong>Example</strong></p>
+<pre><code class="js"><span class="hl-5">// non-public assetGroup</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">files</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">sdk</span><span class="hl-1">(</span><span class="hl-2">&quot;stage&quot;</span><span class="hl-1">).</span><span class="hl-0">token</span><span class="hl-1">(</span><span class="hl-4">token</span><span class="hl-1">).</span><span class="hl-0">dm</span><span class="hl-1">(</span><span class="hl-2">&quot;83cc6374&quot;</span><span class="hl-1">).</span><span class="hl-0">assetGroup</span><span class="hl-1">(</span><span class="hl-2">&quot;avatars&quot;</span><span class="hl-1">).</span><span class="hl-0">assets</span><span class="hl-1">()</span>
+</code><button type="button">Copy</button></pre>
+
+<p><a name="module_api.Sdk+createAsset"></a></p>
+<a id="sdkcreateassetoptions-⇒-promise" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.createAsset(options) ⇒ <a href="#AssetResource"><code>Promise.&lt;AssetResource&gt;</code></a><a href="#sdkcreateassetoptions-⇒-promise" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Uploads an asset. Expects <code>dmShortID</code> / <code>assetGroup</code> / <code>file</code> to be set.
+If the assetGroup is not public, you also need to provide a <code>token</code>.</p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>options</td>
+<td><code>Object</code></td>
+<td><p>options for entry list request.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre><code class="js"><span class="hl-5">// browser example</span><br/><span class="hl-4">document</span><span class="hl-1">.</span><span class="hl-0">getElementById</span><span class="hl-1">(</span><span class="hl-2">&quot;file&quot;</span><span class="hl-1">).</span><span class="hl-0">addEventListener</span><span class="hl-1">(</span><span class="hl-2">&quot;input&quot;</span><span class="hl-1">, </span><span class="hl-6">async</span><span class="hl-1"> (</span><span class="hl-4">e</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-6">const</span><span class="hl-1"> [</span><span class="hl-7">file</span><span class="hl-1">] = </span><span class="hl-4">e</span><span class="hl-1">.</span><span class="hl-4">target</span><span class="hl-1">.</span><span class="hl-4">files</span><span class="hl-1">;</span><br/><span class="hl-1">  </span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">asset</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-4">ecadmin</span><span class="hl-1">.</span><span class="hl-0">assetgroup</span><span class="hl-1">(</span><span class="hl-2">&quot;test&quot;</span><span class="hl-1">).</span><span class="hl-0">createAsset</span><span class="hl-1">({ </span><span class="hl-4">file</span><span class="hl-1"> })</span><br/><span class="hl-1">});</span>
+</code><button type="button">Copy</button></pre>
+
+<p><strong>Example</strong></p>
+<pre><code class="js"><span class="hl-5">// node example</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">buf</span><span class="hl-1"> = </span><span class="hl-4">fs</span><span class="hl-1">.</span><span class="hl-0">readFileSync</span><span class="hl-1">(</span><span class="hl-2">&quot;venndiagram.png&quot;</span><span class="hl-1">);</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">file</span><span class="hl-1"> = </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">Blob</span><span class="hl-1">([</span><span class="hl-4">buf</span><span class="hl-1">]);</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">upload</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">sdk</span><span class="hl-1">(</span><span class="hl-2">&quot;stage&quot;</span><span class="hl-1">)</span><br/><span class="hl-1">.</span><span class="hl-0">dm</span><span class="hl-1">(</span><span class="hl-2">&quot;83cc6374&quot;</span><span class="hl-1">)</span><br/><span class="hl-1">.</span><span class="hl-0">assetgroup</span><span class="hl-1">(</span><span class="hl-2">&quot;test&quot;</span><span class="hl-1">)</span><br/><span class="hl-1">.</span><span class="hl-0">createAsset</span><span class="hl-1">({ </span><span class="hl-4">file</span><span class="hl-1">, </span><span class="hl-4">name:</span><span class="hl-1"> </span><span class="hl-2">&quot;venndiagram.png&quot;</span><span class="hl-1"> });</span>
+</code><button type="button">Copy</button></pre>
+
+<p><a name="module_api.Sdk+deleteAsset"></a></p>
+<a id="sdkdeleteassetassetid-⇒-promise" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.deleteAsset(assetID) ⇒ <code>Promise.&lt;void&gt;</code><a href="#sdkdeleteassetassetid-⇒-promise" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Deletes an asset. Expects <code>dmShortID</code> / <code>assetGroup</code> / <code>assetID</code> to be set.
+You probably also need to provide a <code>token</code>.</p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>assetID</td>
+<td><code>string</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre><code class="js"><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-4">ecadmin</span><span class="hl-1">.</span><span class="hl-0">assetgroup</span><span class="hl-1">(</span><span class="hl-2">&quot;test&quot;</span><span class="hl-1">).</span><span class="hl-0">deleteAsset</span><span class="hl-1">(</span><span class="hl-2">&#39;xxxx&#39;</span><span class="hl-1">);</span>
+</code><button type="button">Copy</button></pre>
+
+<p><a name="module_api.Sdk+getAsset"></a></p>
+<a id="sdkgetassetassetid-⇒-promise" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.getAsset(assetID) ⇒ <a href="#AssetResource"><code>Promise.&lt;AssetResource&gt;</code></a><a href="#sdkgetassetassetid-⇒-promise" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Loads a single asset. Expects <code>dmShortID</code> / <code>assetGroup</code> to be set.
+If the asset group is not public, you also need to provide a <code>token</code>.</p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>assetID</td>
+<td><code>string</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre><code class="js"><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">asset</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">sdk</span><span class="hl-1">(</span><span class="hl-2">&quot;stage&quot;</span><span class="hl-1">).</span><span class="hl-0">dm</span><span class="hl-1">(</span><span class="hl-2">&quot;83cc6374&quot;</span><span class="hl-1">).</span><span class="hl-0">assetgroup</span><span class="hl-1">(</span><span class="hl-2">&quot;test&quot;</span><span class="hl-1">).</span><span class="hl-0">getAsset</span><span class="hl-1">(</span><span class="hl-2">&quot;tP-ZxpZZTGmbPnET-wArAQ&quot;</span><span class="hl-1">)</span>
+</code><button type="button">Copy</button></pre>
+
+<p><a name="module_api.Sdk+createEntry"></a></p>
+<a id="sdkcreateentryvalue-⇒-promise" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.createEntry(value) ⇒ <a href="#EntryResource"><code>Promise.&lt;EntryResource&gt;</code></a><a href="#sdkcreateentryvalue-⇒-promise" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Creates a new entry. Expects <code>dmShortID</code> / <code>model</code> to be set.
+If model POST is not public, you also need to provide a <code>token</code>.</p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>value</td>
+<td><code>object</code></td>
+<td><p>values to set.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre><code class="js"><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">entry</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">sdk</span><span class="hl-1">(</span><span class="hl-2">&quot;stage&quot;</span><span class="hl-1">).</span><span class="hl-0">dm</span><span class="hl-1">(</span><span class="hl-2">&quot;83cc6374&quot;</span><span class="hl-1">).</span><span class="hl-0">model</span><span class="hl-1">(</span><span class="hl-2">&quot;muffin&quot;</span><span class="hl-1">).</span><span class="hl-0">createEntry</span><span class="hl-1">({ </span><span class="hl-4">name:</span><span class="hl-1"> </span><span class="hl-2">&#39;test&#39;</span><span class="hl-1"> })</span>
+</code><button type="button">Copy</button></pre>
+
+<p><a name="module_api.Sdk+editEntry"></a></p>
+<a id="sdkeditentryentryid-value-⇒-promise" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.editEntry(entryID, value) ⇒ <a href="#EntryResource"><code>Promise.&lt;EntryResource&gt;</code></a><a href="#sdkeditentryentryid-value-⇒-promise" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Edits an entry. Expects <code>dmShortID</code> / <code>model</code> to be set.
+If model PUT is not public, you also need to provide a <code>token</code>.</p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>entryID</td>
+<td><code>string</code></td>
+<td><p>id of entry to edit</p></td>
+</tr>
+<tr>
+<td>value</td>
+<td><code>object</code></td>
+<td><p>values to set. undefined fields are ignored</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre><code class="js"><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">entry</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">sdk</span><span class="hl-1">(</span><span class="hl-2">&quot;stage&quot;</span><span class="hl-1">).</span><span class="hl-0">dm</span><span class="hl-1">(</span><span class="hl-2">&quot;83cc6374&quot;</span><span class="hl-1">).</span><span class="hl-0">model</span><span class="hl-1">(</span><span class="hl-2">&quot;muffin&quot;</span><span class="hl-1">).</span><span class="hl-0">editEntry</span><span class="hl-1">(</span><span class="hl-2">&quot;1gOtzWvrdq&quot;</span><span class="hl-1">, { </span><span class="hl-4">name:</span><span class="hl-1"> </span><span class="hl-2">&quot;test&quot;</span><span class="hl-1"> })</span>
+</code><button type="button">Copy</button></pre>
+
+<p><a name="module_api.Sdk+deleteEntry"></a></p>
+<a id="sdkdeleteentryentryid-⇒-promise" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.deleteEntry(entryID) ⇒ <code>Promise.&lt;void&gt;</code><a href="#sdkdeleteentryentryid-⇒-promise" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Deletes an entry. Expects <code>dmShortID</code> / <code>model</code> to be set.
+If model DELETE is not public, you also need to provide a <code>token</code>.</p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>entryID</td>
+<td><code>string</code></td>
+<td><p>id of entry to delete</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre><code class="js"><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">sdk</span><span class="hl-1">(</span><span class="hl-2">&quot;stage&quot;</span><span class="hl-1">).</span><span class="hl-0">dm</span><span class="hl-1">(</span><span class="hl-2">&quot;83cc6374&quot;</span><span class="hl-1">).</span><span class="hl-0">model</span><span class="hl-1">(</span><span class="hl-2">&quot;muffin&quot;</span><span class="hl-1">).</span><span class="hl-0">deleteEntry</span><span class="hl-1">(</span><span class="hl-2">&quot;1gOtzWvrdq&quot;</span><span class="hl-1">)</span>
+</code><button type="button">Copy</button></pre>
+
+<p><a name="module_api.Sdk+resourceList"></a></p>
+<a id="sdkresourcelistoptions-⇒-promise" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.resourceList([options]) ⇒ <a href="#ResourceList"><code>Promise.&lt;ResourceList&gt;</code></a><a href="#sdkresourcelistoptions-⇒-promise" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Fetches resource list. Expects <code>resource</code> to be set. <code>subdomain</code> defaults to &quot;datamanager&quot;.
+Fetches <code>https://&lt;subdomain&gt;.entrecode.de/&lt;resource&gt;?_list=true&amp;size=&lt;options.size ?? 25&gt;</code></p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[options]</td>
+<td><code>object</code></td>
+<td><p>options for list request.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre><code class="js"><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">res</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">sdk</span><span class="hl-1">(</span><span class="hl-2">&quot;stage&quot;</span><span class="hl-1">).</span><span class="hl-0">resource</span><span class="hl-1">(</span><span class="hl-2">&quot;template&quot;</span><span class="hl-1">).</span><span class="hl-0">resourceList</span><span class="hl-1">()</span>
+</code><button type="button">Copy</button></pre>
+
+<p><a name="module_api.Sdk+raw"></a></p>
+<a id="sdkrawoptions-fetchoptions-⇒-promise" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.raw([options], [fetchOptions]) ⇒ <code>Promise.&lt;any&gt;</code><a href="#sdkrawoptions-fetchoptions-⇒-promise" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Fetches raw route. Expects <code>route</code> to be set. <code>subdomain</code> defaults to &quot;datamanager&quot;.
+Fetches <code>https://&lt;subdomain&gt;.entrecode.de/&lt;route&gt;?&lt;options&gt;</code>
+Use this when no other fdk method can give you your request.</p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[options]</td>
+<td><code>object</code></td>
+<td><p>options for list request.</p></td>
+</tr>
+<tr>
+<td>[fetchOptions]</td>
+<td><code>object</code></td>
+<td><p>(optional) options passed to fetch.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre><code class="js"><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">res</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">sdk</span><span class="hl-1">(</span><span class="hl-2">&quot;stage&quot;</span><span class="hl-1">).</span><span class="hl-0">route</span><span class="hl-1">(</span><span class="hl-2">&quot;stats&quot;</span><span class="hl-1">).</span><span class="hl-0">raw</span><span class="hl-1">()</span>
+</code><button type="button">Copy</button></pre>
+
+<p><a name="module_api.Sdk+model"></a></p>
+<a id="sdkmodelmodel-⇒" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.model(model) ⇒<a href="#sdkmodelmodel-⇒" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Sets the given model to use</p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a><br>
+<strong>Returns</strong>: <p>Sdk</p></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>model</td>
+<td><code>string</code></td>
+<td><p>name of the model</p></td>
+</tr>
+</tbody>
+</table>
+<p><a name="module_api.Sdk+token"></a></p>
+<a id="sdktokentoken-⇒" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.token(token) ⇒<a href="#sdktokentoken-⇒" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Sets the token to use in requests</p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a><br>
+<strong>Returns</strong>: <p>Sdk</p></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>token</td>
+<td><code>string</code></td>
+</tr>
+</tbody>
+</table>
+<p><a name="module_api.Sdk+dmShortID"></a></p>
+<a id="sdkdmshortiddmshortid-⇒" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.dmShortID(dmShortID) ⇒<a href="#sdkdmshortiddmshortid-⇒" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Sets the short ID of the datamanager to use</p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a><br>
+<strong>Returns</strong>: <p>Sdk</p></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dmShortID</td>
+<td><code>string</code></td>
+</tr>
+</tbody>
+</table>
+<p><a name="module_api.Sdk+dmID"></a></p>
+<a id="sdkdmiddmid-⇒" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.dmID(dmID) ⇒<a href="#sdkdmiddmid-⇒" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Sets the (long) ID of the datamanager to use</p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a><br>
+<strong>Returns</strong>: <p>Sdk</p></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dmID</td>
+<td><code>string</code></td>
+</tr>
+</tbody>
+</table>
+<p><a name="module_api.Sdk+dm"></a></p>
+<a id="sdkdmdmshortid-⇒" class="tsd-anchor"></a><h4 class="tsd-anchor-link"><a href="http://sdk.dm">sdk.dm</a>(dmShortID) ⇒<a href="#sdkdmdmshortid-⇒" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Sets the short ID of the datamanager to use. Alias for <code>dmShortID</code></p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a><br>
+<strong>Returns</strong>: <p>Sdk</p></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dmShortID</td>
+<td><code>string</code></td>
+</tr>
+</tbody>
+</table>
+<p><a name="module_api.Sdk+assetGroup"></a></p>
+<a id="sdkassetgroupassetgroup-⇒" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.assetGroup(assetGroup) ⇒<a href="#sdkassetgroupassetgroup-⇒" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Sets the name of the asset group to use.</p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a><br>
+<strong>Returns</strong>: <p>Sdk</p></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>assetGroup</td>
+<td><code>string</code></td>
+<td><p>name of the asset group</p></td>
+</tr>
+</tbody>
+</table>
+<p><a name="module_api.Sdk+assetgroup"></a></p>
+<a id="sdkassetgroupassetgroup-⇒-1" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.assetgroup(assetGroup) ⇒<a href="#sdkassetgroupassetgroup-⇒-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Sets the name of the asset group to use. Alias for <code>assetGroup</code></p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a><br>
+<strong>Returns</strong>: <p>Sdk</p></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>assetGroup</td>
+<td><code>string</code></td>
+<td><p>name of the asset group</p></td>
+</tr>
+</tbody>
+</table>
+<p><a name="module_api.Sdk+subdomain"></a></p>
+<a id="sdksubdomainsubdomain-⇒" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.subdomain(subdomain) ⇒<a href="#sdksubdomainsubdomain-⇒" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Sets the subdomain to use.</p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a><br>
+<strong>Returns</strong>: <p>Sdk</p></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>subdomain</td>
+<td><code>string</code></td>
+<td><p>subdomain</p></td>
+</tr>
+</tbody>
+</table>
+<p><a name="module_api.Sdk+resource"></a></p>
+<a id="sdkresourceresource-⇒" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.resource(resource) ⇒<a href="#sdkresourceresource-⇒" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Sets the name of the resource to use.</p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a><br>
+<strong>Returns</strong>: <p>Sdk</p></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>resource</td>
+<td><code>string</code></td>
+<td><p>name of the resource</p></td>
+</tr>
+</tbody>
+</table>
+<p><a name="module_api.Sdk+route"></a></p>
+<a id="sdkrouteroute-⇒" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.route(route) ⇒<a href="#sdkrouteroute-⇒" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Sets the route to use.</p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a><br>
+<strong>Returns</strong>: <p>Sdk</p></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>route</td>
+<td><code>string</code></td>
+<td><p>route</p></td>
+</tr>
+</tbody>
+</table>
+<p><a name="module_api.Sdk+publicApi"></a></p>
+<a id="sdkpublicapi-⇒" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.publicApi() ⇒<a href="#sdkpublicapi-⇒" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Returns the public api root endpoint. Expects dmShortID to be set.</p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a><br>
+<strong>Returns</strong>: <p>any</p><br>
+<a name="module_api.Sdk+getDatamanager"></a></p>
+<a id="sdkgetdatamanager-⇒" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.getDatamanager() ⇒<a href="#sdkgetdatamanager-⇒" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Loads a DatamanagerResource by its long id. Requires token.</p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a><br>
+<strong>Returns</strong>: <p>any</p><br>
+<a name="module_api.Sdk+dmList"></a></p>
+<a id="sdkdmlistoptions-⇒-promise" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.dmList([options]) ⇒ <a href="#DatamanagerList"><code>Promise.&lt;DatamanagerList&gt;</code></a><a href="#sdkdmlistoptions-⇒-promise" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Loads datamanager list. Make sure to provide an ec.admin <code>token</code> intercept one.</p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[options]</td>
+<td><code>object</code></td>
+<td><p>options for entry list request.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre><code class="js"><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">dms</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">sdk</span><span class="hl-1">(</span><span class="hl-2">&quot;stage&quot;</span><span class="hl-1">).</span><span class="hl-0">dmList</span><span class="hl-1">()</span>
+</code><button type="button">Copy</button></pre>
+
+<p><a name="module_api.Sdk+modelList"></a></p>
+<a id="sdkmodellistoptions-⇒-promise" class="tsd-anchor"></a><h4 class="tsd-anchor-link">sdk.modelList([options]) ⇒ <a href="#ModelList"><code>Promise.&lt;ModelList&gt;</code></a><a href="#sdkmodellistoptions-⇒-promise" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Loads model list. Expects dmID to be set. Make sure to provide an ec.admin <code>token</code> intercept one.</p>
+<p><strong>Kind</strong>: instance method of <a href="#module_api.Sdk"><code>Sdk</code></a></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[options]</td>
+<td><code>object</code></td>
+<td><p>options for entry list request.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre><code class="js"><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">models</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">sdk</span><span class="hl-1">(</span><span class="hl-2">&quot;stage&quot;</span><span class="hl-1">).</span><span class="hl-0">dmID</span><span class="hl-1">(</span><span class="hl-2">&quot;254a03f1-cb76-4f1e-a52a-bbd4180ca10c&quot;</span><span class="hl-1">).</span><span class="hl-0">modelList</span><span class="hl-1">()</span>
+</code><button type="button">Copy</button></pre>
+
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><use href="assets/icons.svg#icon-chevronDown"></use></svg>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><use href="assets/icons.svg#icon-chevronDown"></use></svg>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#ecfdk"><span>ec.fdk</span></a><ul><li><a href="#install"><span>Install</span></a></li><li><a href="#getting-started"><span>Getting <wbr/>Started</span></a></li><li><ul><li><a href="#method-chaining"><span>Method <wbr/>Chaining</span></a></li><li><a href="#act-1"><span>act</span></a></li><li><a href="#using-act-with-swr--react-query"><span>Using act with swr / react-<wbr/>query</span></a></li></ul></li><li><a href="#migration-from-ecsdk"><span>migration from ec.sdk</span></a></li><li><ul><li><a href="#entry-save"><span>Entry save</span></a></li><li><a href="#entry-delete"><span>Entry delete</span></a></li><li><a href="#entry-asset-fields"><span>Entry <wbr/>Asset <wbr/>Fields</span></a></li><li><a href="#entry-date-fields"><span>Entry <wbr/>Date <wbr/>Fields</span></a></li><li><a href="#entry-list"><span>Entry <wbr/>List</span></a></li><li><a href="#entry-list-filter-options"><span>Entry <wbr/>List <wbr/>Filter <wbr/>Options</span></a></li></ul></li><li><a href="#publish"><span>Publish</span></a></li><li><a href="#api-reference"><span>API <wbr/>Reference</span></a></li><li><ul><li><a href="#apisdk"><span>api.<wbr/>Sdk</span></a></li><li><ul><li><a href="#sdkentriesoptions-⇒-promise"><span>sdk.entries([options]) ⇒ &lt;code&gt;<wbr/>Promise.&lt;<wbr/>Entry<wbr/>List&gt;&lt;/code&gt;</span></a></li><li><a href="#sdkmapentriesoptions-⇒-promise"><span>sdk.map<wbr/>Entries([options]) ⇒ &lt;code&gt;<wbr/>Promise.&lt;<wbr/>Entry<wbr/>List&gt;&lt;/code&gt;</span></a></li><li><a href="#sdkgetentryentryid-⇒-promise"><span>sdk.get<wbr/>Entry(entryID) ⇒ &lt;code&gt;<wbr/>Promise.&lt;<wbr/>Entry<wbr/>Resource&gt;&lt;/code&gt;</span></a></li><li><a href="#sdkeditentrysafeentryid-value-⇒-promise"><span>sdk.edit<wbr/>Entry<wbr/>Safe(entryID, value) ⇒ &lt;code&gt;<wbr/>Promise.&lt;<wbr/>Entry<wbr/>Resource&gt;&lt;/code&gt;</span></a></li><li><a href="#sdkgetschemaentryid-⇒-promise"><span>sdk.get<wbr/>Schema(entryID) ⇒ &lt;code&gt;<wbr/>Promise.&lt;<wbr/>Entry<wbr/>Schema&gt;&lt;/code&gt;</span></a></li><li><a href="#sdkassetsoptions-⇒-promise"><span>sdk.assets([options]) ⇒ &lt;code&gt;<wbr/>Promise.&lt;<wbr/>Asset<wbr/>List&gt;&lt;/code&gt;</span></a></li><li><a href="#sdkcreateassetoptions-⇒-promise"><span>sdk.create<wbr/>Asset(options) ⇒ &lt;code&gt;<wbr/>Promise.&lt;<wbr/>Asset<wbr/>Resource&gt;&lt;/code&gt;</span></a></li><li><a href="#sdkdeleteassetassetid-⇒-promise"><span>sdk.delete<wbr/>Asset(assetID) ⇒ &lt;code&gt;<wbr/>Promise.&lt;void&gt;&lt;/code&gt;</span></a></li><li><a href="#sdkgetassetassetid-⇒-promise"><span>sdk.get<wbr/>Asset(assetID) ⇒ &lt;code&gt;<wbr/>Promise.&lt;<wbr/>Asset<wbr/>Resource&gt;&lt;/code&gt;</span></a></li><li><a href="#sdkcreateentryvalue-⇒-promise"><span>sdk.create<wbr/>Entry(value) ⇒ &lt;code&gt;<wbr/>Promise.&lt;<wbr/>Entry<wbr/>Resource&gt;&lt;/code&gt;</span></a></li><li><a href="#sdkeditentryentryid-value-⇒-promise"><span>sdk.edit<wbr/>Entry(entryID, value) ⇒ &lt;code&gt;<wbr/>Promise.&lt;<wbr/>Entry<wbr/>Resource&gt;&lt;/code&gt;</span></a></li><li><a href="#sdkdeleteentryentryid-⇒-promise"><span>sdk.delete<wbr/>Entry(entryID) ⇒ &lt;code&gt;<wbr/>Promise.&lt;void&gt;&lt;/code&gt;</span></a></li><li><a href="#sdkresourcelistoptions-⇒-promise"><span>sdk.resource<wbr/>List([options]) ⇒ &lt;code&gt;<wbr/>Promise.&lt;<wbr/>Resource<wbr/>List&gt;&lt;/code&gt;</span></a></li><li><a href="#sdkrawoptions-fetchoptions-⇒-promise"><span>sdk.raw([options], [fetch<wbr/>Options]) ⇒ &lt;code&gt;<wbr/>Promise.&lt;any&gt;&lt;/code&gt;</span></a></li><li><a href="#sdkmodelmodel-⇒"><span>sdk.model(model) ⇒</span></a></li><li><a href="#sdktokentoken-⇒"><span>sdk.token(token) ⇒</span></a></li><li><a href="#sdkdmshortiddmshortid-⇒"><span>sdk.dm<wbr/>ShortID(dm<wbr/>ShortID) ⇒</span></a></li><li><a href="#sdkdmiddmid-⇒"><span>sdk.dmID(dmID) ⇒</span></a></li><li><a href="#sdkdmdmshortid-⇒"><span>sdk.dm(dm<wbr/>ShortID) ⇒</span></a></li><li><a href="#sdkassetgroupassetgroup-⇒"><span>sdk.asset<wbr/>Group(asset<wbr/>Group) ⇒</span></a></li><li><a href="#sdkassetgroupassetgroup-⇒-1"><span>sdk.assetgroup(asset<wbr/>Group) ⇒</span></a></li><li><a href="#sdksubdomainsubdomain-⇒"><span>sdk.subdomain(subdomain) ⇒</span></a></li><li><a href="#sdkresourceresource-⇒"><span>sdk.resource(resource) ⇒</span></a></li><li><a href="#sdkrouteroute-⇒"><span>sdk.route(route) ⇒</span></a></li><li><a href="#sdkpublicapi-⇒"><span>sdk.public<wbr/>Api() ⇒</span></a></li><li><a href="#sdkgetdatamanager-⇒"><span>sdk.get<wbr/>Datamanager() ⇒</span></a></li><li><a href="#sdkdmlistoptions-⇒-promise"><span>sdk.dm<wbr/>List([options]) ⇒ &lt;code&gt;<wbr/>Promise.&lt;<wbr/>Datamanager<wbr/>List&gt;&lt;/code&gt;</span></a></li><li><a href="#sdkmodellistoptions-⇒-promise"><span>sdk.model<wbr/>List([options]) ⇒ &lt;code&gt;<wbr/>Promise.&lt;<wbr/>Model<wbr/>List&gt;&lt;/code&gt;</span></a></li></ul></li></ul></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="modules.html">ec.fdk</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>
