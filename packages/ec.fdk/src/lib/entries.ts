@@ -1,10 +1,4 @@
-import { apiURL, apis, expect, fetcher, query } from "./util.mjs";
-
-// https://github.com/microsoft/TypeScript/issues/46011
-/* <-- add star here when ^ is fixed
- * @typedef {import('./api.mjs').AssetResource} AssetResource
- * @typedef {import('./api.mjs').EntryResource} EntryResource
- */
+import { apiURL, apis, expect, fetcher, query } from "./util";
 
 let systemFields = [
   "created",
@@ -63,7 +57,7 @@ export function getEntry({ env, dmShortID, model, entryID, token }) {
   expect({ env, dmShortID, model, entryID });
   const q = query({ _id: entryID });
   const url = apiURL(`api/${dmShortID}/${model}?${q}`, env);
-  return fetcher(url, { dmShortID, token });
+  return fetcher(url, { token });
 }
 
 export async function createEntry({ env, dmShortID, model, value, token }) {
@@ -71,7 +65,7 @@ export async function createEntry({ env, dmShortID, model, value, token }) {
   const url = apiURL(`api/${dmShortID}/${model}`, env);
   const res = await fetcher(
     url,
-    { env, dmShortID, token },
+    { token },
     {
       method: "POST",
       body: JSON.stringify(value),
@@ -91,7 +85,7 @@ export async function editEntry({
   value,
   token,
   safePut = false,
-}) {
+}: Partial<EntryOptions> & { value: any; safePut?: boolean }) {
   expect({ env, dmShortID, model, entryID, value });
   const headers = {
     "Content-Type": "application/json",
@@ -119,7 +113,21 @@ export async function editEntry({
   return res;
 }
 
-export function deleteEntry({ env, dmShortID, model, entryID, token }) {
+type EntryOptions = {
+  env: string;
+  dmShortID: string;
+  model: string;
+  entryID: string;
+  token: string;
+};
+
+export function deleteEntry({
+  env,
+  dmShortID,
+  model,
+  entryID,
+  token,
+}: Partial<EntryOptions>) {
   expect({ env, dmShortID, model, entryID });
   // console.log("edit entry", dmShortID, model, entryID, value);
   const url = apiURL(`api/${dmShortID}/${model}?_id=${entryID}`, env);
@@ -234,7 +242,7 @@ export async function getSchema({ env, dmShortID, model, withMetadata }) {
  */
 export function sdkOptions(options) {
   return Object.entries(options)
-    .map(([key, o]) => {
+    .map(([key, o]: [string, any]) => {
       if (typeof o !== "object") {
         return { [key]: String(o) };
       }

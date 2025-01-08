@@ -1,4 +1,4 @@
-import { expect, apiURL, fetcher } from "./util.mjs";
+import { expect, apiURL, fetcher } from "./util";
 
 const accountServer = {
   stage: "https://accounts.cachena.entrecode.de/",
@@ -51,7 +51,7 @@ export async function logoutPublic(config) {
   );
   const res = await fetcher(
     url,
-    { dmShortID, rawRes: true },
+    { rawRes: true },
     {
       method: "POST",
     }

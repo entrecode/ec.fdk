@@ -1,9 +1,9 @@
 /**
  * @module api
  */
-import * as actions from "./actions.mjs";
-import { expect } from "./util.mjs";
-export * from "./util.mjs";
+import * as actions from "./actions";
+import { expect } from "./util";
+export * from "./util";
 
 const {
   entryList,
@@ -48,6 +48,7 @@ export function act(config) {
  * SDK
  */
 export class Sdk {
+  config: any;
   constructor(config) {
     this.config = config;
   }
@@ -176,7 +177,7 @@ export class Sdk {
    * .assetgroup("test")
    * .createAsset({ file, name: "venndiagram.png" });
    */
-  async createAsset({ file, name, options } = {}) {
+  async createAsset({ file, name, options }: any = {}) {
     const token = await this.getBestToken();
     return createAsset({ ...this.config, file, name, options, token });
   }
@@ -485,141 +486,3 @@ export class Sdk {
 
 export const sdk = (env) => new Sdk({ env });
 export const fdk = sdk;
-
-/**
- * @typedef {Object} AssetFile
- * @property {string} url
- * @property {number} size
- * @property {Object} resolution
- */
-
-/**
- * @typedef {Object} AssetResource
- * @property {string} assetID
- * @property {Date} created
- * @property {Array<any>} files
- * @property {Array<string | any>} tags
- * @property {string} title
- * @property {string} type
- * @property {string} mimetype
- * @property {number} duplicates
- * @property {AssetFile} file
- */
-
-/**
- * @typedef {Object} EntryResource
- * @property {string} id - The id
- * @property {Date} _created - The creation date.
- * @property {string} _creator - The creator's string representation.
- * @property {any} _embedded - Any embedded resource.
- * @property {any} _links - Any associated links.
- * @property {string} _modelTitle - The title of the model.
- * @property {string} _modelTitleField - The field representing the model title.
- * @property {Date} _modified - The last modification date.
- * @property {Date} created - The creation date.
- * @property {Date} modified - The last modification date.
- * @property {any} [key] - Any additional properties can be added dynamically.
- *
- * @extends {Record<string, any>}
- */
-
-/**
- * @typedef {Object} EntryFieldSchema
- * @property {any} default - The default value or null
- * @property {string} description - The field description
- * @property {boolean} readOnly - If true, the field cannot be changed on PUT
- * @property {boolean} required - If true, the field has to be set on POST
- * @property {string} type - field type
- * @property {string} resource - If field type is one of entry | entries | asset | assets, this field contains the name of the expected resource or null if all are valid
- */
-
-/**
- * @typedef {Object.<string, EntryFieldSchema>} EntrySchema
- */
-
-/**
- * @typedef {Object} EntryList
- * @property {number} count
- * @property {number} total
- * @property {EntryResource[]} items
- */
-
-/**
- * @typedef {Object} DatamanagerResource
- * @property {string} created
- * @property {string} dataManagerID
- * @property {string} defaultLocale
- * @property {string} description
- * @property {any} config
- * @property {string} hexColor
- * @property {string[]} locales
- * @property {string[]} rights
- * @property {string[]} publicAssetRights
- * @property {string} shortID
- * @property {string} title
- * @property {any} _links - Any associated links.
- */
-
-/**
- * @typedef {Object} DatamanagerList
- * @property {number} count
- * @property {number} total
- * @property {DatamanagerResource[]} items
- */
-
-/**
- * @typedef {Object} AssetList
- * @property {number} count
- * @property {number} total
- * @property {AssetResource[]} items
- */
-
-/**
- * @typedef {Object} ResourceList
- * @property {number} count
- * @property {number} total
- * @property {any[]} items
- */
-
-/**
- * @typedef {Object} ModelFieldConfig
- * // config: {} ?
- * @property {any} default
- * @property {string} description
- * @property {boolean} localizable
- * @property {boolean} mutable
- * @property {boolean} readOnly
- * @property {boolean} required
- * @property {boolean} unique
- * @property {string} title
- * @property {string} type
- * @property {string | null} validation
- */
-
-/**
- * @typedef {Object} ModelResource
- * @property {any} config
- * @property {string} created
- * @property {string} description
- * @property {ModelFieldConfig[]} fields
- * @property {boolean} hasEntries
- * @property {string} hexColor
- * @property {any[]} hooks
- * @property {any[]} lastSyncs
- * @property {string[]} locales
- * @property {string} modelID
- * @property {string} modified
- * @property {any[]} policies
- * @property {any} sync
- * @property {string} title
- * @property {string} titleField
- * @property {any} _links
- *
- */
-
-/**
- * @typedef {Object} ModelList
- * @property {number} count
- * @property {number} total
- * @property {ModelResource[]} items
- */
