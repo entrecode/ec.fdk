@@ -1,3 +1,9 @@
+import {
+  AssetResource,
+  EntryList,
+  EntryResource,
+  PublicApiRoot,
+} from "src/types";
 import { apiURL, apis, expect, fetcher, query } from "./util";
 
 let systemFields = [
@@ -31,7 +37,7 @@ function withoutUndefinedValues(entryLike) {
   return JSON.parse(JSON.stringify(entryLike));
 }
 
-export async function publicApi(config) {
+export async function publicApi(config): Promise<PublicApiRoot> {
   let { env, dmShortID } = config;
   expect({ env, dmShortID });
   // name~ = search
@@ -39,7 +45,8 @@ export async function publicApi(config) {
   return fetcher(url, config);
 }
 
-export async function entryList(config) {
+/** @ignore */
+export async function entryList(config): Promise<EntryList> {
   let { env, dmShortID, model, options = {} } = config;
   expect({ env, dmShortID, model });
   options = { size: 50, page: 1, _list: true, ...options };
@@ -53,14 +60,28 @@ export async function entryList(config) {
   return { count, total, items };
 }
 
-export function getEntry({ env, dmShortID, model, entryID, token }) {
+/** @ignore */
+export function getEntry({
+  env,
+  dmShortID,
+  model,
+  entryID,
+  token,
+}): Promise<EntryResource> {
   expect({ env, dmShortID, model, entryID });
   const q = query({ _id: entryID });
   const url = apiURL(`api/${dmShortID}/${model}?${q}`, env);
   return fetcher(url, { token });
 }
 
-export async function createEntry({ env, dmShortID, model, value, token }) {
+/** @ignore */
+export async function createEntry({
+  env,
+  dmShortID,
+  model,
+  value,
+  token,
+}): Promise<EntryResource> {
   expect({ env, dmShortID, model, value });
   const url = apiURL(`api/${dmShortID}/${model}`, env);
   const res = await fetcher(
@@ -77,6 +98,7 @@ export async function createEntry({ env, dmShortID, model, value, token }) {
   return res;
 }
 
+/** @ignore */
 export async function editEntry({
   env,
   dmShortID,
@@ -85,7 +107,10 @@ export async function editEntry({
   value,
   token,
   safePut = false,
-}: Partial<EntryOptions> & { value: any; safePut?: boolean }) {
+}: Partial<EntryOptions> & {
+  value: any;
+  safePut?: boolean;
+}): Promise<EntryResource> {
   expect({ env, dmShortID, model, entryID, value });
   const headers = {
     "Content-Type": "application/json",
@@ -121,13 +146,14 @@ type EntryOptions = {
   token: string;
 };
 
+/** @ignore */
 export function deleteEntry({
   env,
   dmShortID,
   model,
   entryID,
   token,
-}: Partial<EntryOptions>) {
+}: Partial<EntryOptions>): Promise<void> {
   expect({ env, dmShortID, model, entryID });
   // console.log("edit entry", dmShortID, model, entryID, value);
   const url = apiURL(`api/${dmShortID}/${model}?_id=${entryID}`, env);
@@ -143,7 +169,7 @@ export function deleteEntry({
   );
 }
 
-export async function mapEntries(config, fn) {
+export async function mapEntries(config, fn): Promise<EntryResource[]> {
   let { env, dmShortID, model, options = {} } = config;
   expect({ env, dmShortID, model });
   config.options = { size: 50, page: 1, _list: true, ...options };
@@ -167,6 +193,7 @@ export async function mapEntries(config, fn) {
 // checkPermission,
 // error handling problems detail etc.. alles in message werfen oder ec.errors nehmen?
 
+/** @ignore */
 export async function getSchema({ env, dmShortID, model, withMetadata }) {
   // https://datamanager.cachena.entrecode.de/api/schema/fb5dbaab/addon_config
   expect({ env, dmShortID, model });
@@ -257,22 +284,14 @@ export function sdkOptions(options) {
 export const filterOptions = sdkOptions;
 /**
  * Returns the shortID of the given EntryResource
- *
- * @param {EntryResource}} entry EntryResource
- * @returns {string}
- *
  */
-export function getEntryShortID(entry) {
+export function getEntryShortID(entry: EntryResource): string {
   return entry._links.collection.href.split("/").slice(-2)[0];
 }
 /**
  * Returns the env of the given EntryResource
- *
- * @param {EntryResource}} entry EntryResource
- * @returns {string}
- *
  */
-export function getEntryEnv(entry) {
+export function getEntryEnv(entry: EntryResource): string {
   const baseUrl = entry._links.collection.href.split("api/")[0];
   const env = Object.keys(apis.datamanager).find(
     (key) => apis.datamanager[key] === baseUrl
@@ -288,8 +307,10 @@ const getEntryConfig = (entry) => {
   return { dmShortID, env, model, entryID };
 };
 
+/** @ignore */
 export const deleteEntryObject = (entry) => deleteEntry(getEntryConfig(entry));
 
+/** @ignore */
 export const editEntryObject = (entry, value) =>
   editEntry({
     ...getEntryConfig(entry),
@@ -298,12 +319,11 @@ export const editEntryObject = (entry, value) =>
 
 /**
  * Returns the embedded asset from the given field name and EntryResource
- *
- * @param {EntryResource}} entry EntryResource
- * @returns {AssetResource}}
- *
  */
-export function getEntryAsset(field, entry) {
+export function getEntryAsset(
+  field: string,
+  entry: EntryResource
+): AssetResource {
   const shortID = getEntryShortID(entry);
   return entry._embedded[`${shortID}:${entry._modelTitle}/${field}/asset`];
 }

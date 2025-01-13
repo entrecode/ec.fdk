@@ -27,7 +27,7 @@ import { fdk } from "ec.fdk";
 fdk("stage") // choose stage environment
   .dm("83cc6374") // select datamanager via short id
   .model("muffin") // select model muffin
-  .entries() // load entry list
+  .entryList() // load entry list
   .then((list) => {
     console.log(list);
   });
@@ -39,7 +39,7 @@ You can also reuse parts of the chain with variables:
 // we want to do stuff with model muffin here
 const muffin = fdk("stage").dm("83cc6374").model("muffin");
 // load entry list
-const { items } = await muffin.entries();
+const { items } = await muffin.entryList();
 // edit first entry
 await muffin.editEntry(items[0].id, { name: "edit!" });
 // delete second entry

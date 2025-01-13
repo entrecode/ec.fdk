@@ -1,3 +1,4 @@
+/** @ignore */
 export async function fetcher(
   url,
   config: { token?: string; rawRes?: boolean } = {},
@@ -26,6 +27,10 @@ export async function fetcher(
   return await res.json();
 }
 
+/**
+ * @ignore
+ * The different ec API urls for live and stage environments, used by {@link apiURL}
+ */
 export const apis = {
   datamanager: {
     live: "https://datamanager.entrecode.de/",
@@ -45,6 +50,10 @@ export const apis = {
   },
 };
 
+/**
+ * Resolves the url of a ec API endpoint.
+ * @ignore
+ */
 export function apiURL(route, env = "stage", subdomain = "datamanager") {
   const api = apis[subdomain];
   if (!api) {
@@ -63,6 +72,7 @@ export function apiURL(route, env = "stage", subdomain = "datamanager") {
   return base + route;
 }
 
+/** @ignore */
 export function query(params, sort = true) {
   return Object.entries(params)
     .sort((a, b) => a[0].localeCompare(b[0]))
@@ -70,6 +80,7 @@ export function query(params, sort = true) {
     .join("&");
 }
 
+/** @ignore */
 export function expect(obj) {
   Object.entries(obj).forEach(([key, value]) => {
     if (value === undefined) {

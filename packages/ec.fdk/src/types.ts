@@ -47,6 +47,8 @@ export type EntryList = {
   items: EntryResource[];
 };
 
+export type PublicApiRoot = any; // TODO
+
 export type DatamanagerResource = {
   created: string;
   dataManagerID: string;
@@ -116,4 +118,20 @@ export type ModelList = {
   count: number;
   total: number;
   items: ModelResource[];
+};
+
+/** see https://doc.entrecode.de/api-basics/#generic-list-resources */
+export type GenericListOptions = {
+  page?: number;
+  size?: number;
+  sort?: string;
+};
+
+/** see https://doc.entrecode.de/datamanager/resources/asset/#relations_1 */
+export type AssetCreateOptions = {
+  preserveFilenames?: boolean;
+  includeAssetIDInPath?: boolean;
+  defaultVariants?: string;
+  ignoreDuplicates?: boolean;
+  deduplicate?: boolean;
 };

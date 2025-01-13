@@ -1,6 +1,14 @@
+import { AssetList, AssetResource } from "src/types";
 import { apiURL, expect, fetcher, query } from "./util";
 
-export async function getAsset({ env, dmShortID, assetGroup, assetID, token }) {
+/** @ignore */
+export async function getAsset({
+  env,
+  dmShortID,
+  assetGroup,
+  assetID,
+  token,
+}): Promise<AssetResource> {
   expect({ env, dmShortID, assetGroup, assetID });
   const q = query({ assetID: assetID });
   const url = apiURL(`a/${dmShortID}/${assetGroup}?${q}`, env);
@@ -8,7 +16,8 @@ export async function getAsset({ env, dmShortID, assetGroup, assetID, token }) {
   return _embedded ? _embedded["ec:dm-asset"] : undefined;
 }
 
-export async function assetList(config) {
+/** @ignore */
+export async function assetList(config): Promise<AssetList> {
   let { env, dmShortID, assetGroup, token, options = {} } = config;
   expect({ env, dmShortID, assetGroup });
   options = { size: 50, page: 1, _list: true, ...options };
@@ -21,6 +30,9 @@ export async function assetList(config) {
   return { count, total, items };
 }
 
+/**
+ * @ignore
+ */
 export async function createAsset({
   env,
   dmShortID,
@@ -29,7 +41,7 @@ export async function createAsset({
   file,
   name,
   options,
-}) {
+}): Promise<AssetResource> {
   expect({ env, dmShortID, assetGroup, file });
 
   const url = apiURL(`a/${dmShortID}/${assetGroup}`, env);
@@ -52,6 +64,9 @@ export async function createAsset({
   return list._embedded["ec:dm-asset"];
 }
 
+/**
+ * @ignore
+ */
 export async function deleteAsset({
   env,
   dmShortID,

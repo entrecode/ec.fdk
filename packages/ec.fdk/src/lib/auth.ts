@@ -76,10 +76,13 @@ export async function logoutEc(config) {
   return res;
 }
 
+/** @ignore */
 export function getPublicAuthKey({ dmShortID }) {
   expect({ dmShortID });
   return dmShortID;
 }
+
+/** @ignore */
 export function getEcAuthKey({ env }) {
   expect({ env });
   return env;
