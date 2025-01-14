@@ -1,3 +1,5 @@
+<img src="/feather.svg" style="width:180px;float:right" />
+
 # ec.fdk
 
 *F*eatherweight *D*evelopment *K*it for entrecode APIs.

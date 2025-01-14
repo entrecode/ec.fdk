@@ -19,7 +19,9 @@
     "notDocumented": false,
     "unusedMergeModuleWith": true
   },
+  "visibilityFilters": {},
   "categorizeByGroup": true,
+  "hideGenerator": true,
   "hostedBaseUrl": "https://entrecode.github.io/ec.fdk/",
   "outputs": [
     {
