@@ -135,3 +135,14 @@ export type AssetCreateOptions = {
   ignoreDuplicates?: boolean;
   deduplicate?: boolean;
 };
+
+export type StorageAdapter = {
+  get: (key: string) => string;
+  set: (key: string, token: string) => void;
+  remove: (key: string) => void;
+};
+
+export type FdkConfig = {
+  storageAdapter?: StorageAdapter;
+  [key: string]: any;
+};

@@ -1,4 +1,10 @@
-import { AssetCreateOptions, EntrySchema, GenericListOptions } from "src/types";
+import {
+  AssetCreateOptions,
+  EntrySchema,
+  FdkConfig,
+  GenericListOptions,
+  StorageAdapter,
+} from "src/types";
 import * as actions from "./actions";
 import { expect } from "./util";
 export * from "./util";
@@ -102,7 +108,15 @@ export class Fdk {
   /** @ignore */
   config: any;
   /** @ignore */
-  constructor(config) {
+  constructor(config: FdkConfig = {}) {
+    if (!config.storageAdapter) {
+      let authStorage = new Map();
+      config.storageAdapter = {
+        get: (key) => authStorage.get(key),
+        set: (key, token) => authStorage.set(key, token),
+        remove: (key) => authStorage.delete(key),
+      };
+    }
     this.config = config;
   }
   /** @ignore */
@@ -328,85 +342,106 @@ export class Fdk {
   }
 
   /**
-   * Defines a storage to use for auth data.
+   * Defines a custom storage to use for auth data. In most cases, this should not be needed. By default, auth will be stored in-memory, using a JS Map. This should be fine for NodeJS.
+   * In the Browser, it's better to use [oidc-client](https://github.com/AxaFrance/oidc-client) and ignore all Auth methods here.
+   *
    * @category Auth
    * @example
+   * // using Cookies
    * import Cookies from "js-cookie";
    * let fdk = fdk("stage").storageAdapter(Cookies);
    * await fdk.dm("83cc6374").model("my-protected-model").entryList();
    *
    */
-  storageAdapter(storageAdapter) {
+  storageAdapter(storageAdapter: StorageAdapter) {
     // is expected to have get, set and remove
     return this.set({ storageAdapter });
   }
   /** @ignore */
-  setAuth(key) {
-    return (auth) => {
-      if (!this.config.storageAdapter) {
-        throw new Error("cannot setAuth: no storageAdapter defined!");
-      }
-      const { set } = this.config.storageAdapter;
-      set(key, auth.token);
-      return auth;
-    };
+  removeToken(key) {
+    if (!this.config.storageAdapter) {
+      throw new Error("cannot removeToken: no storageAdapter defined!");
+    }
+    const { remove } = this.config.storageAdapter;
+    remove(key);
   }
   /** @ignore */
-  unsetAuth(key) {
-    return (auth) => {
-      if (!this.config.storageAdapter) {
-        throw new Error("cannot unsetAuth: no storageAdapter defined!");
-      }
-      const { remove } = this.config.storageAdapter;
-      remove(key);
-      return auth;
-    };
-  }
-  /** @ignore */
-  getAuth(key) {
+  getToken(key) {
     if (!this.config.storageAdapter) {
       throw new Error("cannot getAuth: no storageAdapter defined!");
     }
     const { get } = this.config.storageAdapter;
     return get(key);
   }
-  /**
-   * @category Auth
-   *
-   * */
-  loginEc(config) {
-    return loginEc({ ...this.config, ...config }).then(
-      this.setAuth(getEcAuthKey(this.config))
-    );
-  }
-  /** @ignore */
-  loginPublic(config) {
-    //
-    return loginPublic({ ...this.config, ...config }).then(
-      this.setAuth(getPublicAuthKey(this.config))
-    );
-  }
-  /** @ignore */
-  logoutPublic() {
-    const token = this.getPublicToken();
-    return logoutPublic({ ...this.config, token }).then(
-      this.unsetAuth(getPublicAuthKey(this.config))
-    );
-  }
-  /** @ignore */
-  logoutEc() {
-    const token = this.getEcToken();
-    return logoutEc({ ...this.config, token }).then(
-      this.unsetAuth(getEcAuthKey(this.config))
-    );
-  }
   /** @ignore */
   getPublicToken() {
-    return this.config.token || this.getAuth(getPublicAuthKey(this.config));
+    return this.config.token || this.getToken(getPublicAuthKey(this.config));
   }
   /** @ignore */
   getEcToken() {
-    return this.config.token || this.getAuth(getEcAuthKey(this.config));
+    return this.config.token || this.getToken(getEcAuthKey(this.config));
+  }
+  /** @ignore */
+  setToken(key, token) {
+    if (!this.config.storageAdapter) {
+      throw new Error("cannot setEcToken: no storageAdapter defined!");
+    }
+    return this.config.storageAdapter.get(key, token);
+  }
+  /**
+   * Manually set ec user token on the {@link Fdk.authStorage}. In most cases, you'd want to use {@link Fdk.token} instead!
+   * @category Auth
+   * @ignore
+   */
+  setEcToken(token: string) {
+    this.setToken(getEcAuthKey(this.config), token);
+  }
+  /**
+   * Manually set public user token on the {@link Fdk.authStorage}. In most cases, you'd want to use {@link Fdk.token} instead!
+   * @category Auth
+   * @ignore
+   */
+  setPublicToken(token: string) {
+    this.setToken(getPublicAuthKey(this.config), token);
+  }
+  /**
+   * Login with the given ec user. Only needed when using manual auth.
+   * @category Auth
+   */
+  loginEc(config: { email: string; password: string }) {
+    return loginEc({ ...this.config, ...config }).then((auth) =>
+      this.setToken(getEcAuthKey(this.config), auth.token)
+    );
+  }
+  /**
+   * Login with the given public user. Only needed when using manual auth.
+   * @category Auth
+   */
+  loginPublic(config) {
+    //
+    return loginPublic({ ...this.config, ...config }).then((auth) =>
+      this.setToken(getPublicAuthKey(this.config), auth.token)
+    );
+  }
+  /**
+   * Logs out the current public user. Only needed when using manual auth.
+   * @category Auth
+   */
+  logoutPublic() {
+    const token = this.getPublicToken();
+    return logoutPublic({ ...this.config, token }).then(() =>
+      this.removeToken(getPublicAuthKey(this.config))
+    );
+  }
+  /**
+   * Logs out the current ec user. Only needed when using manual auth.
+   * @category Auth
+   */
+  logoutEc() {
+    const token = this.getEcToken();
+    return logoutEc({ ...this.config, token }).then(() =>
+      this.removeToken(getEcAuthKey(this.config))
+    );
   }
   /** @ignore */
   hasPublicToken() {
@@ -437,7 +472,7 @@ export class Fdk {
     return this.set({ model });
   }
   /**
-   * Sets the token to use in requests
+   * Sets the token to use in requests. Intended for usage with a fixed token in NodeJS.
    * @param token
    * @category Auth
    */

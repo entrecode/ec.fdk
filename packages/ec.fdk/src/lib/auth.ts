@@ -26,7 +26,7 @@ export async function loginPublic(config) {
 }
 
 /** @ignore */
-export async function loginEc(config) {
+export async function loginEc(config): Promise<{ token: string }> {
   let { env, email, password } = config;
   expect({ env, email, password });
   const url = `${accountServer[env]}auth/login?clientID=rest`;
@@ -45,7 +45,7 @@ export async function loginEc(config) {
 }
 
 /** @ignore */
-export async function logoutPublic(config) {
+export async function logoutPublic(config): Promise<{ token: string }> {
   let { dmShortID, env, token } = config;
   expect({ dmShortID, env, token });
   const url = apiURL(
