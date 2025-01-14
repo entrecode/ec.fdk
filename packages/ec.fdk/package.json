@@ -1,6 +1,6 @@
 {
   "name": "ec.fdk",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "ec frontend sdk",
   "main": "./src/index.ts",
   "publishConfig": {
