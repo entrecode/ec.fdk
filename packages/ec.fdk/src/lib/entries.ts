@@ -37,6 +37,7 @@ function withoutUndefinedValues(entryLike) {
   return JSON.parse(JSON.stringify(entryLike));
 }
 
+/** @ignore */
 export async function publicApi(config): Promise<PublicApiRoot> {
   let { env, dmShortID } = config;
   expect({ env, dmShortID });
@@ -169,6 +170,7 @@ export function deleteEntry({
   );
 }
 
+/** @ignore */
 export async function mapEntries(config, fn): Promise<EntryResource[]> {
   let { env, dmShortID, model, options = {} } = config;
   expect({ env, dmShortID, model });
@@ -261,6 +263,21 @@ export type SdkFilterOptions = {
  *
  * @param {SdkFilterOptions} options sdk filterOptions
  * @returns {Record<string, string>}
+ * @example
+ * await dsbApi.model('admin_news').entries(
+ *   sdkOptions(
+ *     {
+ *       _count: 3,
+ *       adminNotification: true,
+ *       startDate: {
+ *         to: dayjs().format('YYYY-MM-DD'),
+ *       },
+ *       endDate: {
+ *         from: dayjs().format('YYYY-MM-DD'),
+ *       },
+ *     },
+ *   ),
+ * )
  *
  */
 export function sdkOptions(options) {

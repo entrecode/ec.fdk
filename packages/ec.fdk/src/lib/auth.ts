@@ -5,6 +5,7 @@ const accountServer = {
   live: "https://accounts.entrecode.de/",
 };
 
+/** @ignore */
 export async function loginPublic(config) {
   let { env, dmShortID, email, password } = config;
   expect({ env, dmShortID, email, password });
@@ -24,6 +25,7 @@ export async function loginPublic(config) {
   return res;
 }
 
+/** @ignore */
 export async function loginEc(config) {
   let { env, email, password } = config;
   expect({ env, email, password });
@@ -42,6 +44,7 @@ export async function loginEc(config) {
   return res;
 }
 
+/** @ignore */
 export async function logoutPublic(config) {
   let { dmShortID, env, token } = config;
   expect({ dmShortID, env, token });
@@ -59,6 +62,7 @@ export async function logoutPublic(config) {
   return res;
 }
 
+/** @ignore */
 export async function logoutEc(config) {
   let { env, token } = config;
   expect({ env, token });

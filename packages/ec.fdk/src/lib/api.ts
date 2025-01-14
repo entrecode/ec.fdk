@@ -1,6 +1,3 @@
-/**
- * @module api
- */
 import { AssetCreateOptions, EntrySchema, GenericListOptions } from "src/types";
 import * as actions from "./actions";
 import { expect } from "./util";
@@ -32,7 +29,31 @@ const {
   raw,
 } = actions;
 
-export function act(config) {
+/** The act function converts a single `config` object param into a fetch request:
+ * ```js
+ * const muffins = await act({
+ *   action: "entryList",
+ *   env: "stage",
+ *   dmShortID: "83cc6374",
+ *   model: "muffin",
+ * });
+ * ```
+ *
+ * The `config` object passed to `act` expects an `action` ([available actions](https://github.com/entrecode/ec.fdk/blob/main/packages/ec.fdk/src/lib/api.ts))
+ * and additional keys that are required to perform the action.
+ * If you don't know the required keys for an action, either call `act` without additional keys or look it up in the source.
+ * For example, this is how the `entryList` function looks:
+ * ```js
+ * export async function entryList(config) {
+ *   let { env, dmShortID, model, options = {} } = config;
+ *   expect({ env, dmShortID, model });
+ *   // more stuff
+ * }
+ * ```
+ * The call to `expect` shows which keys are expected to be set.
+ *
+ */
+export function act(config: Record<string, any>): Promise<any> {
   const { action } = config;
   expect({ action });
   if (!actions[action]) {
@@ -47,6 +68,8 @@ export function act(config) {
 
 /**
  * Main API to interact with the ec.fdk. You can create an instance with {@link fdk}.
+ * 
+ * Checkout all available methods in the sidebar on the right.
  * @example
  * fdk("stage") // choose stage environment
  * .dm("83cc6374") // select datamanager via short id
@@ -55,6 +78,25 @@ export function act(config) {
  * .then((list) => {
  *   console.log(list);
  * });
+ * 
+ * @example You can also reuse parts of the chain with variables:
+ * ```js
+ * // we want to do stuff with model muffin here
+ * const muffin = fdk("stage").dm("83cc6374").model("muffin");
+ * // load entry list
+ * const { items } = await muffin.entryList();
+ * // edit first entry
+ * await muffin.editEntry(items[0].id, { name: "edit!" });
+ * // delete second entry
+ * await muffin.deleteEntry(items[1].id);
+ * // create a new muffin
+ * await muffin.createEntry({ name: "new muffin" });
+ * // edit third entry with safePut
+ * await muffin.editEntrySafe(items[2].id, {
+ *   _modified: items[2]._modified,
+ *   name: "safePut!",
+ * });
+```
  */
 export class Fdk {
   /** @ignore */
@@ -79,12 +121,13 @@ export class Fdk {
    * If the model is not public, you also need to provide a `token`.
    *
    * @param options options for list request.
+   * @category Entries
    * @example
    * // public model
-   * const muffins = await sdk("stage").dm("83cc6374").model("muffin").entryList()
+   * const muffins = await fdk("stage").dm("83cc6374").model("muffin").entryList()
    * @example
    * // non-public model
-   * const secrets = await sdk("stage").token(token).dm("83cc6374").model("secret").entryList()
+   * const secrets = await fdk("stage").token(token).dm("83cc6374").model("secret").entryList()
    */
   async entryList(options: GenericListOptions) {
     const token = await this.getBestToken();
@@ -95,9 +138,10 @@ export class Fdk {
    * Maps over entry list.
    *
    * @param options options for entry list request.
+   * @category Entries
    * @example
    * // public model
-   * const muffins = sdk("stage").dm("83cc6374").model("muffin")
+   * const muffins = fdk("stage").dm("83cc6374").model("muffin")
    * const res = await muffin.mapEntries((entry) => muffin.editEntry(entry.id, { name: entry.name + "!" }));
    * console.log("res", res);
    */
@@ -108,9 +152,9 @@ export class Fdk {
   /**
    * Loads a single entry. Expects `dmShortID` / `model` to be set.
    * If the model is not public, you also need to provide a `token`.
-   *
+   * @category Entries
    * @example
-   * const muffin = await sdk("stage").dm("83cc6374").model("muffin").getEntry("1gOtzWvrdq")
+   * const muffin = await fdk("stage").dm("83cc6374").model("muffin").getEntry("1gOtzWvrdq")
    */
   async getEntry(entryID: string) {
     const token = await this.getBestToken();
@@ -123,8 +167,9 @@ export class Fdk {
    *
    * @param entryID id of entry to edit
    * @param value values to set. undefined fields are ignored
+   * @category Entries
    * @example
-   * const entry = await sdk("stage")
+   * const entry = await fdk("stage")
    *  .dm("83cc6374")
    *  .model("muffin")
    *  .editEntrySafe("1gOtzWvrdq", { name: "test", _modified: "2020-01-01T00:00:00.000Z"})
@@ -136,8 +181,9 @@ export class Fdk {
   /**
    * Loads the schema of a model. Expects `dmShortID` / `model` to be set.
    *
+   * @category Entries
    * @example
-   * const muffin = await sdk("stage").dm("83cc6374").model("muffin").getSchema()
+   * const muffin = await fdk("stage").dm("83cc6374").model("muffin").getSchema()
    */
   async getSchema(): Promise<EntrySchema> {
     return getSchema(this.config);
@@ -150,13 +196,13 @@ export class Fdk {
   /**
    * Loads asset list. Expects `dmShortID` / `assetGroup` to be set.
    * If the assetGroup is not public, you also need to provide a `token`.
-   *
+   * @category Assets
    * @example
    * // public assetGroup
-   * const files = await sdk("stage").dm("83cc6374").assetGroup("avatars").assetList()
+   * const files = await fdk("stage").dm("83cc6374").assetGroup("avatars").assetList()
    * @example
    * // non-public assetGroup
-   * const files = await sdk("stage").token(token).dm("83cc6374").assetGroup("avatars").assetList()
+   * const files = await fdk("stage").token(token).dm("83cc6374").assetGroup("avatars").assetList()
    */
   async assetList(options: GenericListOptions) {
     const token = await this.getBestToken();
@@ -165,7 +211,7 @@ export class Fdk {
   /**
    * Uploads an asset. Expects `dmShortID` / `assetGroup` / `file` to be set.
    * If the assetGroup is not public, you also need to provide a `token`.
-   *
+   * @category Assets
    * @example
    * // browser example
    * document.getElementById("file").addEventListener("input", async (e) => {
@@ -176,7 +222,7 @@ export class Fdk {
    * // node example
    * const buf = fs.readFileSync("venndiagram.png");
    * const file = new Blob([buf]);
-   * const upload = await sdk("stage")
+   * const upload = await fdk("stage")
    * .dm("83cc6374")
    * .assetgroup("test")
    * .createAsset({ file, name: "venndiagram.png" });
@@ -193,7 +239,7 @@ export class Fdk {
   /**
    * Deletes an asset. Expects `dmShortID` / `assetGroup` / `assetID` to be set.
    * You probably also need to provide a `token`.
-   *
+   * @category Assets
    * @param assetID
    * @example
    * await ecadmin.assetgroup("test").deleteAsset('xxxx');
@@ -205,9 +251,9 @@ export class Fdk {
   /**
    * Loads a single asset. Expects `dmShortID` / `assetGroup` to be set.
    * If the asset group is not public, you also need to provide a `token`.
-   *
+   * @category Assets
    * @example
-   * const asset = await sdk("stage").dm("83cc6374").assetgroup("test").getAsset("tP-ZxpZZTGmbPnET-wArAQ")
+   * const asset = await fdk("stage").dm("83cc6374").assetgroup("test").getAsset("tP-ZxpZZTGmbPnET-wArAQ")
    */
   async getAsset(assetID: string) {
     const token = await this.getBestToken();
@@ -217,10 +263,10 @@ export class Fdk {
   /**
    * Creates a new entry. Expects `dmShortID` / `model` to be set.
    * If model POST is not public, you also need to provide a `token`.
-   *
+   * @category Entries
    * @param value Entry value that satisfies the model's schema.
    * @example
-   * const entry = await sdk("stage").dm("83cc6374").model("muffin").createEntry({ name: 'test' })
+   * const entry = await fdk("stage").dm("83cc6374").model("muffin").createEntry({ name: 'test' })
    */
   async createEntry(value: object) {
     const token = await this.getBestToken();
@@ -229,11 +275,11 @@ export class Fdk {
   /**
    * Edits an entry. Expects `dmShortID` / `model` to be set.
    * If model PUT is not public, you also need to provide a `token`.
-   *
+   * @category Entries
    * @param entryID id of entry to edit
    * @param value values to set. undefined fields are ignored
    * @example
-   * const entry = await sdk("stage").dm("83cc6374").model("muffin").editEntry("1gOtzWvrdq", { name: "test" })
+   * const entry = await fdk("stage").dm("83cc6374").model("muffin").editEntry("1gOtzWvrdq", { name: "test" })
    */
   async editEntry(entryID: string, value: object) {
     const token = await this.getBestToken();
@@ -244,8 +290,9 @@ export class Fdk {
    * If model DELETE is not public, you also need to provide a `token`.
    *
    * @param entryID id of entry to delete
+   * @category Entries
    * @example
-   * await sdk("stage").dm("83cc6374").model("muffin").deleteEntry("1gOtzWvrdq")
+   * await fdk("stage").dm("83cc6374").model("muffin").deleteEntry("1gOtzWvrdq")
    */
   async deleteEntry(entryID: string) {
     const token = await this.getBestToken();
@@ -255,10 +302,10 @@ export class Fdk {
   /**
    * Fetches resource list. Expects `resource` to be set. `subdomain` defaults to "datamanager".
    * Fetches `https://<subdomain>.entrecode.de/<resource>?_list=true&size=<options.size ?? 25>`
-   *
    * @param options options for list request.
+   * @category Admin
    * @example
-   * const res = await sdk("stage").resource("template").resourceList()
+   * const res = await fdk("stage").resource("template").resourceList()
    */
   async resourceList(options: GenericListOptions) {
     const token = await this.getBestToken();
@@ -269,18 +316,26 @@ export class Fdk {
    * Fetches raw route. Expects `route` to be set. `subdomain` defaults to "datamanager".
    * Fetches `https://<subdomain>.entrecode.de/<route>?<options>`
    * Use this when no other fdk method can give you your request.
-   *
    * @param {object=} options options that are converted to query params.
    * @param {object=} fetchOptions (optional) options passed to fetch.
+   * @category Admin
    * @example
-   * const res = await sdk("stage").route("stats").raw()
+   * const res = await fdk("stage").route("stats").raw()
    */
   async raw<T = any>(options: object, fetchOptions?: object) {
     const token = await this.getBestToken();
     return raw<T>({ ...this.config, options, token }, fetchOptions);
   }
 
-  /** @ignore */
+  /**
+   * Defines a storage to use for auth data.
+   * @category Auth
+   * @example
+   * import Cookies from "js-cookie";
+   * let fdk = fdk("stage").storageAdapter(Cookies);
+   * await fdk.dm("83cc6374").model("my-protected-model").entryList();
+   *
+   */
   storageAdapter(storageAdapter) {
     // is expected to have get, set and remove
     return this.set({ storageAdapter });
@@ -315,7 +370,10 @@ export class Fdk {
     const { get } = this.config.storageAdapter;
     return get(key);
   }
-  /** @ignore */
+  /**
+   * @category Auth
+   *
+   * */
   loginEc(config) {
     return loginEc({ ...this.config, ...config }).then(
       this.setAuth(getEcAuthKey(this.config))
@@ -372,6 +430,7 @@ export class Fdk {
   }
   /**
    * Sets the given model to use
+   * @category Entries
    * @param model name of the model
    */
   model(model: string) {
@@ -380,6 +439,7 @@ export class Fdk {
   /**
    * Sets the token to use in requests
    * @param token
+   * @category Auth
    */
   token(token: string) {
     return this.set({ token });
@@ -390,6 +450,8 @@ export class Fdk {
   }
   /**
    * Sets the short ID of the datamanager to use.
+   * @category Entries
+   * @category Assets
    */
   dm(dmShortID: string) {
     return this.dmShortID(dmShortID);
@@ -397,6 +459,7 @@ export class Fdk {
   /**
    * Sets the (long) ID of the datamanager to use
    * @param {string} dmID
+   * @category Admin
    */
   dmID(dmID) {
     return this.set({ dmID });
@@ -404,6 +467,7 @@ export class Fdk {
   /**
    * Sets the name of the asset group to use.
    * @param assetGroup name of the asset group
+   * @category Assets
    */
   assetGroup(assetGroup: string) {
     return this.set({ assetGroup });
@@ -414,6 +478,7 @@ export class Fdk {
   }
   /**
    * Sets the subdomain to use.
+   * @category Admin
    * @param subdomain subdomain
    */
   subdomain(subdomain: string) {
@@ -422,12 +487,14 @@ export class Fdk {
   /**
    * Sets the name of the resource to use.
    * @param resource name of the resource
+   * @category Admin
    */
   resource(resource: string) {
     return this.set({ resource });
   }
   /**
    * Sets the route to use.
+   * @category Admin
    */
   route(route: string) {
     return this.set({ route });
@@ -435,6 +502,7 @@ export class Fdk {
 
   /**
    * Returns the public api root endpoint. Expects `dmShortID` to be set.
+   * @category Entries
    */
   publicApi() {
     return publicApi(this.config);
@@ -442,6 +510,7 @@ export class Fdk {
 
   /**
    * Loads a DatamanagerResource by its long id. Requires token.
+   * @category Admin
    */
   async getDatamanager(dmID: string) {
     const token = await this.getBestToken();
@@ -452,8 +521,9 @@ export class Fdk {
    * Loads datamanager list. Requires auth.
    *
    * @param options options for list request.
+   * @category Admin
    * @example
-   * const dms = await sdk("stage").dmList()
+   * const dms = await fdk("stage").dmList()
    */
   async dmList(options: GenericListOptions = {}) {
     const token = await this.getBestToken();
@@ -463,8 +533,9 @@ export class Fdk {
    * Loads model list. Expects dmID to be set. Requires auth.
    *
    * @param options options for entry list request.
+   * @category Admin
    * @example
-   * const models = await sdk("stage").dmID("254a03f1-cb76-4f1e-a52a-bbd4180ca10c").modelList()
+   * const models = await fdk("stage").dmID("254a03f1-cb76-4f1e-a52a-bbd4180ca10c").modelList()
    */
   async modelList(options: GenericListOptions = {}) {
     const token = await this.getBestToken();
@@ -473,7 +544,7 @@ export class Fdk {
 }
 
 /**
- * Returns an instance of {@link Fdk}.
+ * Returns an instance of {@link Fdk}. This is the entry point for the method chaining API.
  * @example
  * const api = fdk("stage")
  * // do something with api...

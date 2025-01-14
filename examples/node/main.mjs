@@ -1,7 +1,7 @@
-import { entryList, sdk, act } from "ec.fdk";
+import { entryList, fdk, act } from "ec.fdk";
 
 async function run() {
-  const entries = await sdk("stage").dm("83cc6374").model("muffin").entries();
+  const entries = await fdk("stage").dm("83cc6374").model("muffin").entries();
 
   // or write:
 

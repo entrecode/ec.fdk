@@ -1,0 +1,65 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["./src/index.ts"],
+  "includeHierarchySummary": false,
+  "name": "ec.fdk",
+  "githubPages": true,
+  "navigationLinks": {
+    "github": "https://github.com/entrecode/ec.fdk",
+    "npm": "https://www.npmjs.com/package/ec.fdk"
+  },
+  "headings": {
+    "readme": false,
+    "document": true
+  },
+  "validation": {
+    "notExported": true,
+    "invalidLink": true,
+    "rewrittenLink": true,
+    "notDocumented": false,
+    "unusedMergeModuleWith": true
+  },
+  "categorizeByGroup": true,
+  "hostedBaseUrl": "https://entrecode.github.io/ec.fdk/",
+  "outputs": [
+    {
+      "name": "html",
+      "path": "../../docs",
+      "options": {
+        "navigation": {
+          "includeCategories": true,
+          "includeGroups": false,
+          "excludeReferences": false
+        }
+      }
+    }
+  ],
+  "categoryOrder": ["Entries", "Assets", "Admin", "Auth"],
+  "groupOrder": ["Classes", "Functions"],
+  "sort": ["kind"],
+  "kindSortOrder": [
+    "Class",
+    "Function",
+    "Reference",
+    "Project",
+    "Module",
+    "Namespace",
+    "Enum",
+    "EnumMember",
+    "Interface",
+    "TypeAlias",
+    "Constructor",
+    "Property",
+    "Variable",
+    "Accessor",
+    "Method",
+    "Parameter",
+    "TypeParameter",
+    "TypeLiteral",
+    "CallSignature",
+    "ConstructorSignature",
+    "IndexSignature",
+    "GetSignature",
+    "SetSignature"
+  ]
+}

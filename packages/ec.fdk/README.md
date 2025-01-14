@@ -33,25 +33,7 @@ fdk("stage") // choose stage environment
   });
 ```
 
-You can also reuse parts of the chain with variables:
-
-```js
-// we want to do stuff with model muffin here
-const muffin = fdk("stage").dm("83cc6374").model("muffin");
-// load entry list
-const { items } = await muffin.entryList();
-// edit first entry
-await muffin.editEntry(items[0].id, { name: "edit!" });
-// delete second entry
-await muffin.deleteEntry(items[1].id);
-// create a new muffin
-await muffin.createEntry({ name: "new muffin" });
-// edit third entry with safePut
-await muffin.editEntrySafe(items[2].id, {
-  _modified: items[2]._modified,
-  name: "safePut!",
-});
-```
+See all functions in the [Fdk reference](/docs/classes/Fdk.html).
 
 ### act
 
@@ -66,20 +48,7 @@ const muffins = await act({
 });
 ```
 
-The object passed to `act` expects an `action` ([available actions](https://github.com/entrecode/ec.fdk/blob/main/packages/ec.fdk/src/lib/api.ts))
-and additional keys that are required to perform the action.
-If you don't know the required keys for an action, either call `act` without additional keys or look it up in the source.
-For example, this is how the `entryList` function looks:
-
-```js
-export async function entryList(config) {
-  let { env, dmShortID, model, options = {} } = config;
-  expect({ env, dmShortID, model });
-  /* more stuff */
-}
-```
-
-here you can clearly see the available params.
+More in the [act reference](/docs/functions/act.html).
 
 ### Using act with swr / react-query
 

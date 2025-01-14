@@ -5,7 +5,7 @@ import { Blob } from "node:buffer";
 async function run() {
   const buf = fs.readFileSync("venndiagram.png");
   const file = new Blob([buf]);
-  const upload = await sdk("stage")
+  const upload = await fdk("stage")
     .dm("83cc6374")
     .assetgroup("test")
     .createAsset({ file, name: "venndiagram.png" });

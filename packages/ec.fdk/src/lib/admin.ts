@@ -31,6 +31,7 @@ export async function dmList(config): Promise<DatamanagerList> {
   return { count, total, items };
 }
 
+/** @ignore  */
 export async function modelList(config): Promise<ModelList> {
   // https://datamanager.cachena.entrecode.de/model?dataManagerID=254a03f1-cb76-4f1e-a52a-bbd4180ca10c&_list=true&size=0
   let { env, dmID, options = {} } = config;
@@ -44,6 +45,7 @@ export async function modelList(config): Promise<ModelList> {
   return { count, total, items };
 }
 
+/** @ignore */
 export async function resourceList(config): Promise<ResourceList> {
   // https://<subdomain>.cachena.entrecode.de/<resource>?_list=true&size=0
   let { env, resource, options = {}, subdomain = "datamanager" } = config;
@@ -57,7 +59,42 @@ export async function resourceList(config): Promise<ResourceList> {
   return { count, total, items };
 }
 
-export async function raw<T = any>(config, fetchOptions = {}): Promise<T> {
+/**
+ * Sends a raw fetch request to an API. Useful to call API endpoints that have no dedicated Fdk method or function.
+ * The fetched URL is composed of:
+ *
+ * ```txt
+ * https://<subdomain>(.cachena).entrecode.de/<route>?<options>
+ * ```
+ * @param config
+ * @example
+ * const options = {
+ *   size: 25,
+ *   dataManagerID: 'x',
+ *   modelID: 'y'
+ * };
+ * const list = await raw({
+ *   env: "stage",
+ *   options, // query options
+ *   route: 'entries',
+ *   subdomain: 'dm-history',
+ *   rawRes: true // if true, no .json() is called on res
+ * });
+ * // https://dm-history.cachena.entrecode.de/entries?size=25&datamanagerID=x&modelID=y
+ * // checkout ec.editor4 for more examples
+ *
+ */
+export async function raw<T = any>(
+  config: {
+    env?: string;
+    route?: string;
+    subdomain?: string;
+    options?: string;
+    token?: string;
+    rawRes?: boolean;
+  },
+  fetchOptions = {}
+): Promise<T> {
   // https://<subdomain>.cachena.entrecode.de/<route>?<options>
   let { env, route, options = {}, subdomain = "datamanager" } = config;
   expect({ env, subdomain, route });

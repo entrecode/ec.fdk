@@ -1,8 +1,8 @@
-import { sdk, filterOptions } from "ec.fdk";
+import { fdk, filterOptions } from "ec.fdk";
 import Cookies from "js-cookie";
 
 // test
-let ecadmin = sdk("stage").dm("83cc6374").storageAdapter(Cookies);
+let ecadmin = fdk("stage").dm("83cc6374").storageAdapter(Cookies);
 const field_test = ecadmin.model("field_test");
 const muffin = ecadmin.model("muffin");
 
@@ -145,11 +145,11 @@ press("logoutEc", () => {
 });
 
 press("dmList", () => {
-  sdk("stage").storageAdapter(Cookies).dmList().then(console.log);
+  fdk("stage").storageAdapter(Cookies).dmList().then(console.log);
 });
 
 press("modelList", () => {
-  sdk("stage")
+  fdk("stage")
     .storageAdapter(Cookies)
     .dmID("254a03f1-cb76-4f1e-a52a-bbd4180ca10c")
     .modelList()
@@ -157,12 +157,12 @@ press("modelList", () => {
 });
 
 press("publicApi", async () => {
-  const res = await sdk("stage").dm("83cc6374").publicApi();
+  const res = await fdk("stage").dm("83cc6374").publicApi();
   console.log("res", res);
 });
 press("getDatamanager", async () => {
   console.log("getDatamanager");
-  const res = await sdk("stage")
+  const res = await fdk("stage")
     .storageAdapter(Cookies)
     .getDatamanager("254a03f1-cb76-4f1e-a52a-bbd4180ca10c");
   console.log("res", res);
@@ -170,7 +170,7 @@ press("getDatamanager", async () => {
 
 press("fetch-test", () => {
   console.log("test");
-  const token = sdk("stage").storageAdapter(Cookies).getBestToken();
+  const token = fdk("stage").storageAdapter(Cookies).getBestToken();
   fetch(
     //`https://datamanager.cachena.entrecode.de/api/83cc6374`,
     `https://datamanager.cachena.entrecode.de/?dataManagerID=254a03f1-cb76-4f1e-a52a-bbd4180ca10c`,
@@ -188,7 +188,7 @@ press("fetch-test", () => {
 });
 
 press("templates", () =>
-  sdk("stage")
+  fdk("stage")
     .storageAdapter(Cookies)
     .resource("template")
     .resourceList()
@@ -196,10 +196,10 @@ press("templates", () =>
 );
 
 press("stats", () =>
-  sdk("stage").storageAdapter(Cookies).route("stats").raw().then(console.log)
+  fdk("stage").storageAdapter(Cookies).route("stats").raw().then(console.log)
 );
 press("clients", () =>
-  sdk("stage")
+  fdk("stage")
     .storageAdapter(Cookies)
     .resource("client")
     .resourceList({ dataManagerID: "50d2fe55-7e8f-4302-be4f-b816cad02b01" })
