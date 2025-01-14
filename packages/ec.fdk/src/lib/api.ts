@@ -585,3 +585,5 @@ export class Fdk {
  * // do something with api...
  */
 export const fdk = (env: "live" | "stage") => new Fdk({ env });
+/** @ignore */
+export const sdk = (env: "live" | "stage") => new Fdk({ env }); // legacy
