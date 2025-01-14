@@ -89,7 +89,7 @@ export async function raw<T = any>(
     env?: string;
     route?: string;
     subdomain?: string;
-    options?: string;
+    options?: Record<string, any>;
     token?: string;
     rawRes?: boolean;
   },
