@@ -37,7 +37,7 @@ fdk("stage") // choose stage environment
   });
 ```
 
-See all functions in the [Fdk reference](/docs/classes/Fdk.html).
+See all functions in the [Fdk reference](https://entrecode.github.io/ec.fdk/classes/Fdk.html).
 
 ### act
 
@@ -52,7 +52,7 @@ const muffins = await act({
 });
 ```
 
-More in the [act reference](/docs/functions/act.html).
+More in the [act reference](https://entrecode.github.io/ec.fdk/functions/act.html).
 
 ### Using act with swr / react-query
 
