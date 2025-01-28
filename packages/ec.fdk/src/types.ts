@@ -14,6 +14,7 @@ export type AssetResource = {
   mimetype: string;
   duplicates: number;
   file: AssetFile;
+  fileVariants: AssetFile[];
 };
 
 export type EntryResource = Record<string, any> & {
