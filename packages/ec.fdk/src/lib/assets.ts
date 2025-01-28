@@ -67,6 +67,38 @@ export async function createAsset({
 /**
  * @ignore
  */
+export async function createAssets({
+  env,
+  dmShortID,
+  assetGroup,
+  files,
+  options,
+}): Promise<AssetList> {
+  expect({ env, dmShortID, assetGroup, files });
+  const url = apiURL(`a/${dmShortID}/${assetGroup}`, env);
+  const formData = new FormData();
+  files.forEach((file: any) => {
+    formData.append("file", file /* , name */);
+  });
+  if (options) {
+    Object.keys(options).forEach((key) => {
+      formData.append(key, options[key]);
+    });
+  }
+  const list = await fetcher(
+    url,
+    {},
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
+  return list._embedded["ec:dm-asset"];
+}
+
+/**
+ * @ignore
+ */
 export async function deleteAsset({
   env,
   dmShortID,

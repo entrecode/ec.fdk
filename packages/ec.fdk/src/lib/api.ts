@@ -16,6 +16,7 @@ const {
   getAsset,
   assetList,
   createAsset,
+  createAssets,
   deleteAsset,
   createEntry,
   editEntry,
@@ -249,6 +250,30 @@ export class Fdk {
     const { file, name, options } = config;
     const token = await this.getBestToken();
     return createAsset({ ...this.config, file, name, options, token });
+  }
+  /**
+   * Uploads multiple assets. Expects `dmShortID` / `assetGroup` / `files` to be set.
+   * If the assetGroup is not public, you also need to provide a `token`.
+   * @category Assets
+   * @example
+   * // browser example
+   * document.getElementById("file").addEventListener("input", async (e) => {
+   *   const files = e.target.files;
+   *   const asset = await ecadmin.assetgroup("test").createAssets({ files })
+   * });
+   * @example
+   * // node example
+   * const buf = fs.readFileSync("venndiagram.png");
+   * const files = [new Blob([buf])];
+   * const upload = await fdk("stage")
+   * .dm("83cc6374")
+   * .assetgroup("test")
+   * .createAsset({ files });
+   */
+  async createAssets(config: { files: Blob[]; options: AssetCreateOptions }) {
+    const { files, options } = config;
+    const token = await this.getBestToken();
+    return createAssets({ ...this.config, files, options, token });
   }
   /**
    * Deletes an asset. Expects `dmShortID` / `assetGroup` / `assetID` to be set.
