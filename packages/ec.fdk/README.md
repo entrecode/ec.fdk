@@ -189,6 +189,25 @@ const entryList = await fdk("stage")
   .entryList(filterOptions({ created: { to: "2021-01-18T09:13:47.605Z" } }));
 ```
 
+### Asset List
+
+```js
+// ec.sdk
+await api.dmAssetList(group, { assetID: { any: value } });
+// ec.fdk
+const options = sdkOptions({ assetID: { any: value } } as any);
+const assets = await api.assetGroup(group).assetList(options);
+```
+
+### Load Asset
+
+```js
+// ec.sdk
+api.dmAsset(group, img);
+// ec.fdk
+api.assetGroup(group).getAsset(img);
+```
+
 ## Publish
 
 0. `cd packages/ec.fdk`
