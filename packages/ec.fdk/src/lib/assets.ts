@@ -73,7 +73,7 @@ export async function createAssets({
   assetGroup,
   files,
   options,
-}): Promise<AssetList> {
+}): Promise<AssetResource[]> {
   expect({ env, dmShortID, assetGroup, files });
   const url = apiURL(`a/${dmShortID}/${assetGroup}`, env);
   const formData = new FormData();
@@ -93,6 +93,9 @@ export async function createAssets({
       body: formData,
     }
   );
+  if (!Array.isArray(list._embedded["ec:dm-asset"])) {
+    return [list._embedded["ec:dm-asset"]];
+  }
   return list._embedded["ec:dm-asset"];
 }
 
