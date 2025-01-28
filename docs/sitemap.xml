@@ -2,126 +2,126 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/modules.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/index.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/classes/Fdk.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/functions/act.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/functions/fdk-1.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/functions/sdkOptions.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/functions/getEntryShortID.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/functions/getEntryEnv.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/functions/getEntryAsset.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/functions/filterOptions.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/functions/raw.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/SdkFilter.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/SdkFilterOptions.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/AssetFile.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/AssetResource.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/EntryResource.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/EntryFieldSchema.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/EntrySchema.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/EntryList.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/PublicApiRoot.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/DatamanagerResource.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/DatamanagerList.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/AssetList.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/ResourceList.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/ModelFieldConfig.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/ModelResource.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/ModelList.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/GenericListOptions.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/AssetCreateOptions.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/StorageAdapter.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/FdkConfig.html</loc>
-		<lastmod>2025-01-28T13:41:35.952Z</lastmod>
+		<lastmod>2025-01-28T13:58:30.163Z</lastmod>
 	</url>
 </urlset>
