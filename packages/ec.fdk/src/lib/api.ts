@@ -411,7 +411,7 @@ export class Fdk {
     if (!this.config.storageAdapter) {
       throw new Error("cannot setEcToken: no storageAdapter defined!");
     }
-    return this.config.storageAdapter.get(key, token);
+    return this.config.storageAdapter.set(key, token);
   }
   /**
    * Manually set ec user token on the {@link Fdk.authStorage}. In most cases, you'd want to use {@link Fdk.token} instead!
