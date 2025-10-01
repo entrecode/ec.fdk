@@ -120,6 +120,20 @@ export async function deleteAsset({
   );
 }
 
+/**
+ * Loads entry list. Expects `dmShortID` / `model` to be set.
+ * If the model is not public, you also need to provide a `token`.
+ *
+ * @param {AssetResouce} asset asset in question.
+ * @param {number} size in px to find closest match (larger side)
+ * @param {boolean} thumb if true, returns a thumbnail (width = height)
+ * @category Assets
+ * @example
+ * const asset = await ecadmin
+ *   .assetgroup("test")
+ *   .getAsset("tP-ZxpZZTGmbPnET-wArAQ");
+ * const variant = fileVariant(asset, 128, false);
+ */
 export function fileVariant(asset: AssetResource, size: number, thumb = false) {
   let best, bestDiff;
   const variants = thumb ? asset?.thumbnails : asset?.fileVariants
