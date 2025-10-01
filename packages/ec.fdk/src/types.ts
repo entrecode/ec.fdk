@@ -15,6 +15,7 @@ export type AssetResource = {
   duplicates: number;
   file: AssetFile;
   fileVariants: AssetFile[];
+  thumbnails?: any[];
 };
 
 export type EntryResource = Record<string, any> & {

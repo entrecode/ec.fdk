@@ -1,4 +1,4 @@
-import { fdk, filterOptions } from "ec.fdk";
+import { fdk, fileVariant, filterOptions } from "ec.fdk";
 import Cookies from "js-cookie";
 
 // test
@@ -95,6 +95,14 @@ press("asset", () =>
     .getAsset("tP-ZxpZZTGmbPnET-wArAQ")
     .then(console.log)
 );
+press("asset-variant", async () => {
+  const asset = await ecadmin
+    .assetgroup("test")
+    .getAsset("tP-ZxpZZTGmbPnET-wArAQ");
+  console.log("asset", asset);
+  const variant = fileVariant(asset, 128, false);
+  console.log("variant", variant);
+});
 press("assets", () => ecadmin.assetgroup("test").assets().then(console.log));
 
 document.getElementById("file").addEventListener("input", (e) => {

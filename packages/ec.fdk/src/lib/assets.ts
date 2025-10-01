@@ -119,3 +119,19 @@ export async function deleteAsset({
     }
   );
 }
+
+export function fileVariant(asset: AssetResource, size: number, thumb = false) {
+  let best, bestDiff;
+  const variants = thumb ? asset?.thumbnails : asset?.fileVariants
+  variants?.forEach(variant => {
+    const {
+      resolution: { width, height },
+    } = variant;
+    const diff = Math.abs(Math.max(width, height) - size);
+    if (!bestDiff || diff < bestDiff) {
+      bestDiff = diff;
+      best = variant;
+    }
+  })
+  return best?.url ?? asset?.file?.url ?? null;
+}
