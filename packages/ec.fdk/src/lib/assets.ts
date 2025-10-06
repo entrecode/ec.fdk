@@ -149,3 +149,40 @@ export function fileVariant(asset: AssetResource, size: number, thumb = false) {
   })
   return best?.url ?? asset?.file?.url ?? null;
 }
+
+/**
+ * Returns list of file variants for given asset.
+ *
+ * @param {string} env env
+ * @param {string} shortID dm shortID
+ * @param {number[]} allSizes array of dimensions. must match configuration in dm | assetgroup | defaultSizes. see getPossibleSizes in ec.editor4 for details.
+ * @param {AssetResouce} asset asset in question.
+ * @param {number} size in px to find closest match (larger side)
+ * @param {boolean} thumb if true, returns a thumbnail (width = height)
+ * @category Assets
+ * @example
+ * const asset = await ecadmin
+ *   .assetgroup("test")
+ *   .getAsset("tP-ZxpZZTGmbPnET-wArAQ");
+ * const variants = getFileVariants('stage', '83cc6374', [64, 128, 256, 512, 1024], asset, 128, false);
+ */
+export function getFileVariants(env = 'stage', shortID: string, allSizes: number[], asset: AssetResource, thumb = false) {
+  const originalSize = Math.max(asset.file.resolution.width, asset.file.resolution.height);
+  const possibleSizes = allSizes.filter((size) => size < originalSize);
+  const rootUrl = `https://datamanager${env === 'stage' ? '.cachena' : ''}.entrecode.de`;
+  if (thumb) {
+    return possibleSizes.map((size) => {
+      const generated = asset.thumbnails.find((v) => size === v.dimension);
+      const generateUrl = `${rootUrl}/t/${shortID}/${asset.assetID}/${size}`;
+      const url = generated ? generated.url : generateUrl;
+      return { size, url, generated };
+    });
+  } else {
+    return possibleSizes.map((size) => {
+      const generated = asset.fileVariants.find((v) => size === Math.max(v.resolution.width, v.resolution.height));
+      const generateUrl = `${rootUrl}/f/${shortID}/${asset.assetID}/${size}`;
+      const url = generated ? generated.url : generateUrl;
+      return { size, url, generated };
+    });
+  }
+}

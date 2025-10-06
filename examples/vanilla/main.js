@@ -1,4 +1,4 @@
-import { fdk, fileVariant, filterOptions } from "ec.fdk";
+import { fdk, fileVariant, getFileVariants, filterOptions } from "ec.fdk";
 import Cookies from "js-cookie";
 
 // test
@@ -104,6 +104,20 @@ press("asset-variant", async () => {
   console.log("variant", variant);
 });
 press("assets", () => ecadmin.assetgroup("test").assets().then(console.log));
+press("getFileVariants", async () => {
+  const asset = await ecadmin
+    .assetgroup("test")
+    .getAsset("tP-ZxpZZTGmbPnET-wArAQ");
+  const variants = getFileVariants(
+    "stage",
+    "83cc6374",
+    [64, 128, 256, 512, 1024],
+    asset,
+    false
+  );
+  // a variant is not generated yet if variant.generated is undefined
+  console.log("variants", variants);
+});
 
 document.getElementById("file").addEventListener("input", (e) => {
   const [file] = e.target.files;
