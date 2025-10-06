@@ -157,7 +157,6 @@ export function fileVariant(asset: AssetResource, size: number, thumb = false) {
  * @param {string} shortID dm shortID
  * @param {number[]} allSizes array of dimensions. must match configuration in dm | assetgroup | defaultSizes. see getPossibleSizes in ec.editor4 for details.
  * @param {AssetResouce} asset asset in question.
- * @param {number} size in px to find closest match (larger side)
  * @param {boolean} thumb if true, returns a thumbnail (width = height)
  * @category Assets
  * @example
