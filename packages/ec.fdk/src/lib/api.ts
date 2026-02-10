@@ -105,6 +105,22 @@ export function act(config: Record<string, any>): Promise<any> {
  * });
 ```
  */
+/** @ignore */
+function cleanEntry(entry: any) {
+  if (!entry || typeof entry !== "object") return entry;
+  const { _links, _embedded, ...rest } = entry;
+  return rest;
+}
+
+/** @ignore */
+function cleanResult(result: any) {
+  if (!result || typeof result !== "object") return result;
+  if (Array.isArray(result.items)) {
+    return { ...result, items: result.items.map(cleanEntry) };
+  }
+  return cleanEntry(result);
+}
+
 export class Fdk {
   /** @ignore */
   config: any;
@@ -146,7 +162,7 @@ export class Fdk {
    */
   async entryList(options: GenericListOptions) {
     const token = await this.getBestToken();
-    return entryList({ ...this.config, options, token });
+    return entryList({ ...this.config, options, token }).then((r) => this.maybeClean(r));
   }
 
   /**
@@ -173,7 +189,7 @@ export class Fdk {
    */
   async getEntry(entryID: string) {
     const token = await this.getBestToken();
-    return getEntry({ ...this.config, entryID, token });
+    return getEntry({ ...this.config, entryID, token }).then((r) => this.maybeClean(r));
   }
   /**
    * Edits an entry with safe put. Expects `dmShortID` / `model` to be set.
@@ -191,7 +207,7 @@ export class Fdk {
    */
   async editEntrySafe(entryID: string, value: object) {
     const token = await this.getBestToken();
-    return editEntry({ ...this.config, entryID, token, value, safePut: true });
+    return editEntry({ ...this.config, entryID, token, value, safePut: true }).then((r) => this.maybeClean(r));
   }
   /**
    * Loads the schema of a model. Expects `dmShortID` / `model` to be set.
@@ -309,7 +325,7 @@ export class Fdk {
    */
   async createEntry(value: object) {
     const token = await this.getBestToken();
-    return createEntry({ ...this.config, token, value });
+    return createEntry({ ...this.config, token, value }).then((r) => this.maybeClean(r));
   }
   /**
    * Edits an entry. Expects `dmShortID` / `model` to be set.
@@ -322,7 +338,7 @@ export class Fdk {
    */
   async editEntry(entryID: string, value: object) {
     const token = await this.getBestToken();
-    return editEntry({ ...this.config, entryID, token, value });
+    return editEntry({ ...this.config, entryID, token, value }).then((r) => this.maybeClean(r));
   }
   /**
    * Deletes an entry. Expects `dmShortID` / `model` to be set.
@@ -487,6 +503,21 @@ export class Fdk {
     } catch (err) {
       return undefined;
     }
+  }
+  /**
+   * If true, removes `_links` and `_embedded` from returned entries. Default: false.
+   * @category Entries
+   * @param shouldClean whether to clean entries (default: true)
+   * @example
+   * const { items } = await fdk("stage").dm("83cc6374").model("muffin").clean().entryList()
+   * // items won't have _links or _embedded
+   */
+  clean(shouldClean = true) {
+    return this.set({ _clean: shouldClean });
+  }
+  /** @ignore */
+  maybeClean(result: any) {
+    return this.config._clean ? cleanResult(result) : result;
   }
   /**
    * Sets the given model to use

@@ -1,18 +1,26 @@
 {
   "name": "ec.fdk",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "description": "ec frontend sdk",
   "main": "./src/index.ts",
+  "bin": {
+    "ec.fdk": "./dist/cli.cjs"
+  },
   "publishConfig": {
     "main": "dist/index.cjs",
     "module": "dist/index.mjs",
-    "types": "dist/index.d.ts"
+    "types": "dist/index.d.ts",
+    "bin": {
+      "ec.fdk": "./dist/cli.cjs"
+    }
   },
   "directories": {
     "lib": "lib"
   },
   "scripts": {
-    "build": "vite build && tsc",
+    "build": "vite build && vite build --config vite.cli.config.js && tsc",
+    "build:cli": "vite build --config vite.cli.config.js && chmod +x dist/cli.cjs",
+    "postbuild": "chmod +x dist/cli.cjs",
     "prepublishOnly": "npm run build",
     "docs": "typedoc --out ../../docs",
     "docs-dec": "typedoc --watch"

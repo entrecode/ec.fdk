@@ -26,11 +26,11 @@ There are 2 ways to use ec.fdk:
 Start by calling `fdk` with your environment (`stage` | `live`), then method chain your way to success:
 
 ```js
-import { fdk } from "ec.fdk";
+import { fdk } from 'ec.fdk';
 
-fdk("stage") // choose stage environment
-  .dm("83cc6374") // select datamanager via short id
-  .model("muffin") // select model muffin
+fdk('stage') // choose stage environment
+  .dm('83cc6374') // select datamanager via short id
+  .model('muffin') // select model muffin
   .entryList() // load entry list
   .then((list) => {
     console.log(list);
@@ -45,10 +45,10 @@ The act function converts a single object param into a fetch request:
 
 ```js
 const muffins = await act({
-  action: "entryList",
-  env: "stage",
-  dmShortID: "83cc6374",
-  model: "muffin",
+  action: 'entryList',
+  env: 'stage',
+  dmShortID: '83cc6374',
+  model: 'muffin',
 });
 ```
 
@@ -59,8 +59,8 @@ More in the [act reference](https://entrecode.github.io/ec.fdk/functions/act.htm
 The act function is good to be used with swr or react-query:
 
 ```js
-import { act } from "ec.fdk";
-import useSWR from "swr";
+import { act } from 'ec.fdk';
+import useSWR from 'swr';
 
 export function useFdk(config) {
   const key = config ? JSON.stringify(config) : null;
@@ -72,19 +72,99 @@ Then use the hook:
 
 ```js
 const config = {
-  env: "stage",
-  dmShortID: "83cc6374",
+  env: 'stage',
+  dmShortID: '83cc6374',
 };
 
 function App() {
   const { data: entryList } = useFdk({
     ...config,
-    action: "entryList",
-    model: "muffin",
+    action: 'entryList',
+    model: 'muffin',
   });
   /* more stuff */
 }
 ```
+
+## CLI
+
+ec.fdk also ships a CLI for quick shell-based interaction with entrecode APIs. Output is JSON, so you can pipe it into `jq` and friends.
+
+### Usage
+
+```sh
+npx ec.fdk <command> [options]
+```
+
+Or install globally:
+
+```sh
+npm i -g ec.fdk
+ec.fdk <command> [options]
+```
+
+### Commands
+
+| Command       | Description                                    |
+| ------------- | ---------------------------------------------- |
+| `login`       | Login with ec credentials (interactive prompt) |
+| `entryList`   | List entries                                   |
+| `getEntry`    | Get a single entry                             |
+| `createEntry` | Create an entry                                |
+| `editEntry`   | Edit an entry                                  |
+| `deleteEntry` | Delete an entry                                |
+| `getSchema`   | Get model schema                               |
+
+### Options
+
+| Option               | Description                                       |
+| -------------------- | ------------------------------------------------- |
+| `-e, --env <env>`    | Environment: `stage` \| `live` (default: `stage`) |
+| `-d, --dm <shortID>` | DataManager short ID                              |
+| `-m, --model <name>` | Model name                                        |
+| `-i, --id <id>`      | Entry ID (for get/edit/delete)                    |
+| `--data <json>`      | JSON data (for create/edit)                       |
+| `-s, --size <n>`     | Page size for list                                |
+| `-p, --page <n>`     | Page number for list                              |
+| `--sort <field>`     | Sort field for list                               |
+| `--raw`              | Include `_links` and `_embedded` in output        |
+| `-h, --help`         | Show help                                         |
+
+### Examples
+
+```sh
+# Login to stage (stores token in ~/.ec-fdk/auth.json)
+ec.fdk login -e stage
+
+# List entries
+ec.fdk entryList -d 83cc6374 -m muffin
+
+# List with pagination
+ec.fdk entryList -d 83cc6374 -m muffin -s 10 -p 2
+
+# Get a single entry
+ec.fdk getEntry -d 83cc6374 -m muffin -i fZctZXIeRJ
+
+# Create an entry
+ec.fdk createEntry -d 83cc6374 -m muffin --data '{"name":"new muffin","amazement_factor":10}'
+
+# Create via stdin pipe
+echo '{"name":"piped muffin","amazement_factor":10}' | ec.fdk createEntry -d 83cc6374 -m muffin
+
+# Edit an entry
+ec.fdk editEntry -d 83cc6374 -m muffin -i fZctZXIeRJ --data '{"name":"edited"}'
+
+# Delete an entry
+ec.fdk deleteEntry -d 83cc6374 -m muffin -i fZctZXIeRJ
+
+# Get model schema
+ec.fdk getSchema -d 83cc6374 -m muffin
+
+# Pipe into jq
+ec.fdk entryList -d 83cc6374 -m muffin | jq '.items | length'
+```
+
+Status/error messages go to stderr, data goes to stdout — so piping always works cleanly.
 
 ## migration from ec.sdk
 
@@ -107,7 +187,7 @@ await editEntryObject(entry, value); // <- DO
 // alternatively:
 await fdk.env(env).dm(dmShortID).model(model).updateEntry(entryID, value);
 // or:
-await act({ action: "editEntry", env, dmShortID, model, entryID, value });
+await act({ action: 'editEntry', env, dmShortID, model, entryID, value });
 ```
 
 ### Entry delete
@@ -120,9 +200,9 @@ await entry.del(); // <- DONT
 // use this to delete an entry:
 await deleteEntryObject(entry); // <- DO
 // alternatively:
-await fdk.dm("shortID").model("model").deleteEntry("entryID");
+await fdk.dm('shortID').model('model').deleteEntry('entryID');
 // or:
-await act({ action: "deleteEntry", env, dmShortID, model, entryID });
+await act({ action: 'deleteEntry', env, dmShortID, model, entryID });
 ```
 
 ### Entry Asset Fields
@@ -133,7 +213,7 @@ In ec.fdk, entry asset fields are plain ids:
 // assuming "photo" is an asset field:
 entry.photo; // <-- this used to be an AssetResource. Now it's a plain id string.
 // use this to get the embedded AssetResource:
-getEntryAsset("photo", entry); // (no request goes out)
+getEntryAsset('photo', entry); // (no request goes out)
 ```
 
 ### Entry Date Fields
@@ -167,9 +247,7 @@ const entryList = await fdk(env).dm(shortID).entryList(model);
 By default, the second param of ec.fdk `entryList` will just convert the object to url params:
 
 ```js
-const entryList = await fdk("stage")
-  .dm("83cc6374")
-  .entryList({ createdTo: "2021-01-18T09:13:47.605Z" });
+const entryList = await fdk('stage').dm('83cc6374').entryList({ createdTo: '2021-01-18T09:13:47.605Z' });
 /* 
 https://datamanager.cachena.entrecode.de/api/83cc6374/muffin?
 _list=true&
@@ -184,9 +262,9 @@ Read more in the [entrecode filtering doc](https://doc.entrecode.de/api-basics/#
 There is some syntax sugar you can use to get the same behavior as [ec.sdk filterOptions](https://entrecode.github.io/ec.sdk/#filteroptions):
 
 ```js
-const entryList = await fdk("stage")
-  .dm("83cc6374")
-  .entryList(filterOptions({ created: { to: "2021-01-18T09:13:47.605Z" } }));
+const entryList = await fdk('stage')
+  .dm('83cc6374')
+  .entryList(filterOptions({ created: { to: '2021-01-18T09:13:47.605Z' } }));
 ```
 
 ### Asset List
