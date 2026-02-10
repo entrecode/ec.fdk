@@ -34,6 +34,40 @@ const {
   getDatamanager,
   resourceList,
   raw,
+  // admin CRUD
+  createDatamanager,
+  editDatamanager,
+  deleteDatamanager,
+  createModel,
+  editModel,
+  deleteModel,
+  createTemplate,
+  editTemplate,
+  deleteTemplate,
+  createAssetGroup,
+  editAssetGroup,
+  editAsset,
+  editDmClient,
+  createRole,
+  editRole,
+  deleteRole,
+  editDmAccount,
+  deleteDmAccount,
+  getStats,
+  getHistory,
+  createAccountClient,
+  editAccountClient,
+  deleteAccountClient,
+  createGroup,
+  editGroup,
+  deleteGroup,
+  createInvite,
+  editInvite,
+  deleteInvite,
+  editAccount,
+  listTokens,
+  createToken,
+  deleteToken,
 } = actions;
 
 /** The act function converts a single `config` object param into a fetch request:
@@ -380,6 +414,333 @@ export class Fdk {
   async raw<T = any>(options: object, fetchOptions?: object) {
     const token = await this.getBestToken();
     return raw<T>({ ...this.config, options, token }, fetchOptions);
+  }
+
+  // --- Datamanager CRUD ---
+
+  /**
+   * Creates a new datamanager.
+   * @category Admin
+   */
+  async createDatamanager(value: object) {
+    const token = await this.getBestToken();
+    return createDatamanager({ ...this.config, token, value });
+  }
+
+  /**
+   * Edits a datamanager. Expects `dmID` to be set.
+   * @category Admin
+   */
+  async editDatamanager(dmID: string, value: object) {
+    const token = await this.getBestToken();
+    return editDatamanager({ ...this.config, token, dmID, value });
+  }
+
+  /**
+   * Deletes a datamanager. Expects `dmID` to be set.
+   * @category Admin
+   */
+  async deleteDatamanager(dmID: string) {
+    const token = await this.getBestToken();
+    return deleteDatamanager({ ...this.config, token, dmID });
+  }
+
+  // --- Model CRUD ---
+
+  /**
+   * Creates a new model. Expects `dmID` to be set.
+   * @category Admin
+   */
+  async createModel(value: object) {
+    const token = await this.getBestToken();
+    return createModel({ ...this.config, token, value });
+  }
+
+  /**
+   * Edits a model. Expects `dmID` to be set.
+   * @category Admin
+   */
+  async editModel(modelID: string, value: object) {
+    const token = await this.getBestToken();
+    return editModel({ ...this.config, token, modelID, value });
+  }
+
+  /**
+   * Deletes a model. Expects `dmID` to be set.
+   * @category Admin
+   */
+  async deleteModel(modelID: string) {
+    const token = await this.getBestToken();
+    return deleteModel({ ...this.config, token, modelID });
+  }
+
+  // --- Template CRUD ---
+
+  /**
+   * Creates a new template.
+   * @category Admin
+   */
+  async createTemplate(value: object) {
+    const token = await this.getBestToken();
+    return createTemplate({ ...this.config, token, value });
+  }
+
+  /**
+   * Edits a template.
+   * @category Admin
+   */
+  async editTemplate(templateID: string, value: object) {
+    const token = await this.getBestToken();
+    return editTemplate({ ...this.config, token, templateID, value });
+  }
+
+  /**
+   * Deletes a template.
+   * @category Admin
+   */
+  async deleteTemplate(templateID: string) {
+    const token = await this.getBestToken();
+    return deleteTemplate({ ...this.config, token, templateID });
+  }
+
+  // --- Asset Group ---
+
+  /**
+   * Creates a new asset group. Expects `dmID` to be set.
+   * @category Admin
+   */
+  async createAssetGroup(value: object) {
+    const token = await this.getBestToken();
+    return createAssetGroup({ ...this.config, token, value });
+  }
+
+  /**
+   * Edits an asset group. Expects `dmID` to be set.
+   * @category Admin
+   */
+  async editAssetGroup(assetGroupID: string, value: object) {
+    const token = await this.getBestToken();
+    return editAssetGroup({ ...this.config, token, assetGroupID, value });
+  }
+
+  // --- Asset metadata ---
+
+  /**
+   * Edits asset metadata. Expects `dmShortID` and `assetGroup` to be set.
+   * @category Assets
+   */
+  async editAsset(assetID: string, value: object) {
+    const token = await this.getBestToken();
+    return editAsset({ ...this.config, token, assetID, value });
+  }
+
+  // --- DM Client ---
+
+  /**
+   * Edits a DM client. Expects `dmID` to be set.
+   * @category Admin
+   */
+  async editDmClient(clientID: string, value: object) {
+    const token = await this.getBestToken();
+    return editDmClient({ ...this.config, token, clientID, value });
+  }
+
+  // --- Role CRUD ---
+
+  /**
+   * Creates a new role. Expects `dmID` to be set.
+   * @category Admin
+   */
+  async createRole(value: object) {
+    const token = await this.getBestToken();
+    return createRole({ ...this.config, token, value });
+  }
+
+  /**
+   * Edits a role. Expects `dmID` to be set.
+   * @category Admin
+   */
+  async editRole(roleID: string, value: object) {
+    const token = await this.getBestToken();
+    return editRole({ ...this.config, token, roleID, value });
+  }
+
+  /**
+   * Deletes a role. Expects `dmID` to be set.
+   * @category Admin
+   */
+  async deleteRole(roleID: string) {
+    const token = await this.getBestToken();
+    return deleteRole({ ...this.config, token, roleID });
+  }
+
+  // --- DM Account ---
+
+  /**
+   * Edits a DM account. Expects `dmID` to be set.
+   * @category Admin
+   */
+  async editDmAccount(accountID: string, value: object) {
+    const token = await this.getBestToken();
+    return editDmAccount({ ...this.config, token, accountID, value });
+  }
+
+  /**
+   * Deletes a DM account. Expects `dmID` to be set.
+   * @category Admin
+   */
+  async deleteDmAccount(accountID: string) {
+    const token = await this.getBestToken();
+    return deleteDmAccount({ ...this.config, token, accountID });
+  }
+
+  // --- Stats ---
+
+  /**
+   * Loads datamanager stats.
+   * @category Admin
+   */
+  async getStats(options: object = {}) {
+    const token = await this.getBestToken();
+    return getStats({ ...this.config, token, options });
+  }
+
+  // --- History ---
+
+  /**
+   * Loads dm-history entries.
+   * @category Admin
+   */
+  async getHistory(options: object = {}) {
+    const token = await this.getBestToken();
+    return getHistory({ ...this.config, token, options });
+  }
+
+  // --- Account Client ---
+
+  /**
+   * Creates an account client.
+   * @category Admin
+   */
+  async createAccountClient(value: object) {
+    const token = await this.getBestToken();
+    return createAccountClient({ ...this.config, token, value });
+  }
+
+  /**
+   * Edits an account client.
+   * @category Admin
+   */
+  async editAccountClient(clientID: string, value: object) {
+    const token = await this.getBestToken();
+    return editAccountClient({ ...this.config, token, clientID, value });
+  }
+
+  /**
+   * Deletes an account client.
+   * @category Admin
+   */
+  async deleteAccountClient(clientID: string) {
+    const token = await this.getBestToken();
+    return deleteAccountClient({ ...this.config, token, clientID });
+  }
+
+  // --- Group ---
+
+  /**
+   * Creates a group.
+   * @category Admin
+   */
+  async createGroup(value: object) {
+    const token = await this.getBestToken();
+    return createGroup({ ...this.config, token, value });
+  }
+
+  /**
+   * Edits a group.
+   * @category Admin
+   */
+  async editGroup(groupID: string, value: object) {
+    const token = await this.getBestToken();
+    return editGroup({ ...this.config, token, groupID, value });
+  }
+
+  /**
+   * Deletes a group.
+   * @category Admin
+   */
+  async deleteGroup(groupID: string) {
+    const token = await this.getBestToken();
+    return deleteGroup({ ...this.config, token, groupID });
+  }
+
+  // --- Invite ---
+
+  /**
+   * Creates an invite.
+   * @category Admin
+   */
+  async createInvite(value: object) {
+    const token = await this.getBestToken();
+    return createInvite({ ...this.config, token, value });
+  }
+
+  /**
+   * Edits an invite.
+   * @category Admin
+   */
+  async editInvite(inviteID: string, value: object) {
+    const token = await this.getBestToken();
+    return editInvite({ ...this.config, token, inviteID, value });
+  }
+
+  /**
+   * Deletes an invite.
+   * @category Admin
+   */
+  async deleteInvite(inviteID: string) {
+    const token = await this.getBestToken();
+    return deleteInvite({ ...this.config, token, inviteID });
+  }
+
+  // --- Account ---
+
+  /**
+   * Edits an account.
+   * @category Admin
+   */
+  async editAccount(accountID: string, value: object) {
+    const token = await this.getBestToken();
+    return editAccount({ ...this.config, token, accountID, value });
+  }
+
+  // --- Tokens ---
+
+  /**
+   * Lists tokens for an account.
+   * @category Admin
+   */
+  async listTokens(accountID: string) {
+    const token = await this.getBestToken();
+    return listTokens({ ...this.config, token, accountID });
+  }
+
+  /**
+   * Creates a token for an account.
+   * @category Admin
+   */
+  async createToken(accountID: string) {
+    const token = await this.getBestToken();
+    return createToken({ ...this.config, token, accountID });
+  }
+
+  /**
+   * Deletes a token for an account.
+   * @category Admin
+   */
+  async deleteToken(accountID: string, accessTokenID: string) {
+    const token = await this.getBestToken();
+    return deleteToken({ ...this.config, token, accountID, accessTokenID });
   }
 
   /**

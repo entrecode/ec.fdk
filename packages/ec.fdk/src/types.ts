@@ -144,7 +144,170 @@ export type StorageAdapter = {
   remove: (key: string) => void;
 };
 
+export type TemplateResource = {
+  templateID: string;
+  name: string;
+  version: string;
+  dataSchema: any;
+  template: any;
+  collection: any;
+  [key: string]: any;
+};
+
+export type TemplateList = {
+  count: number;
+  total: number;
+  items: TemplateResource[];
+};
+
+export type AssetGroupResource = {
+  assetGroupID: string;
+  dataManagerID: string;
+  public: boolean;
+  settings: any;
+  [key: string]: any;
+};
+
+export type RoleResource = {
+  roleID: string;
+  name: string;
+  label: string;
+  accounts: string[];
+  addRegistered: boolean;
+  addUnregistered: boolean;
+  [key: string]: any;
+};
+
+export type ClientResource = {
+  clientID: string;
+  callbackURL: string;
+  tokenMethod: string;
+  disableStrategies: string[];
+  [key: string]: any;
+};
+
+export type GroupResource = {
+  groupID: string;
+  name: string;
+  permissions: any[];
+  [key: string]: any;
+};
+
+export type InviteResource = {
+  inviteID: string;
+  email: string;
+  groups: string[];
+  permissions: any[];
+  [key: string]: any;
+};
+
+export type AccountResource = {
+  accountID: string;
+  email: string;
+  created: string;
+  hasPassword: boolean;
+  permissions: any[];
+  groups: string[];
+  [key: string]: any;
+};
+
+export type TokenResource = {
+  accessTokenID: string;
+  created: string;
+  device: string;
+  isCurrent: boolean;
+  [key: string]: any;
+};
+
 export type FdkConfig = {
   storageAdapter?: StorageAdapter;
   [key: string]: any;
+};
+
+// --- Admin config types ---
+
+export type AdminConfig = {
+  env: string;
+  token: string;
+};
+
+export type AdminListConfig = AdminConfig & {
+  options?: Record<string, any>;
+};
+
+export type AdminDmConfig = AdminConfig & {
+  dmID: string;
+};
+
+export type AdminDmListConfig = AdminDmConfig & {
+  options?: Record<string, any>;
+};
+
+export type AdminResourceListConfig = AdminListConfig & {
+  resource: string;
+  subdomain?: string;
+};
+
+export type AdminCreateConfig<T = Record<string, any>> = AdminConfig & {
+  value: T;
+};
+
+export type AdminDmCreateConfig<T = Record<string, any>> = AdminDmConfig & {
+  value: T;
+};
+
+export type AdminEditConfig<K extends string, T = Record<string, any>> = AdminConfig & {
+  value: T;
+} & { [P in K]: string };
+
+export type AdminDeleteConfig<K extends string> = AdminConfig & { [P in K]: string };
+
+// --- List types ---
+
+export type AssetGroupList = {
+  count: number;
+  total: number;
+  items: AssetGroupResource[];
+};
+
+export type RoleList = {
+  count: number;
+  total: number;
+  items: RoleResource[];
+};
+
+export type ClientList = {
+  count: number;
+  total: number;
+  items: ClientResource[];
+};
+
+export type DmAccountList = {
+  count: number;
+  total: number;
+  items: AccountResource[];
+};
+
+export type GroupList = {
+  count: number;
+  total: number;
+  items: GroupResource[];
+};
+
+export type InviteList = {
+  count: number;
+  total: number;
+  items: InviteResource[];
+};
+
+export type AccountList = {
+  count: number;
+  total: number;
+  items: AccountResource[];
+};
+
+export type TokenList = {
+  count: number;
+  total: number;
+  items: TokenResource[];
 };

@@ -23,7 +23,8 @@
     "postbuild": "chmod +x dist/cli.cjs",
     "prepublishOnly": "npm run build",
     "docs": "typedoc --out ../../docs",
-    "docs-dec": "typedoc --watch"
+    "docs-dec": "typedoc --watch",
+    "test": "vitest run"
   },
   "repository": {
     "type": "git",
@@ -38,13 +39,13 @@
     "url": "https://github.com/entrecode/ec.fdk/issues"
   },
   "homepage": "https://github.com/entrecode/ec.fdk#readme",
-  "dependencies": {},
   "devDependencies": {
     "jsdoc": "^4.0.2",
     "jsdoc-json": "^2.0.2",
     "jsdoc-to-markdown": "^8.0.0",
     "typedoc": "^0.27.6",
     "typescript": "^5.3.3",
-    "vite": "^4.4.9"
+    "vite": "^4.4.9",
+    "vitest": "^4.0.18"
   }
 }
