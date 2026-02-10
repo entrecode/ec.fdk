@@ -1,7 +1,6 @@
 src
 vite.config.js
 vite.cli.config.js
-vite.mcp.config.js
 tsconfig.json
 README.hbs
 jsdoc.config.json
