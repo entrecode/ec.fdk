@@ -30,10 +30,21 @@ Options:
   -s, --size <n>        Page size for list
   -p, --page <n>        Page number for list
   --sort <field>        Sort field for list
+  -f, --filter <k=v>   Filter for list (repeatable, e.g. -f title~=hello -f ageFrom=5)
   --raw                 Include _links and _embedded in output
   --md                  Output entries as readable markdown
   -v, --version         Show version
   -h, --help            Show help`;
+
+function parseFilters(filters: string[]): Record<string, string> {
+  return Object.fromEntries(
+    filters.map((f) => {
+      const idx = f.indexOf("=");
+      if (idx === -1) error(`Invalid filter: "${f}" (expected key=value)`);
+      return [f.slice(0, idx), f.slice(idx + 1)];
+    })
+  );
+}
 
 function error(msg: string): never {
   process.stderr.write(`Error: ${msg}\n`);
@@ -140,6 +151,7 @@ async function main() {
       size: { type: "string", short: "s" },
       page: { type: "string", short: "p" },
       sort: { type: "string" },
+      filter: { type: "string", short: "f", multiple: true, default: [] },
       raw: { type: "boolean", default: false },
       md: { type: "boolean", default: false },
       version: { type: "boolean", short: "v" },
@@ -184,7 +196,7 @@ async function main() {
 
     switch (command) {
       case "dmList": {
-        const options: Record<string, any> = {};
+        const options: Record<string, any> = { ...parseFilters(values.filter as string[]) };
         if (values.size) options.size = Number(values.size);
         if (values.page) options.page = Number(values.page);
         result = await sdk.dmList(options);
@@ -193,7 +205,7 @@ async function main() {
       }
       case "modelList": {
         if (!values.id) error("--id (datamanager UUID) is required for modelList");
-        const options: Record<string, any> = {};
+        const options: Record<string, any> = { ...parseFilters(values.filter as string[]) };
         if (values.size) options.size = Number(values.size);
         if (values.page) options.page = Number(values.page);
         result = await sdk.dmID(values.id).modelList(options);
@@ -218,7 +230,7 @@ async function main() {
 
         switch (command) {
           case "entryList": {
-            const options: Record<string, any> = {};
+            const options: Record<string, any> = { ...parseFilters(values.filter as string[]) };
             if (values.size) options.size = Number(values.size);
             if (values.page) options.page = Number(values.page);
             if (values.sort) options.sort = [values.sort];

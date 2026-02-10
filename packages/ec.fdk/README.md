@@ -130,6 +130,7 @@ ec.fdk <command> [options]
 | `-s, --size <n>`     | Page size for list                                |
 | `-p, --page <n>`     | Page number for list                              |
 | `--sort <field>`     | Sort field for list                               |
+| `-f, --filter <k=v>` | Filter for list (repeatable)                     |
 | `--raw`              | Include `_links` and `_embedded` in output        |
 | `--md`               | Output entries as readable markdown table          |
 | `-v, --version`      | Show version                                      |
@@ -149,6 +150,9 @@ ec.fdk getDatamanager -e stage --id 73538731-4ac3-4a1a-b3b5-e31d09e94d42
 
 # List models of a datamanager
 ec.fdk modelList -e stage --id 73538731-4ac3-4a1a-b3b5-e31d09e94d42
+
+# Filter models by title
+ec.fdk modelList --id 73538731-4ac3-4a1a-b3b5-e31d09e94d42 -f title~=muffin
 
 # List entries
 ec.fdk entryList -d 83cc6374 -m muffin
@@ -174,9 +178,26 @@ ec.fdk deleteEntry -d 83cc6374 -m muffin -i fZctZXIeRJ
 # Get model schema
 ec.fdk getSchema -d 83cc6374 -m muffin
 
+# Filter entries (repeatable -f for arbitrary query params)
+ec.fdk entryList -d 83cc6374 -m muffin -f name~=chocolate
+ec.fdk entryList -d 83cc6374 -m muffin -f amazement_factorFrom=5 -f amazement_factorTo=10
+ec.fdk entryList -d 83cc6374 -m muffin -f createdFrom=2024-01-01
+
+# Filter datamanagers
+ec.fdk dmList -f title~=ec-admin
+
 # Pipe into jq
 ec.fdk entryList -d 83cc6374 -m muffin | jq '.items | length'
 ```
+
+The `-f` flag maps directly to [entrecode filter query params](https://doc.entrecode.de/api-basics/#filtering). Common filter suffixes:
+
+| Suffix     | Meaning              | Example                        |
+| ---------- | -------------------- | ------------------------------ |
+| `~`        | Search (contains)    | `-f name~=chocolate`           |
+| `From`     | Greater than / after | `-f createdFrom=2024-01-01`    |
+| `To`       | Less than / before   | `-f createdTo=2025-01-01`      |
+| (none)     | Exact match          | `-f amazement_factor=10`       |
 
 Status/error messages go to stderr, data goes to stdout — so piping always works cleanly.
 
