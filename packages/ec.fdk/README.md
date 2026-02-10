@@ -105,36 +105,147 @@ ec.fdk <command> [options]
 
 ### Commands
 
-| Command          | Description                                    |
-| ---------------- | ---------------------------------------------- |
-| `login`          | Login with ec credentials (interactive prompt) |
-| `dmList`         | List datamanagers                              |
-| `modelList`      | List models of a datamanager                   |
-| `getDatamanager` | Get a single datamanager                       |
-| `entryList`      | List entries                                   |
-| `getEntry`       | Get a single entry                             |
-| `createEntry`    | Create an entry                                |
-| `editEntry`      | Edit an entry                                  |
-| `deleteEntry`    | Delete an entry                                |
-| `getSchema`      | Get model schema                               |
+#### Entry commands (require `--dm`, `--model`)
+
+| Command       | Description      | Required flags    |
+| ------------- | ---------------- | ----------------- |
+| `entryList`   | List entries     | `--dm`, `--model` |
+| `getEntry`    | Get a single entry | `--dm`, `--model`, `--id` |
+| `createEntry` | Create an entry  | `--dm`, `--model`, `--data` |
+| `editEntry`   | Edit an entry    | `--dm`, `--model`, `--id`, `--data` |
+| `deleteEntry` | Delete an entry  | `--dm`, `--model`, `--id` |
+| `getSchema`   | Get model schema | `--dm`, `--model` |
+
+#### Admin list commands
+
+| Command          | Description               | Required flags |
+| ---------------- | ------------------------- | -------------- |
+| `login`          | Login with ec credentials | — |
+| `dmList`         | List datamanagers         | — |
+| `modelList`      | List models               | `--id` (DM UUID) |
+| `getDatamanager` | Get a datamanager         | `--id` (DM UUID) |
+| `resourceList`   | List resources            | `--resource`, optional `--subdomain` |
+| `getStats`       | Get datamanager stats     | — |
+| `getHistory`     | Get dm-history entries    | — |
+
+#### Datamanager CRUD
+
+| Command             | Description          | Required flags |
+| ------------------- | -------------------- | -------------- |
+| `createDatamanager` | Create a datamanager | `--data` |
+| `editDatamanager`   | Edit a datamanager   | `--id`, `--data` |
+| `deleteDatamanager` | Delete a datamanager | `--id` |
+
+#### Model CRUD (`--id` = DM UUID)
+
+| Command       | Description    | Required flags |
+| ------------- | -------------- | -------------- |
+| `createModel` | Create a model | `--id`, `--data` |
+| `editModel`   | Edit a model   | `--id`, `--rid`, `--data` |
+| `deleteModel` | Delete a model | `--id`, `--rid` |
+
+#### Template CRUD
+
+| Command          | Description       | Required flags |
+| ---------------- | ----------------- | -------------- |
+| `createTemplate` | Create a template | `--data` |
+| `editTemplate`   | Edit a template   | `--rid`, `--data` |
+| `deleteTemplate` | Delete a template | `--rid` |
+
+#### Asset Group (`--id` = DM UUID)
+
+| Command            | Description           | Required flags |
+| ------------------ | --------------------- | -------------- |
+| `createAssetGroup` | Create an asset group | `--id`, `--data` |
+| `editAssetGroup`   | Edit an asset group   | `--id`, `--rid`, `--data` |
+
+#### Asset metadata
+
+| Command     | Description          | Required flags |
+| ----------- | -------------------- | -------------- |
+| `editAsset` | Edit asset metadata  | `--dm`, `--assetgroup`, `--rid`, `--data` |
+
+#### DM Client (`--id` = DM UUID)
+
+| Command        | Description      | Required flags |
+| -------------- | ---------------- | -------------- |
+| `editDmClient` | Edit a DM client | `--id`, `--rid`, `--data` |
+
+#### Role CRUD (`--id` = DM UUID)
+
+| Command      | Description   | Required flags |
+| ------------ | ------------- | -------------- |
+| `createRole` | Create a role | `--id`, `--data` |
+| `editRole`   | Edit a role   | `--id`, `--rid`, `--data` |
+| `deleteRole` | Delete a role | `--id`, `--rid` |
+
+#### DM Account (`--id` = DM UUID)
+
+| Command           | Description        | Required flags |
+| ----------------- | ------------------ | -------------- |
+| `editDmAccount`   | Edit a DM account  | `--id`, `--account-id`, `--data` |
+| `deleteDmAccount` | Delete a DM account | `--id`, `--account-id` |
+
+#### Account Client
+
+| Command               | Description             | Required flags |
+| --------------------- | ----------------------- | -------------- |
+| `createAccountClient` | Create an account client | `--data` |
+| `editAccountClient`   | Edit an account client  | `--rid`, `--data` |
+| `deleteAccountClient` | Delete an account client | `--rid` |
+
+#### Group
+
+| Command       | Description    | Required flags |
+| ------------- | -------------- | -------------- |
+| `createGroup` | Create a group | `--data` |
+| `editGroup`   | Edit a group   | `--rid`, `--data` |
+| `deleteGroup` | Delete a group | `--rid` |
+
+#### Invite
+
+| Command        | Description     | Required flags |
+| -------------- | --------------- | -------------- |
+| `createInvite` | Create an invite | `--data` |
+| `editInvite`   | Edit an invite  | `--rid`, `--data` |
+| `deleteInvite` | Delete an invite | `--rid` |
+
+#### Account
+
+| Command       | Description    | Required flags |
+| ------------- | -------------- | -------------- |
+| `editAccount` | Edit an account | `--account-id`, `--data` |
+
+#### Tokens
+
+| Command       | Description    | Required flags |
+| ------------- | -------------- | -------------- |
+| `listTokens`  | List tokens    | `--account-id` |
+| `createToken` | Create a token | `--account-id` |
+| `deleteToken` | Delete a token | `--account-id`, `--rid` |
 
 ### Options
 
-| Option               | Description                                       |
-| -------------------- | ------------------------------------------------- |
-| `-e, --env <env>`    | Environment: `stage` \| `live` (default: `stage`) |
-| `-d, --dm <shortID>` | DataManager short ID                              |
-| `-m, --model <name>` | Model name                                        |
-| `-i, --id <id>`      | Entry ID or DataManager UUID (context-dependent)  |
-| `--data <json>`      | JSON data (for create/edit)                       |
-| `-s, --size <n>`     | Page size for list                                |
-| `-p, --page <n>`     | Page number for list                              |
-| `--sort <field>`     | Sort field for list                               |
-| `-f, --filter <k=v>` | Filter for list (repeatable)                     |
-| `--raw`              | Include `_links` and `_embedded` in output        |
-| `--md`               | Output entries as readable markdown table          |
-| `-v, --version`      | Show version                                      |
-| `-h, --help`         | Show help                                         |
+| Option                  | Description                                       |
+| ----------------------- | ------------------------------------------------- |
+| `-e, --env <env>`       | Environment: `stage` \| `live` (default: `stage`) |
+| `-d, --dm <shortID>`    | DataManager short ID                              |
+| `-m, --model <name>`    | Model name                                        |
+| `-i, --id <id>`         | Entry ID or DataManager UUID (context-dependent)  |
+| `--rid <id>`            | Resource ID (model, template, role, client, asset group, invite, etc.) |
+| `--account-id <id>`     | Account ID                                        |
+| `--assetgroup <name>`   | Asset group name (for `editAsset`)                |
+| `--resource <name>`     | Resource name (for `resourceList`)                |
+| `--subdomain <name>`    | Subdomain override (for `resourceList`)           |
+| `--data <json>`         | JSON data (for create/edit, or pipe via stdin)    |
+| `-s, --size <n>`        | Page size for list                                |
+| `-p, --page <n>`        | Page number for list                              |
+| `--sort <field>`        | Sort field for list                               |
+| `-f, --filter <k=v>`    | Filter for list (repeatable)                     |
+| `--raw`                 | Include `_links` and `_embedded` in output        |
+| `--md`                  | Output entries as readable markdown table          |
+| `-v, --version`         | Show version                                      |
+| `-h, --help`            | Show help                                         |
 
 ### Examples
 
@@ -188,6 +299,87 @@ ec.fdk dmList -f title~=ec-admin
 
 # Pipe into jq
 ec.fdk entryList -d 83cc6374 -m muffin | jq '.items | length'
+```
+
+### Admin examples
+
+```sh
+# Get datamanager stats
+ec.fdk getStats
+
+# Get dm-history entries
+ec.fdk getHistory -s 10
+
+# List templates
+ec.fdk resourceList --resource template -s 5
+
+# List resources with custom subdomain
+ec.fdk resourceList --resource client --subdomain accounts
+
+# Create a datamanager
+ec.fdk createDatamanager --data '{"title":"My DM","config":{}}'
+
+# Edit a datamanager
+ec.fdk editDatamanager --id <DM-UUID> --data '{"title":"New Title"}'
+
+# Delete a datamanager
+ec.fdk deleteDatamanager --id <DM-UUID>
+
+# Create a model
+ec.fdk createModel --id <DM-UUID> --data '{"title":"article","fields":[...]}'
+
+# Edit a model
+ec.fdk editModel --id <DM-UUID> --rid <MODEL-ID> --data '{"title":"renamed"}'
+
+# Delete a model
+ec.fdk deleteModel --id <DM-UUID> --rid <MODEL-ID>
+
+# Create/edit/delete templates
+ec.fdk createTemplate --data '{"name":"My Template"}'
+ec.fdk editTemplate --rid <TEMPLATE-ID> --data '{"name":"Renamed"}'
+ec.fdk deleteTemplate --rid <TEMPLATE-ID>
+
+# Asset group management
+ec.fdk createAssetGroup --id <DM-UUID> --data '{"assetGroupID":"photos"}'
+ec.fdk editAssetGroup --id <DM-UUID> --rid <ASSETGROUP-ID> --data '{"public":true}'
+
+# Edit asset metadata
+ec.fdk editAsset --dm 83cc6374 --assetgroup photos --rid <ASSET-ID> --data '{"title":"sunset"}'
+
+# Edit a DM client
+ec.fdk editDmClient --id <DM-UUID> --rid <CLIENT-ID> --data '{"callbackURL":"..."}'
+
+# Role management
+ec.fdk createRole --id <DM-UUID> --data '{"name":"editor"}'
+ec.fdk editRole --id <DM-UUID> --rid <ROLE-ID> --data '{"name":"admin"}'
+ec.fdk deleteRole --id <DM-UUID> --rid <ROLE-ID>
+
+# DM account management
+ec.fdk editDmAccount --id <DM-UUID> --account-id <ACCOUNT-ID> --data '{"email":"new@example.com"}'
+ec.fdk deleteDmAccount --id <DM-UUID> --account-id <ACCOUNT-ID>
+
+# Account client management
+ec.fdk createAccountClient --data '{"clientID":"my-client","callbackURL":"..."}'
+ec.fdk editAccountClient --rid <CLIENT-ID> --data '{"callbackURL":"..."}'
+ec.fdk deleteAccountClient --rid <CLIENT-ID>
+
+# Group management
+ec.fdk createGroup --data '{"name":"devs"}'
+ec.fdk editGroup --rid <GROUP-ID> --data '{"name":"developers"}'
+ec.fdk deleteGroup --rid <GROUP-ID>
+
+# Invite management
+ec.fdk createInvite --data '{"email":"user@example.com"}'
+ec.fdk editInvite --rid <INVITE-ID> --data '{"permissions":["dm-read"]}'
+ec.fdk deleteInvite --rid <INVITE-ID>
+
+# Account management
+ec.fdk editAccount --account-id <ACCOUNT-ID> --data '{"email":"updated@example.com"}'
+
+# Token management
+ec.fdk listTokens --account-id <ACCOUNT-ID>
+ec.fdk createToken --account-id <ACCOUNT-ID>
+ec.fdk deleteToken --account-id <ACCOUNT-ID> --rid <TOKEN-ID>
 ```
 
 The `-f` flag maps directly to [entrecode filter query params](https://doc.entrecode.de/api-basics/#filtering). Common filter suffixes:

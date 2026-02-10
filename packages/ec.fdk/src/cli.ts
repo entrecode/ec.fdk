@@ -11,21 +11,90 @@ const HELP = `ec.fdk <command> [options]
 
 Commands:
   login                 Login with ec credentials (interactive prompt)
-  dmList                List datamanagers
-  modelList             List models of a datamanager
-  getDatamanager        Get a single datamanager
-  entryList             List entries
-  getEntry              Get a single entry
-  createEntry           Create an entry
-  editEntry             Edit an entry
-  deleteEntry           Delete an entry
-  getSchema             Get model schema
+
+  Entry commands (require --dm, --model):
+    entryList             List entries
+    getEntry              Get a single entry (--id)
+    createEntry           Create an entry (--data)
+    editEntry             Edit an entry (--id, --data)
+    deleteEntry           Delete an entry (--id)
+    getSchema             Get model schema
+
+  Admin list commands:
+    dmList                List datamanagers
+    modelList             List models (--id = DM UUID)
+    getDatamanager        Get a datamanager (--id = DM UUID)
+    resourceList          List resources (--resource, optional --subdomain)
+    getStats              Get datamanager stats
+    getHistory            Get dm-history entries
+
+  Datamanager CRUD:
+    createDatamanager     Create a datamanager (--data)
+    editDatamanager       Edit a datamanager (--id, --data)
+    deleteDatamanager     Delete a datamanager (--id)
+
+  Model CRUD (--id = DM UUID):
+    createModel           Create a model (--data)
+    editModel             Edit a model (--rid, --data)
+    deleteModel           Delete a model (--rid)
+
+  Template CRUD:
+    createTemplate        Create a template (--data)
+    editTemplate          Edit a template (--rid, --data)
+    deleteTemplate        Delete a template (--rid)
+
+  Asset Group (--id = DM UUID):
+    createAssetGroup      Create an asset group (--data)
+    editAssetGroup        Edit an asset group (--rid, --data)
+
+  Asset metadata:
+    editAsset             Edit asset metadata (--dm, --assetgroup, --rid, --data)
+
+  DM Client (--id = DM UUID):
+    editDmClient          Edit a DM client (--rid, --data)
+
+  Role CRUD (--id = DM UUID):
+    createRole            Create a role (--data)
+    editRole              Edit a role (--rid, --data)
+    deleteRole            Delete a role (--rid)
+
+  DM Account (--id = DM UUID):
+    editDmAccount         Edit a DM account (--account-id, --data)
+    deleteDmAccount       Delete a DM account (--account-id)
+
+  Account Client:
+    createAccountClient   Create an account client (--data)
+    editAccountClient     Edit an account client (--rid, --data)
+    deleteAccountClient   Delete an account client (--rid)
+
+  Group:
+    createGroup           Create a group (--data)
+    editGroup             Edit a group (--rid, --data)
+    deleteGroup           Delete a group (--rid)
+
+  Invite:
+    createInvite          Create an invite (--data)
+    editInvite            Edit an invite (--rid, --data)
+    deleteInvite          Delete an invite (--rid)
+
+  Account:
+    editAccount           Edit an account (--account-id, --data)
+
+  Tokens:
+    listTokens            List tokens (--account-id)
+    createToken           Create a token (--account-id)
+    deleteToken           Delete a token (--account-id, --rid)
 
 Options:
   -e, --env <env>       Environment: stage|live (default: stage)
   -d, --dm <shortID>    DataManager short ID
   -m, --model <name>    Model name
   -i, --id <id>         Entry ID or DataManager UUID (context-dependent)
+  --rid <id>            Resource ID (model, template, role, client, asset group, etc.)
+  --account-id <id>     Account ID
+  --assetgroup <name>   Asset group name (for editAsset)
+  --resource <name>     Resource name (for resourceList)
+  --subdomain <name>    Subdomain override (for resourceList)
   --data <json>         JSON data (for create/edit, or pipe via stdin)
   -s, --size <n>        Page size for list
   -p, --page <n>        Page number for list
@@ -152,6 +221,11 @@ async function main() {
       page: { type: "string", short: "p" },
       sort: { type: "string" },
       filter: { type: "string", short: "f", multiple: true, default: [] },
+      rid: { type: "string" },
+      "account-id": { type: "string" },
+      assetgroup: { type: "string" },
+      resource: { type: "string" },
+      subdomain: { type: "string" },
       raw: { type: "boolean", default: false },
       md: { type: "boolean", default: false },
       version: { type: "boolean", short: "v" },
@@ -194,21 +268,24 @@ async function main() {
   try {
     let result: any;
 
+    const listOpts = (): Record<string, any> => {
+      const options: Record<string, any> = { ...parseFilters(values.filter as string[]) };
+      if (values.size) options.size = Number(values.size);
+      if (values.page) options.page = Number(values.page);
+      if (values.sort) options.sort = [values.sort];
+      return options;
+    };
+
     switch (command) {
+      // --- Admin list commands ---
       case "dmList": {
-        const options: Record<string, any> = { ...parseFilters(values.filter as string[]) };
-        if (values.size) options.size = Number(values.size);
-        if (values.page) options.page = Number(values.page);
-        result = await sdk.dmList(options);
+        result = await sdk.dmList(listOpts());
         if (!values.raw) result = cleanResult(result);
         break;
       }
       case "modelList": {
         if (!values.id) error("--id (datamanager UUID) is required for modelList");
-        const options: Record<string, any> = { ...parseFilters(values.filter as string[]) };
-        if (values.size) options.size = Number(values.size);
-        if (values.page) options.page = Number(values.page);
-        result = await sdk.dmID(values.id).modelList(options);
+        result = await sdk.dmID(values.id).modelList(listOpts());
         if (!values.raw) result = cleanResult(result);
         break;
       }
@@ -218,6 +295,24 @@ async function main() {
         if (!values.raw) result = cleanResult(result);
         break;
       }
+      case "resourceList": {
+        if (!values.resource) error("--resource is required for resourceList");
+        let chain = sdk.resource(values.resource);
+        if (values.subdomain) chain = chain.subdomain(values.subdomain);
+        result = await chain.resourceList(listOpts());
+        if (!values.raw) result = cleanResult(result);
+        break;
+      }
+      case "getStats": {
+        result = await sdk.getStats(listOpts());
+        break;
+      }
+      case "getHistory": {
+        result = await sdk.getHistory(listOpts());
+        break;
+      }
+
+      // --- Entry commands ---
       case "entryList":
       case "getEntry":
       case "createEntry":
@@ -226,46 +321,259 @@ async function main() {
       case "getSchema": {
         if (!values.dm) error("--dm is required");
         if (!values.model) error("--model is required");
-        const chain = sdk.dm(values.dm).model(values.model).clean(!values.raw);
+        const entryChain = sdk.dm(values.dm).model(values.model).clean(!values.raw);
 
         switch (command) {
           case "entryList": {
-            const options: Record<string, any> = { ...parseFilters(values.filter as string[]) };
-            if (values.size) options.size = Number(values.size);
-            if (values.page) options.page = Number(values.page);
-            if (values.sort) options.sort = [values.sort];
-            result = await chain.entryList(options);
+            result = await entryChain.entryList(listOpts());
             break;
           }
           case "getEntry": {
             if (!values.id) error("--id is required for getEntry");
-            result = await chain.getEntry(values.id);
+            result = await entryChain.getEntry(values.id);
             break;
           }
           case "createEntry": {
             const data = await getJsonData(values.data);
-            result = await chain.createEntry(data);
+            result = await entryChain.createEntry(data);
             break;
           }
           case "editEntry": {
             if (!values.id) error("--id is required for editEntry");
             const data = await getJsonData(values.data);
-            result = await chain.editEntry(values.id, data);
+            result = await entryChain.editEntry(values.id, data);
             break;
           }
           case "deleteEntry": {
             if (!values.id) error("--id is required for deleteEntry");
-            await chain.deleteEntry(values.id);
+            await entryChain.deleteEntry(values.id);
             process.stderr.write("Entry deleted.\n");
             return;
           }
           case "getSchema": {
-            result = await chain.getSchema();
+            result = await entryChain.getSchema();
             break;
           }
         }
         break;
       }
+
+      // --- Datamanager CRUD ---
+      case "createDatamanager": {
+        const data = await getJsonData(values.data);
+        result = await sdk.createDatamanager(data);
+        break;
+      }
+      case "editDatamanager": {
+        if (!values.id) error("--id (datamanager UUID) is required for editDatamanager");
+        const data = await getJsonData(values.data);
+        result = await sdk.editDatamanager(values.id, data);
+        break;
+      }
+      case "deleteDatamanager": {
+        if (!values.id) error("--id (datamanager UUID) is required for deleteDatamanager");
+        await sdk.deleteDatamanager(values.id);
+        process.stderr.write("Datamanager deleted.\n");
+        return;
+      }
+
+      // --- Model CRUD ---
+      case "createModel": {
+        if (!values.id) error("--id (datamanager UUID) is required for createModel");
+        const data = await getJsonData(values.data);
+        result = await sdk.dmID(values.id).createModel(data);
+        break;
+      }
+      case "editModel": {
+        if (!values.id) error("--id (datamanager UUID) is required for editModel");
+        if (!values.rid) error("--rid (model ID) is required for editModel");
+        const data = await getJsonData(values.data);
+        result = await sdk.dmID(values.id).editModel(values.rid, data);
+        break;
+      }
+      case "deleteModel": {
+        if (!values.id) error("--id (datamanager UUID) is required for deleteModel");
+        if (!values.rid) error("--rid (model ID) is required for deleteModel");
+        await sdk.dmID(values.id).deleteModel(values.rid);
+        process.stderr.write("Model deleted.\n");
+        return;
+      }
+
+      // --- Template CRUD ---
+      case "createTemplate": {
+        const data = await getJsonData(values.data);
+        result = await sdk.createTemplate(data);
+        break;
+      }
+      case "editTemplate": {
+        if (!values.rid) error("--rid (template ID) is required for editTemplate");
+        const data = await getJsonData(values.data);
+        result = await sdk.editTemplate(values.rid, data);
+        break;
+      }
+      case "deleteTemplate": {
+        if (!values.rid) error("--rid (template ID) is required for deleteTemplate");
+        await sdk.deleteTemplate(values.rid);
+        process.stderr.write("Template deleted.\n");
+        return;
+      }
+
+      // --- Asset Group ---
+      case "createAssetGroup": {
+        if (!values.id) error("--id (datamanager UUID) is required for createAssetGroup");
+        const data = await getJsonData(values.data);
+        result = await sdk.dmID(values.id).createAssetGroup(data);
+        break;
+      }
+      case "editAssetGroup": {
+        if (!values.id) error("--id (datamanager UUID) is required for editAssetGroup");
+        if (!values.rid) error("--rid (asset group ID) is required for editAssetGroup");
+        const data = await getJsonData(values.data);
+        result = await sdk.dmID(values.id).editAssetGroup(values.rid, data);
+        break;
+      }
+
+      // --- Asset metadata ---
+      case "editAsset": {
+        if (!values.dm) error("--dm (short ID) is required for editAsset");
+        if (!values.assetgroup) error("--assetgroup is required for editAsset");
+        if (!values.rid) error("--rid (asset ID) is required for editAsset");
+        const data = await getJsonData(values.data);
+        result = await sdk.dm(values.dm).assetGroup(values.assetgroup).editAsset(values.rid, data);
+        break;
+      }
+
+      // --- DM Client ---
+      case "editDmClient": {
+        if (!values.id) error("--id (datamanager UUID) is required for editDmClient");
+        if (!values.rid) error("--rid (client ID) is required for editDmClient");
+        const data = await getJsonData(values.data);
+        result = await sdk.dmID(values.id).editDmClient(values.rid, data);
+        break;
+      }
+
+      // --- Role CRUD ---
+      case "createRole": {
+        if (!values.id) error("--id (datamanager UUID) is required for createRole");
+        const data = await getJsonData(values.data);
+        result = await sdk.dmID(values.id).createRole(data);
+        break;
+      }
+      case "editRole": {
+        if (!values.id) error("--id (datamanager UUID) is required for editRole");
+        if (!values.rid) error("--rid (role ID) is required for editRole");
+        const data = await getJsonData(values.data);
+        result = await sdk.dmID(values.id).editRole(values.rid, data);
+        break;
+      }
+      case "deleteRole": {
+        if (!values.id) error("--id (datamanager UUID) is required for deleteRole");
+        if (!values.rid) error("--rid (role ID) is required for deleteRole");
+        await sdk.dmID(values.id).deleteRole(values.rid);
+        process.stderr.write("Role deleted.\n");
+        return;
+      }
+
+      // --- DM Account ---
+      case "editDmAccount": {
+        if (!values.id) error("--id (datamanager UUID) is required for editDmAccount");
+        if (!values["account-id"]) error("--account-id is required for editDmAccount");
+        const data = await getJsonData(values.data);
+        result = await sdk.dmID(values.id).editDmAccount(values["account-id"], data);
+        break;
+      }
+      case "deleteDmAccount": {
+        if (!values.id) error("--id (datamanager UUID) is required for deleteDmAccount");
+        if (!values["account-id"]) error("--account-id is required for deleteDmAccount");
+        await sdk.dmID(values.id).deleteDmAccount(values["account-id"]);
+        process.stderr.write("DM account deleted.\n");
+        return;
+      }
+
+      // --- Account Client ---
+      case "createAccountClient": {
+        const data = await getJsonData(values.data);
+        result = await sdk.createAccountClient(data);
+        break;
+      }
+      case "editAccountClient": {
+        if (!values.rid) error("--rid (client ID) is required for editAccountClient");
+        const data = await getJsonData(values.data);
+        result = await sdk.editAccountClient(values.rid, data);
+        break;
+      }
+      case "deleteAccountClient": {
+        if (!values.rid) error("--rid (client ID) is required for deleteAccountClient");
+        await sdk.deleteAccountClient(values.rid);
+        process.stderr.write("Account client deleted.\n");
+        return;
+      }
+
+      // --- Group ---
+      case "createGroup": {
+        const data = await getJsonData(values.data);
+        result = await sdk.createGroup(data);
+        break;
+      }
+      case "editGroup": {
+        if (!values.rid) error("--rid (group ID) is required for editGroup");
+        const data = await getJsonData(values.data);
+        result = await sdk.editGroup(values.rid, data);
+        break;
+      }
+      case "deleteGroup": {
+        if (!values.rid) error("--rid (group ID) is required for deleteGroup");
+        await sdk.deleteGroup(values.rid);
+        process.stderr.write("Group deleted.\n");
+        return;
+      }
+
+      // --- Invite ---
+      case "createInvite": {
+        const data = await getJsonData(values.data);
+        result = await sdk.createInvite(data);
+        break;
+      }
+      case "editInvite": {
+        if (!values.rid) error("--rid (invite ID) is required for editInvite");
+        const data = await getJsonData(values.data);
+        result = await sdk.editInvite(values.rid, data);
+        break;
+      }
+      case "deleteInvite": {
+        if (!values.rid) error("--rid (invite ID) is required for deleteInvite");
+        await sdk.deleteInvite(values.rid);
+        process.stderr.write("Invite deleted.\n");
+        return;
+      }
+
+      // --- Account ---
+      case "editAccount": {
+        if (!values["account-id"]) error("--account-id is required for editAccount");
+        const data = await getJsonData(values.data);
+        result = await sdk.editAccount(values["account-id"], data);
+        break;
+      }
+
+      // --- Tokens ---
+      case "listTokens": {
+        if (!values["account-id"]) error("--account-id is required for listTokens");
+        result = await sdk.listTokens(values["account-id"]);
+        break;
+      }
+      case "createToken": {
+        if (!values["account-id"]) error("--account-id is required for createToken");
+        result = await sdk.createToken(values["account-id"]);
+        break;
+      }
+      case "deleteToken": {
+        if (!values["account-id"]) error("--account-id is required for deleteToken");
+        if (!values.rid) error("--rid (access token ID) is required for deleteToken");
+        await sdk.deleteToken(values["account-id"], values.rid);
+        process.stderr.write("Token deleted.\n");
+        return;
+      }
+
       default:
         error(`Unknown command: ${command}`);
     }
