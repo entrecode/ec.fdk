@@ -515,8 +515,9 @@ api.assetGroup(group).getAsset(img);
 
 ## Publish
 
-0. `cd packages/ec.fdk`
-1. bump version in `packages/ec.fdk/package.json`
-2. run `npm run docs` to regenerate docs folder
-3. commit + push
-4. run `pnpm publish`
+```sh
+cd packages/ec.fdk
+./publish.sh
+```
+
+The script prompts for a new version, regenerates docs, commits, pushes, and publishes to npm.
