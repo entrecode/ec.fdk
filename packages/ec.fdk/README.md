@@ -105,15 +105,18 @@ ec.fdk <command> [options]
 
 ### Commands
 
-| Command       | Description                                    |
-| ------------- | ---------------------------------------------- |
-| `login`       | Login with ec credentials (interactive prompt) |
-| `entryList`   | List entries                                   |
-| `getEntry`    | Get a single entry                             |
-| `createEntry` | Create an entry                                |
-| `editEntry`   | Edit an entry                                  |
-| `deleteEntry` | Delete an entry                                |
-| `getSchema`   | Get model schema                               |
+| Command          | Description                                    |
+| ---------------- | ---------------------------------------------- |
+| `login`          | Login with ec credentials (interactive prompt) |
+| `dmList`         | List datamanagers                              |
+| `modelList`      | List models of a datamanager                   |
+| `getDatamanager` | Get a single datamanager                       |
+| `entryList`      | List entries                                   |
+| `getEntry`       | Get a single entry                             |
+| `createEntry`    | Create an entry                                |
+| `editEntry`      | Edit an entry                                  |
+| `deleteEntry`    | Delete an entry                                |
+| `getSchema`      | Get model schema                               |
 
 ### Options
 
@@ -122,13 +125,14 @@ ec.fdk <command> [options]
 | `-e, --env <env>`    | Environment: `stage` \| `live` (default: `stage`) |
 | `-d, --dm <shortID>` | DataManager short ID                              |
 | `-m, --model <name>` | Model name                                        |
-| `-i, --id <id>`      | Entry ID (for get/edit/delete)                    |
+| `-i, --id <id>`      | Entry ID or DataManager UUID (context-dependent)  |
 | `--data <json>`      | JSON data (for create/edit)                       |
 | `-s, --size <n>`     | Page size for list                                |
 | `-p, --page <n>`     | Page number for list                              |
 | `--sort <field>`     | Sort field for list                               |
 | `--raw`              | Include `_links` and `_embedded` in output        |
 | `--md`               | Output entries as readable markdown table          |
+| `-v, --version`      | Show version                                      |
 | `-h, --help`         | Show help                                         |
 
 ### Examples
@@ -136,6 +140,15 @@ ec.fdk <command> [options]
 ```sh
 # Login to stage (stores token in ~/.ec-fdk/auth.json)
 ec.fdk login -e stage
+
+# List datamanagers
+ec.fdk dmList -e stage
+
+# Get a single datamanager
+ec.fdk getDatamanager -e stage --id 73538731-4ac3-4a1a-b3b5-e31d09e94d42
+
+# List models of a datamanager
+ec.fdk modelList -e stage --id 73538731-4ac3-4a1a-b3b5-e31d09e94d42
 
 # List entries
 ec.fdk entryList -d 83cc6374 -m muffin

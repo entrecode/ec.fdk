@@ -1,12 +1,19 @@
 import { parseArgs } from "node:util";
+import { createRequire } from "node:module";
 import { Fdk } from "./lib/api";
 import { fileStorageAdapter } from "./lib/cli-storage";
 import { prompt, promptPassword } from "./lib/cli-prompt";
+
+const require = createRequire(import.meta.url);
+const { version } = require("../package.json");
 
 const HELP = `ec.fdk <command> [options]
 
 Commands:
   login                 Login with ec credentials (interactive prompt)
+  dmList                List datamanagers
+  modelList             List models of a datamanager
+  getDatamanager        Get a single datamanager
   entryList             List entries
   getEntry              Get a single entry
   createEntry           Create an entry
@@ -18,13 +25,14 @@ Options:
   -e, --env <env>       Environment: stage|live (default: stage)
   -d, --dm <shortID>    DataManager short ID
   -m, --model <name>    Model name
-  -i, --id <entryID>    Entry ID (for get/edit/delete)
+  -i, --id <id>         Entry ID or DataManager UUID (context-dependent)
   --data <json>         JSON data (for create/edit, or pipe via stdin)
   -s, --size <n>        Page size for list
   -p, --page <n>        Page number for list
   --sort <field>        Sort field for list
   --raw                 Include _links and _embedded in output
   --md                  Output entries as readable markdown
+  -v, --version         Show version
   -h, --help            Show help`;
 
 function error(msg: string): never {
@@ -59,6 +67,20 @@ async function getJsonData(dataArg?: string): Promise<object> {
     }
   }
   error("Provide --data or pipe JSON via stdin");
+}
+
+function cleanItem(item: any) {
+  if (!item || typeof item !== "object") return item;
+  const { _links, _embedded, ...rest } = item;
+  return rest;
+}
+
+function cleanResult(result: any) {
+  if (!result || typeof result !== "object") return result;
+  if (Array.isArray(result.items)) {
+    return { ...result, items: result.items.map(cleanItem) };
+  }
+  return cleanItem(result);
 }
 
 const MAX_CELL = 40;
@@ -120,9 +142,15 @@ async function main() {
       sort: { type: "string" },
       raw: { type: "boolean", default: false },
       md: { type: "boolean", default: false },
+      version: { type: "boolean", short: "v" },
       help: { type: "boolean", short: "h" },
     },
   });
+
+  if (values.version) {
+    console.log(version);
+    process.exit(0);
+  }
 
   if (values.help || positionals.length === 0) {
     console.log(HELP);
@@ -151,51 +179,79 @@ async function main() {
     return;
   }
 
-  // All other commands need --dm and --model
-  if (!values.dm) error("--dm is required");
-  if (!values.model && command !== "getSchema") {
-    // getSchema also needs model, but let's keep the check uniform
-  }
-  if (!values.model) error("--model is required");
-
-  const chain = sdk.dm(values.dm).model(values.model).clean(!values.raw);
-
   try {
     let result: any;
 
     switch (command) {
-      case "entryList": {
+      case "dmList": {
         const options: Record<string, any> = {};
         if (values.size) options.size = Number(values.size);
         if (values.page) options.page = Number(values.page);
-        if (values.sort) options.sort = [values.sort];
-        result = await chain.entryList(options);
+        result = await sdk.dmList(options);
+        if (!values.raw) result = cleanResult(result);
         break;
       }
-      case "getEntry": {
-        if (!values.id) error("--id is required for getEntry");
-        result = await chain.getEntry(values.id);
+      case "modelList": {
+        if (!values.id) error("--id (datamanager UUID) is required for modelList");
+        const options: Record<string, any> = {};
+        if (values.size) options.size = Number(values.size);
+        if (values.page) options.page = Number(values.page);
+        result = await sdk.dmID(values.id).modelList(options);
+        if (!values.raw) result = cleanResult(result);
         break;
       }
-      case "createEntry": {
-        const data = await getJsonData(values.data);
-        result = await chain.createEntry(data);
+      case "getDatamanager": {
+        if (!values.id) error("--id (datamanager UUID) is required for getDatamanager");
+        result = await sdk.getDatamanager(values.id);
+        if (!values.raw) result = cleanResult(result);
         break;
       }
-      case "editEntry": {
-        if (!values.id) error("--id is required for editEntry");
-        const data = await getJsonData(values.data);
-        result = await chain.editEntry(values.id, data);
-        break;
-      }
-      case "deleteEntry": {
-        if (!values.id) error("--id is required for deleteEntry");
-        await chain.deleteEntry(values.id);
-        process.stderr.write("Entry deleted.\n");
-        return;
-      }
+      case "entryList":
+      case "getEntry":
+      case "createEntry":
+      case "editEntry":
+      case "deleteEntry":
       case "getSchema": {
-        result = await chain.getSchema();
+        if (!values.dm) error("--dm is required");
+        if (!values.model) error("--model is required");
+        const chain = sdk.dm(values.dm).model(values.model).clean(!values.raw);
+
+        switch (command) {
+          case "entryList": {
+            const options: Record<string, any> = {};
+            if (values.size) options.size = Number(values.size);
+            if (values.page) options.page = Number(values.page);
+            if (values.sort) options.sort = [values.sort];
+            result = await chain.entryList(options);
+            break;
+          }
+          case "getEntry": {
+            if (!values.id) error("--id is required for getEntry");
+            result = await chain.getEntry(values.id);
+            break;
+          }
+          case "createEntry": {
+            const data = await getJsonData(values.data);
+            result = await chain.createEntry(data);
+            break;
+          }
+          case "editEntry": {
+            if (!values.id) error("--id is required for editEntry");
+            const data = await getJsonData(values.data);
+            result = await chain.editEntry(values.id, data);
+            break;
+          }
+          case "deleteEntry": {
+            if (!values.id) error("--id is required for deleteEntry");
+            await chain.deleteEntry(values.id);
+            process.stderr.write("Entry deleted.\n");
+            return;
+          }
+          case "getSchema": {
+            result = await chain.getSchema();
+            break;
+          }
+        }
         break;
       }
       default:
