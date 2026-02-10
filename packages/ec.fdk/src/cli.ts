@@ -24,6 +24,7 @@ Options:
   -p, --page <n>        Page number for list
   --sort <field>        Sort field for list
   --raw                 Include _links and _embedded in output
+  --md                  Output entries as readable markdown
   -h, --help            Show help`;
 
 function error(msg: string): never {
@@ -60,6 +61,51 @@ async function getJsonData(dataArg?: string): Promise<object> {
   error("Provide --data or pipe JSON via stdin");
 }
 
+const MAX_CELL = 40;
+
+function truncate(s: string): string {
+  return s.length > MAX_CELL ? s.slice(0, MAX_CELL - 2) + ".." : s;
+}
+
+function cell(val: any): string {
+  if (val === null || val === undefined) return "";
+  if (typeof val === "object") return truncate(JSON.stringify(val));
+  return truncate(String(val));
+}
+
+function entryKeys(entry: Record<string, any>): string[] {
+  return Object.keys(entry).filter((k) => !k.startsWith("_"));
+}
+
+function padRow(cells: string[], widths: number[]): string {
+  return "| " + cells.map((c, i) => c.padEnd(widths[i])).join(" | ") + " |";
+}
+
+function entryToMd(entry: Record<string, any>): string {
+  const keys = entryKeys(entry);
+  const vals = keys.map((k) => cell(entry[k]));
+  const w0 = Math.max(5, ...keys.map((k) => k.length));
+  const w1 = Math.max(5, ...vals.map((v) => v.length));
+  const widths = [w0, w1];
+  const header = padRow(["Field", "Value"], widths);
+  const sep = "| " + widths.map((w) => "-".repeat(w)).join(" | ") + " |";
+  const rows = keys.map((k, i) => padRow([k, vals[i]], widths));
+  return `${header}\n${sep}\n${rows.join("\n")}`;
+}
+
+function entryListToMd(result: { count: number; total: number; items: any[] }): string {
+  if (!result.items.length) return "No entries found.";
+  const keys = entryKeys(result.items[0]);
+  const grid = result.items.map((e) => keys.map((k) => cell(e[k])));
+  const widths = keys.map((k, i) =>
+    Math.max(k.length, ...grid.map((row) => row[i].length))
+  );
+  const header = padRow(keys, widths);
+  const sep = "| " + widths.map((w) => "-".repeat(w)).join(" | ") + " |";
+  const rows = grid.map((r) => padRow(r, widths));
+  return `${header}\n${sep}\n${rows.join("\n")}\n\n${result.items.length} of ${result.total} entries`;
+}
+
 async function main() {
   const { values, positionals } = parseArgs({
     allowPositionals: true,
@@ -73,6 +119,7 @@ async function main() {
       page: { type: "string", short: "p" },
       sort: { type: "string" },
       raw: { type: "boolean", default: false },
+      md: { type: "boolean", default: false },
       help: { type: "boolean", short: "h" },
     },
   });
@@ -155,7 +202,15 @@ async function main() {
         error(`Unknown command: ${command}`);
     }
 
-    process.stdout.write(JSON.stringify(result, null, 2) + "\n");
+    if (values.md && result && typeof result === "object") {
+      if (Array.isArray(result.items)) {
+        process.stdout.write(entryListToMd(result) + "\n");
+      } else {
+        process.stdout.write(entryToMd(result) + "\n");
+      }
+    } else {
+      process.stdout.write(JSON.stringify(result, null, 2) + "\n");
+    }
   } catch (e: any) {
     process.stderr.write(`${e.message}\n`);
     process.exit(1);

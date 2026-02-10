@@ -128,6 +128,7 @@ ec.fdk <command> [options]
 | `-p, --page <n>`     | Page number for list                              |
 | `--sort <field>`     | Sort field for list                               |
 | `--raw`              | Include `_links` and `_embedded` in output        |
+| `--md`               | Output entries as readable markdown table          |
 | `-h, --help`         | Show help                                         |
 
 ### Examples
