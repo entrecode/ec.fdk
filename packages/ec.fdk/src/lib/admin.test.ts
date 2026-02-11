@@ -192,24 +192,6 @@ describe("Template CRUD", () => {
     );
   });
 
-  it("editTemplate → PUT template with templateID", async () => {
-    const value = { name: "updated-tpl" };
-    await admin.editTemplate({ env: "stage", token: "tok", templateID: "tpl-1", value });
-    expect(mockFetcher).toHaveBeenCalledWith(
-      `${DM}template?templateID=tpl-1`,
-      { token: "tok" },
-      { method: "PUT", body: JSON.stringify(value), headers: jsonHeaders },
-    );
-  });
-
-  it("deleteTemplate → DELETE with rawRes", async () => {
-    await admin.deleteTemplate({ env: "stage", token: "tok", templateID: "tpl-1" });
-    expect(mockFetcher).toHaveBeenCalledWith(
-      `${DM}template?templateID=tpl-1`,
-      { token: "tok", rawRes: true },
-      { method: "DELETE", headers: jsonHeaders },
-    );
-  });
 });
 
 // --- Asset Group ---
@@ -445,7 +427,7 @@ describe("Invite", () => {
     const value = { email: "updated@example.com" };
     await admin.editInvite({ env: "stage", token: "tok", inviteID: "inv-1", value });
     expect(mockFetcher).toHaveBeenCalledWith(
-      `${ACC}invite?inviteID=inv-1`,
+      `${ACC}invite?invite=inv-1`,
       { token: "tok" },
       { method: "PUT", body: JSON.stringify(value), headers: jsonHeaders },
     );
@@ -454,7 +436,7 @@ describe("Invite", () => {
   it("deleteInvite → DELETE with rawRes on accounts subdomain", async () => {
     await admin.deleteInvite({ env: "stage", token: "tok", inviteID: "inv-1" });
     expect(mockFetcher).toHaveBeenCalledWith(
-      `${ACC}invite?inviteID=inv-1`,
+      `${ACC}invite?invite=inv-1`,
       { token: "tok", rawRes: true },
       { method: "DELETE", headers: jsonHeaders },
     );
@@ -481,7 +463,7 @@ describe("Tokens", () => {
   it("listTokens → GET account tokens on accounts subdomain", async () => {
     await admin.listTokens({ env: "stage", token: "tok", accountID: "acc-1" });
     expect(mockFetcher).toHaveBeenCalledWith(
-      `${ACC}account/acc-1/tokens`,
+      `${ACC}account/tokens?accountID=acc-1`,
       { token: "tok" },
     );
   });
@@ -489,7 +471,7 @@ describe("Tokens", () => {
   it("createToken → POST account tokens on accounts subdomain", async () => {
     await admin.createToken({ env: "stage", token: "tok", accountID: "acc-1" });
     expect(mockFetcher).toHaveBeenCalledWith(
-      `${ACC}account/acc-1/tokens`,
+      `${ACC}account/tokens?accountID=acc-1`,
       { token: "tok" },
       { method: "POST", headers: jsonHeaders },
     );
@@ -500,7 +482,7 @@ describe("Tokens", () => {
       env: "stage", token: "tok", accountID: "acc-1", accessTokenID: "at-1",
     });
     expect(mockFetcher).toHaveBeenCalledWith(
-      `${ACC}account/acc-1/tokens/at-1`,
+      `${ACC}account/tokens?accessTokenID=at-1&accountID=acc-1`,
       { token: "tok", rawRes: true },
       { method: "DELETE", headers: jsonHeaders },
     );

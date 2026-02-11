@@ -24,7 +24,11 @@ export async function fetcher(
   if (rawRes) {
     return res;
   }
-  return await res.json();
+  if (res.status === 204) {
+    return undefined;
+  }
+  const text = await res.text();
+  return text ? JSON.parse(text) : undefined;
 }
 
 /**

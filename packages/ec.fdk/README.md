@@ -29,7 +29,7 @@ Start by calling `fdk` with your environment (`stage` | `live`), then method cha
 import { fdk } from 'ec.fdk';
 
 fdk('stage') // choose stage environment
-  .dm('83cc6374') // select datamanager via short id
+  .dm('<shortID>') // select datamanager via short id
   .model('muffin') // select model muffin
   .entryList() // load entry list
   .then((list) => {
@@ -47,7 +47,7 @@ The act function converts a single object param into a fetch request:
 const muffins = await act({
   action: 'entryList',
   env: 'stage',
-  dmShortID: '83cc6374',
+  dmShortID: '<shortID>',
   model: 'muffin',
 });
 ```
@@ -73,7 +73,7 @@ Then use the hook:
 ```js
 const config = {
   env: 'stage',
-  dmShortID: '83cc6374',
+  dmShortID: '<shortID>',
 };
 
 function App() {
@@ -116,41 +116,31 @@ ec.fdk <command> [options]
 | `deleteEntry` | Delete an entry  | `--dm`, `--model`, `--id` |
 | `getSchema`   | Get model schema | `--dm`, `--model` |
 
-#### Admin list commands
-
-| Command          | Description               | Required flags |
-| ---------------- | ------------------------- | -------------- |
-| `login`          | Login with ec credentials | — |
-| `dmList`         | List datamanagers         | — |
-| `modelList`      | List models               | `--id` (DM UUID) |
-| `getDatamanager` | Get a datamanager         | `--id` (DM UUID) |
-| `resourceList`   | List resources            | `--resource`, optional `--subdomain` |
-| `getStats`       | Get datamanager stats     | — |
-| `getHistory`     | Get dm-history entries    | — |
-
-#### Datamanager CRUD
+#### Datamanager (`--id` = DM UUID)
 
 | Command             | Description          | Required flags |
 | ------------------- | -------------------- | -------------- |
+| `dmList`            | List datamanagers    | — |
+| `getDatamanager`    | Get a datamanager    | `--id` |
 | `createDatamanager` | Create a datamanager | `--data` |
-| `editDatamanager`   | Edit a datamanager   | `--id`, `--data` |
+| `editDatamanager`   | Edit a datamanager (full PUT) | `--id`, `--data` |
 | `deleteDatamanager` | Delete a datamanager | `--id` |
+| `getStats`          | Get datamanager stats | — |
 
-#### Model CRUD (`--id` = DM UUID)
+#### Model (`--id` = DM UUID)
 
 | Command       | Description    | Required flags |
 | ------------- | -------------- | -------------- |
+| `modelList`   | List models    | `--id` |
 | `createModel` | Create a model | `--id`, `--data` |
 | `editModel`   | Edit a model   | `--id`, `--rid`, `--data` |
 | `deleteModel` | Delete a model | `--id`, `--rid` |
 
-#### Template CRUD
+#### Template
 
 | Command          | Description       | Required flags |
 | ---------------- | ----------------- | -------------- |
 | `createTemplate` | Create a template | `--data` |
-| `editTemplate`   | Edit a template   | `--rid`, `--data` |
-| `deleteTemplate` | Delete a template | `--rid` |
 
 #### Asset Group (`--id` = DM UUID)
 
@@ -171,7 +161,7 @@ ec.fdk <command> [options]
 | -------------- | ---------------- | -------------- |
 | `editDmClient` | Edit a DM client | `--id`, `--rid`, `--data` |
 
-#### Role CRUD (`--id` = DM UUID)
+#### Role (`--id` = DM UUID)
 
 | Command      | Description   | Required flags |
 | ------------ | ------------- | -------------- |
@@ -224,6 +214,34 @@ ec.fdk <command> [options]
 | `createToken` | Create a token | `--account-id` |
 | `deleteToken` | Delete a token | `--account-id`, `--rid` |
 
+#### Other
+
+| Command        | Description               | Required flags |
+| -------------- | ------------------------- | -------------- |
+| `login`          | Login with ec credentials | — |
+| `resourceList`   | List any resource type    | `--resource`, `-f` for query params |
+| `resourceGet`    | Get a single resource     | `--resource`, `-f` for identifying params |
+| `resourceEdit`   | Edit a single resource    | `--resource`, `-f` for identifying params, `--data` |
+| `resourceDelete` | Delete a single resource  | `--resource`, `-f` for identifying params |
+| `getHistory`     | Get dm-history entries    | `-f shortID=<shortID>` |
+
+##### `resourceList` resource types
+
+| `--resource` | `--subdomain` | Typical filters |
+| --- | --- | --- |
+| `model` | — | `-f dataManagerID=<dataManagerID>` |
+| `assetgroup` | — | `-f dataManagerID=<dataManagerID>` |
+| `client` | — | `-f dataManagerID=<dataManagerID>` |
+| `role` | — | `-f dataManagerID=<dataManagerID>` |
+| `account` | — | `-f dataManagerID=<dataManagerID>` |
+| `template` | — | — |
+| `tag` | — | `-f dataManagerID=<dataManagerID>` |
+| `account` | `accounts` | — |
+| `client` | `accounts` | — |
+| `group` | `accounts` | — |
+| `invite` | `accounts` | — |
+| `account/tokens` | `accounts` | `-f accountID=<accountID>` |
+
 ### Options
 
 | Option                  | Description                                       |
@@ -235,8 +253,8 @@ ec.fdk <command> [options]
 | `--rid <id>`            | Resource ID (model, template, role, client, asset group, invite, etc.) |
 | `--account-id <id>`     | Account ID                                        |
 | `--assetgroup <name>`   | Asset group name (for `editAsset`)                |
-| `--resource <name>`     | Resource name (for `resourceList`)                |
-| `--subdomain <name>`    | Subdomain override (for `resourceList`)           |
+| `--resource <name>`     | Resource name (for `resource*` commands)           |
+| `--subdomain <name>`    | Subdomain override (for `resource*` commands)      |
 | `--data <json>`         | JSON data (for create/edit, or pipe via stdin)    |
 | `-s, --size <n>`        | Page size for list                                |
 | `-p, --page <n>`        | Page number for list                              |
@@ -246,6 +264,26 @@ ec.fdk <command> [options]
 | `--md`                  | Output entries as readable markdown table          |
 | `-v, --version`         | Show version                                      |
 | `-h, --help`            | Show help                                         |
+
+### Placeholders
+
+All examples use `<PLACEHOLDER>` values — replace them with your own resource IDs.
+
+| Placeholder | Flag | Resource |
+| --- | --- | --- |
+| `<shortID>` | `--dm` | [Datamanager](https://doc.entrecode.de/datamanager/resources/datamanager/) |
+| `<dataManagerID>` | `--id` | [Datamanager](https://doc.entrecode.de/datamanager/resources/datamanager/) |
+| `<entryID>` | `--id` | [Model](https://doc.entrecode.de/datamanager/resources/model/) |
+| `<modelID>` | `--rid` | [Model](https://doc.entrecode.de/datamanager/resources/model/) |
+| `<assetGroup>` | `--rid` / `--assetgroup` | [Asset Group](https://doc.entrecode.de/datamanager/resources/dm-assetgroup/) |
+| `<assetID>` | `--rid` | [Asset](https://doc.entrecode.de/datamanager/resources/asset/) |
+| `<clientID>` | `--rid` | [DM Client](https://doc.entrecode.de/datamanager/resources/dm-client/) / [Account Client](https://doc.entrecode.de/account/resources/client/) |
+| `<roleID>` | `--rid` | [Role](https://doc.entrecode.de/datamanager/resources/dm-role/) |
+| `<accountID>` | `--account-id` | [DM Account](https://doc.entrecode.de/datamanager/resources/dm-account/) / [Account](https://doc.entrecode.de/account/resources/account/) |
+| `<groupID>` | `--rid` | [Group](https://doc.entrecode.de/account/resources/group/) |
+| `<inviteID>` | `--rid` | [Invite](https://doc.entrecode.de/account/resources/invite/) |
+| `<tokenID>` | `--rid` | [Token](https://doc.entrecode.de/account/resources/token/) |
+| `<collectionID>` | `--data` | [Template](https://doc.entrecode.de/datamanager/resources/dm-template/) |
 
 ### Examples
 
@@ -257,129 +295,133 @@ ec.fdk login -e stage
 ec.fdk dmList -e stage
 
 # Get a single datamanager
-ec.fdk getDatamanager -e stage --id 73538731-4ac3-4a1a-b3b5-e31d09e94d42
+ec.fdk getDatamanager -e stage --id <dataManagerID>
 
 # List models of a datamanager
-ec.fdk modelList -e stage --id 73538731-4ac3-4a1a-b3b5-e31d09e94d42
+ec.fdk modelList -e stage --id <dataManagerID>
 
 # Filter models by title
-ec.fdk modelList --id 73538731-4ac3-4a1a-b3b5-e31d09e94d42 -f title~=muffin
+ec.fdk modelList --id <dataManagerID> -f title~=muffin
 
 # List entries
-ec.fdk entryList -d 83cc6374 -m muffin
+ec.fdk entryList -d <shortID> -m muffin
 
 # List with pagination
-ec.fdk entryList -d 83cc6374 -m muffin -s 10 -p 2
+ec.fdk entryList -d <shortID> -m muffin -s 10 -p 2
 
 # Get a single entry
-ec.fdk getEntry -d 83cc6374 -m muffin -i fZctZXIeRJ
+ec.fdk getEntry -d <shortID> -m muffin -i <entryID>
 
 # Create an entry
-ec.fdk createEntry -d 83cc6374 -m muffin --data '{"name":"new muffin","amazement_factor":10}'
+ec.fdk createEntry -d <shortID> -m muffin --data '{"name":"new muffin","amazement_factor":10}'
 
 # Create via stdin pipe
-echo '{"name":"piped muffin","amazement_factor":10}' | ec.fdk createEntry -d 83cc6374 -m muffin
+echo '{"name":"piped muffin","amazement_factor":10}' | ec.fdk createEntry -d <shortID> -m muffin
 
 # Edit an entry
-ec.fdk editEntry -d 83cc6374 -m muffin -i fZctZXIeRJ --data '{"name":"edited"}'
+ec.fdk editEntry -d <shortID> -m muffin -i <entryID> --data '{"name":"edited"}'
 
 # Delete an entry
-ec.fdk deleteEntry -d 83cc6374 -m muffin -i fZctZXIeRJ
+ec.fdk deleteEntry -d <shortID> -m muffin -i <entryID>
 
 # Get model schema
-ec.fdk getSchema -d 83cc6374 -m muffin
+ec.fdk getSchema -d <shortID> -m muffin
 
 # Filter entries (repeatable -f for arbitrary query params)
-ec.fdk entryList -d 83cc6374 -m muffin -f name~=chocolate
-ec.fdk entryList -d 83cc6374 -m muffin -f amazement_factorFrom=5 -f amazement_factorTo=10
-ec.fdk entryList -d 83cc6374 -m muffin -f createdFrom=2024-01-01
+ec.fdk entryList -d <shortID> -m muffin -f name~=chocolate
+ec.fdk entryList -d <shortID> -m muffin -f amazement_factorFrom=5 -f amazement_factorTo=10
+ec.fdk entryList -d <shortID> -m muffin -f createdFrom=2024-01-01
 
 # Filter datamanagers
-ec.fdk dmList -f title~=ec-admin
+ec.fdk dmList -f title~=myproject
 
 # Pipe into jq
-ec.fdk entryList -d 83cc6374 -m muffin | jq '.items | length'
+ec.fdk entryList -d <shortID> -m muffin | jq '.items | length'
 ```
 
 ### Admin examples
 
 ```sh
-# Get datamanager stats
+# Datamanager stats
 ec.fdk getStats
 
-# Get dm-history entries
-ec.fdk getHistory -s 10
+# dm-history (requires shortID filter)
+ec.fdk getHistory -f shortID=<shortID> -s 10
 
-# List templates
+# List any resource type
 ec.fdk resourceList --resource template -s 5
-
-# List resources with custom subdomain
 ec.fdk resourceList --resource client --subdomain accounts
 
-# Create a datamanager
+# Generic get / edit / delete (works with any resource type)
+ec.fdk resourceGet --resource model -f dataManagerID=<dataManagerID> -f modelID=<modelID>
+ec.fdk resourceGet --resource group --subdomain accounts -f groupID=<groupID>
+ec.fdk resourceEdit --resource invite --subdomain accounts -f invite=<inviteID> --data '{"email":"user@example.com","permissions":["dm-read"],"groups":[]}'
+ec.fdk resourceDelete --resource role -f dataManagerID=<dataManagerID> -f roleID=<roleID>
+
+# Datamanager
 ec.fdk createDatamanager --data '{"title":"My DM","config":{}}'
+ec.fdk deleteDatamanager --id <dataManagerID>
 
-# Edit a datamanager
-ec.fdk editDatamanager --id <DM-UUID> --data '{"title":"New Title"}'
+# editDatamanager is a full PUT — pass the complete resource, not just changed fields.
+# Use getDatamanager + jq to build the payload:
+ec.fdk getDatamanager --id <dataManagerID> \
+  | jq '.title = "New Title"' \
+  | ec.fdk editDatamanager --id <dataManagerID>
 
-# Delete a datamanager
-ec.fdk deleteDatamanager --id <DM-UUID>
+# Model
+ec.fdk createModel --id <dataManagerID> --data '{"title":"article","locales":[],"fields":[]}'
+ec.fdk editModel --id <dataManagerID> --rid <modelID> --data '{"title":"renamed","locales":[],"fields":[]}'
+ec.fdk deleteModel --id <dataManagerID> --rid <modelID>
 
-# Create a model
-ec.fdk createModel --id <DM-UUID> --data '{"title":"article","fields":[...]}'
+# Template
+ec.fdk createTemplate --data '{"name":"My Template","collection":{"id":"<collectionID>","name":"my-collection","order":[],"requests":[]}}'
 
-# Edit a model
-ec.fdk editModel --id <DM-UUID> --rid <MODEL-ID> --data '{"title":"renamed"}'
+# Asset group
+ec.fdk createAssetGroup --id <dataManagerID> --data '{"assetGroupID":"photos"}'
+ec.fdk editAssetGroup --id <dataManagerID> --rid <assetGroup> --data '{"public":true}'
 
-# Delete a model
-ec.fdk deleteModel --id <DM-UUID> --rid <MODEL-ID>
+# Asset metadata
+ec.fdk editAsset --dm <shortID> --assetgroup <assetGroup> --rid <assetID> --data '{"title":"sunset"}'
 
-# Create/edit/delete templates
-ec.fdk createTemplate --data '{"name":"My Template"}'
-ec.fdk editTemplate --rid <TEMPLATE-ID> --data '{"name":"Renamed"}'
-ec.fdk deleteTemplate --rid <TEMPLATE-ID>
+# DM client
+ec.fdk editDmClient --id <dataManagerID> --rid <clientID> --data '{"callbackURL":"https://example.com/cb"}'
 
-# Asset group management
-ec.fdk createAssetGroup --id <DM-UUID> --data '{"assetGroupID":"photos"}'
-ec.fdk editAssetGroup --id <DM-UUID> --rid <ASSETGROUP-ID> --data '{"public":true}'
+# Role
+ec.fdk createRole --id <dataManagerID> --data '{"name":"editor"}'
+ec.fdk editRole --id <dataManagerID> --rid <roleID> --data '{"name":"admin"}'
+ec.fdk deleteRole --id <dataManagerID> --rid <roleID>
 
-# Edit asset metadata
-ec.fdk editAsset --dm 83cc6374 --assetgroup photos --rid <ASSET-ID> --data '{"title":"sunset"}'
+# DM account
+ec.fdk editDmAccount --id <dataManagerID> --account-id <accountID> --data '{"email":"user@example.com"}'
+ec.fdk deleteDmAccount --id <dataManagerID> --account-id <accountID>
 
-# Edit a DM client
-ec.fdk editDmClient --id <DM-UUID> --rid <CLIENT-ID> --data '{"callbackURL":"..."}'
+# Account client
+ec.fdk createAccountClient --data '{"clientID":"my-client","callbackURL":"https://example.com/cb"}'
+# editAccountClient is a full PUT — clientID is required in the body.
+ec.fdk resourceList --resource client --subdomain accounts -f clientID=my-client \
+  | jq '.items[0]' \
+  | jq '.callbackURL = "https://example.com/cb2"' \
+  | ec.fdk editAccountClient --rid my-client
+ec.fdk deleteAccountClient --rid <clientID>
 
-# Role management
-ec.fdk createRole --id <DM-UUID> --data '{"name":"editor"}'
-ec.fdk editRole --id <DM-UUID> --rid <ROLE-ID> --data '{"name":"admin"}'
-ec.fdk deleteRole --id <DM-UUID> --rid <ROLE-ID>
-
-# DM account management
-ec.fdk editDmAccount --id <DM-UUID> --account-id <ACCOUNT-ID> --data '{"email":"new@example.com"}'
-ec.fdk deleteDmAccount --id <DM-UUID> --account-id <ACCOUNT-ID>
-
-# Account client management
-ec.fdk createAccountClient --data '{"clientID":"my-client","callbackURL":"..."}'
-ec.fdk editAccountClient --rid <CLIENT-ID> --data '{"callbackURL":"..."}'
-ec.fdk deleteAccountClient --rid <CLIENT-ID>
-
-# Group management
+# Group
 ec.fdk createGroup --data '{"name":"devs"}'
-ec.fdk editGroup --rid <GROUP-ID> --data '{"name":"developers"}'
-ec.fdk deleteGroup --rid <GROUP-ID>
+ec.fdk editGroup --rid <groupID> --data '{"name":"developers"}'
+ec.fdk deleteGroup --rid <groupID>
 
-# Invite management
+# Invite
 ec.fdk createInvite --data '{"email":"user@example.com"}'
-ec.fdk editInvite --rid <INVITE-ID> --data '{"permissions":["dm-read"]}'
-ec.fdk deleteInvite --rid <INVITE-ID>
+# editInvite is a full PUT — pass the complete resource (email, permissions, groups).
+ec.fdk editInvite --rid <inviteID> --data '{"email":"user@example.com","permissions":["dm-read"],"groups":[]}'
+ec.fdk deleteInvite --rid <inviteID>
 
-# Account management
-ec.fdk editAccount --account-id <ACCOUNT-ID> --data '{"email":"updated@example.com"}'
+# Account
+ec.fdk editAccount --account-id <accountID> --data '{"email":"user@example.com"}'
 
-# Token management
-ec.fdk listTokens --account-id <ACCOUNT-ID>
-ec.fdk createToken --account-id <ACCOUNT-ID>
-ec.fdk deleteToken --account-id <ACCOUNT-ID> --rid <TOKEN-ID>
+# Tokens
+ec.fdk listTokens --account-id <accountID>
+ec.fdk createToken --account-id <accountID>
+ec.fdk deleteToken --account-id <accountID> --rid <tokenID>
 ```
 
 The `-f` flag maps directly to [entrecode filter query params](https://doc.entrecode.de/api-basics/#filtering). Common filter suffixes:
@@ -474,9 +516,9 @@ const entryList = await fdk(env).dm(shortID).entryList(model);
 By default, the second param of ec.fdk `entryList` will just convert the object to url params:
 
 ```js
-const entryList = await fdk('stage').dm('83cc6374').entryList({ createdTo: '2021-01-18T09:13:47.605Z' });
+const entryList = await fdk('stage').dm('<shortID>').entryList({ createdTo: '2021-01-18T09:13:47.605Z' });
 /* 
-https://datamanager.cachena.entrecode.de/api/83cc6374/muffin?
+https://datamanager.cachena.entrecode.de/api/<shortID>/muffin?
 _list=true&
 createdTo=2021-01-18T09:13:47.605Z&
 page=1&
@@ -490,7 +532,7 @@ There is some syntax sugar you can use to get the same behavior as [ec.sdk filte
 
 ```js
 const entryList = await fdk('stage')
-  .dm('83cc6374')
+  .dm('<shortID>')
   .entryList(filterOptions({ created: { to: '2021-01-18T09:13:47.605Z' } }));
 ```
 

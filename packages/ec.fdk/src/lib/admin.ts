@@ -77,6 +77,40 @@ export async function resourceList(config: AdminResourceListConfig): Promise<Res
   return { count, total, items };
 }
 
+/** @ignore */
+export async function resourceGet(config: AdminResourceListConfig): Promise<any> {
+  let { env, resource, options = {}, subdomain = "datamanager" } = config;
+  expect({ env, subdomain, resource });
+  const q = query(options);
+  const url = apiURL(`${resource}?${q}`, env, subdomain);
+  return fetcher(url, config);
+}
+
+/** @ignore */
+export async function resourceEdit(config: AdminResourceListConfig & { value: any }): Promise<any> {
+  let { env, resource, options = {}, subdomain = "datamanager", value } = config;
+  expect({ env, subdomain, resource, value });
+  const q = query(options);
+  const url = apiURL(`${resource}?${q}`, env, subdomain);
+  return fetcher(url, config, {
+    method: "PUT",
+    body: JSON.stringify(value),
+    headers: jsonHeaders,
+  });
+}
+
+/** @ignore */
+export async function resourceDelete(config: AdminResourceListConfig): Promise<Response> {
+  let { env, resource, options = {}, subdomain = "datamanager" } = config;
+  expect({ env, subdomain, resource });
+  const q = query(options);
+  const url = apiURL(`${resource}?${q}`, env, subdomain);
+  return fetcher(url, { ...config, rawRes: true }, {
+    method: "DELETE",
+    headers: jsonHeaders,
+  });
+}
+
 /**
  * Sends a raw fetch request to an API. Useful to call API endpoints that have no dedicated Fdk method or function.
  * The fetched URL is composed of:
@@ -223,35 +257,6 @@ export async function createTemplate(
   return fetcher(url, { token }, {
     method: "POST",
     body: JSON.stringify(value),
-    headers: jsonHeaders,
-  });
-}
-
-/** @ignore */
-export async function editTemplate(
-  config: AdminConfig & { templateID: string; value: Partial<TemplateResource> },
-): Promise<TemplateResource> {
-  let { env, token, templateID, value } = config;
-  expect({ env, templateID, value });
-  const q = query({ templateID });
-  const url = apiURL(`template?${q}`, env);
-  return fetcher(url, { token }, {
-    method: "PUT",
-    body: JSON.stringify(value),
-    headers: jsonHeaders,
-  });
-}
-
-/** @ignore */
-export async function deleteTemplate(
-  config: AdminConfig & { templateID: string },
-): Promise<Response> {
-  let { env, token, templateID } = config;
-  expect({ env, templateID });
-  const q = query({ templateID });
-  const url = apiURL(`template?${q}`, env);
-  return fetcher(url, { token, rawRes: true }, {
-    method: "DELETE",
     headers: jsonHeaders,
   });
 }
@@ -519,11 +524,12 @@ export async function createInvite(
   let { env, token, value } = config;
   expect({ env, value });
   const url = apiURL("invite", env, "accounts");
-  return fetcher(url, { token }, {
+  const res = await fetcher(url, { token }, {
     method: "POST",
     body: JSON.stringify(value),
     headers: jsonHeaders,
   });
+  return res?._embedded?.["ec:invite"] ?? res;
 }
 
 /** @ignore */
@@ -532,7 +538,7 @@ export async function editInvite(
 ): Promise<InviteResource> {
   let { env, token, inviteID, value } = config;
   expect({ env, inviteID, value });
-  const q = query({ inviteID });
+  const q = query({ invite: inviteID });
   const url = apiURL(`invite?${q}`, env, "accounts");
   return fetcher(url, { token }, {
     method: "PUT",
@@ -547,7 +553,7 @@ export async function deleteInvite(
 ): Promise<Response> {
   let { env, token, inviteID } = config;
   expect({ env, inviteID });
-  const q = query({ inviteID });
+  const q = query({ invite: inviteID });
   const url = apiURL(`invite?${q}`, env, "accounts");
   return fetcher(url, { token, rawRes: true }, {
     method: "DELETE",
@@ -580,8 +586,11 @@ export async function listTokens(
 ): Promise<TokenResource[]> {
   let { env, token, accountID } = config;
   expect({ env, accountID });
-  const url = apiURL(`account/${accountID}/tokens`, env, "accounts");
-  return fetcher(url, { token });
+  const q = query({ accountID });
+  const url = apiURL(`account/tokens?${q}`, env, "accounts");
+  const res = await fetcher(url, { token });
+  let items = res?._embedded?.["ec:account/token"] ?? [];
+  return !Array.isArray(items) ? [items] : items;
 }
 
 /** @ignore */
@@ -590,7 +599,8 @@ export async function createToken(
 ): Promise<TokenResource> {
   let { env, token, accountID } = config;
   expect({ env, accountID });
-  const url = apiURL(`account/${accountID}/tokens`, env, "accounts");
+  const q = query({ accountID });
+  const url = apiURL(`account/tokens?${q}`, env, "accounts");
   return fetcher(url, { token }, {
     method: "POST",
     headers: jsonHeaders,
@@ -603,7 +613,8 @@ export async function deleteToken(
 ): Promise<Response> {
   let { env, token, accountID, accessTokenID } = config;
   expect({ env, accountID, accessTokenID });
-  const url = apiURL(`account/${accountID}/tokens/${accessTokenID}`, env, "accounts");
+  const q = query({ accessTokenID, accountID });
+  const url = apiURL(`account/tokens?${q}`, env, "accounts");
   return fetcher(url, { token, rawRes: true }, {
     method: "DELETE",
     headers: jsonHeaders,

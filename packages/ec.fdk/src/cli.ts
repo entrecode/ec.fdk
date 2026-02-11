@@ -25,6 +25,9 @@ Commands:
     modelList             List models (--id = DM UUID)
     getDatamanager        Get a datamanager (--id = DM UUID)
     resourceList          List resources (--resource, optional --subdomain)
+    resourceGet           Get a single resource (--resource, -f key=value)
+    resourceEdit          Edit a single resource (--resource, -f key=value, --data)
+    resourceDelete        Delete a single resource (--resource, -f key=value)
     getStats              Get datamanager stats
     getHistory            Get dm-history entries
 
@@ -38,10 +41,8 @@ Commands:
     editModel             Edit a model (--rid, --data)
     deleteModel           Delete a model (--rid)
 
-  Template CRUD:
+  Template:
     createTemplate        Create a template (--data)
-    editTemplate          Edit a template (--rid, --data)
-    deleteTemplate        Delete a template (--rid)
 
   Asset Group (--id = DM UUID):
     createAssetGroup      Create an asset group (--data)
@@ -303,6 +304,35 @@ async function main() {
         if (!values.raw) result = cleanResult(result);
         break;
       }
+      case "resourceGet": {
+        if (!values.resource) error("--resource is required for resourceGet");
+        let chain = sdk.resource(values.resource);
+        if (values.subdomain) chain = chain.subdomain(values.subdomain);
+        result = await chain.resourceGet(parseFilters(values.filter as string[]));
+        if (!values.raw) result = cleanItem(result);
+        break;
+      }
+      case "resourceEdit": {
+        if (!values.resource) error("--resource is required for resourceEdit");
+        let chain = sdk.resource(values.resource);
+        if (values.subdomain) chain = chain.subdomain(values.subdomain);
+        const data = await getJsonData(values.data);
+        result = await chain.resourceEdit(parseFilters(values.filter as string[]), data);
+        if (!result) {
+          process.stderr.write("Resource updated.\n");
+          return;
+        }
+        if (!values.raw) result = cleanItem(result);
+        break;
+      }
+      case "resourceDelete": {
+        if (!values.resource) error("--resource is required for resourceDelete");
+        let chain = sdk.resource(values.resource);
+        if (values.subdomain) chain = chain.subdomain(values.subdomain);
+        await chain.resourceDelete(parseFilters(values.filter as string[]));
+        process.stderr.write("Resource deleted.\n");
+        return;
+      }
       case "getStats": {
         result = await sdk.getStats(listOpts());
         break;
@@ -405,19 +435,6 @@ async function main() {
         result = await sdk.createTemplate(data);
         break;
       }
-      case "editTemplate": {
-        if (!values.rid) error("--rid (template ID) is required for editTemplate");
-        const data = await getJsonData(values.data);
-        result = await sdk.editTemplate(values.rid, data);
-        break;
-      }
-      case "deleteTemplate": {
-        if (!values.rid) error("--rid (template ID) is required for deleteTemplate");
-        await sdk.deleteTemplate(values.rid);
-        process.stderr.write("Template deleted.\n");
-        return;
-      }
-
       // --- Asset Group ---
       case "createAssetGroup": {
         if (!values.id) error("--id (datamanager UUID) is required for createAssetGroup");
@@ -552,13 +569,18 @@ async function main() {
         if (!values["account-id"]) error("--account-id is required for editAccount");
         const data = await getJsonData(values.data);
         result = await sdk.editAccount(values["account-id"], data);
+        if (!result) {
+          process.stderr.write("Account updated.\n");
+          return;
+        }
         break;
       }
 
       // --- Tokens ---
       case "listTokens": {
         if (!values["account-id"]) error("--account-id is required for listTokens");
-        result = await sdk.listTokens(values["account-id"]);
+        const tokens = await sdk.listTokens(values["account-id"]);
+        result = values.raw ? tokens : tokens.map(cleanItem);
         break;
       }
       case "createToken": {

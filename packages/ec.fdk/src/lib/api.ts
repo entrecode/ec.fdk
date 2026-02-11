@@ -33,6 +33,9 @@ const {
   publicApi,
   getDatamanager,
   resourceList,
+  resourceGet,
+  resourceEdit,
+  resourceDelete,
   raw,
   // admin CRUD
   createDatamanager,
@@ -42,8 +45,6 @@ const {
   editModel,
   deleteModel,
   createTemplate,
-  editTemplate,
-  deleteTemplate,
   createAssetGroup,
   editAssetGroup,
   editAsset,
@@ -402,6 +403,46 @@ export class Fdk {
   }
 
   /**
+   * Fetches a single resource. Expects `resource` to be set. `subdomain` defaults to "datamanager".
+   * Pass identifying query params as `options`.
+   * @param options query params to identify the resource.
+   * @category Admin
+   * @example
+   * const model = await fdk("stage").resource("model").resourceGet({ dataManagerID: 'x', modelID: 'y' })
+   */
+  async resourceGet(options: Record<string, any>) {
+    const token = await this.getBestToken();
+    return resourceGet({ ...this.config, options, token });
+  }
+
+  /**
+   * Edits a single resource via PUT. Expects `resource` to be set. `subdomain` defaults to "datamanager".
+   * Pass identifying query params as `options`.
+   * @param options query params to identify the resource.
+   * @param value the resource body to PUT.
+   * @category Admin
+   * @example
+   * const model = await fdk("stage").resource("model").resourceEdit({ dataManagerID: 'x', modelID: 'y' }, { title: 'new' })
+   */
+  async resourceEdit(options: Record<string, any>, value: object) {
+    const token = await this.getBestToken();
+    return resourceEdit({ ...this.config, options, token, value });
+  }
+
+  /**
+   * Deletes a single resource. Expects `resource` to be set. `subdomain` defaults to "datamanager".
+   * Pass identifying query params as `options`.
+   * @param options query params to identify the resource.
+   * @category Admin
+   * @example
+   * await fdk("stage").resource("model").resourceDelete({ dataManagerID: 'x', modelID: 'y' })
+   */
+  async resourceDelete(options: Record<string, any>) {
+    const token = await this.getBestToken();
+    return resourceDelete({ ...this.config, options, token });
+  }
+
+  /**
    * Fetches raw route. Expects `route` to be set. `subdomain` defaults to "datamanager".
    * Fetches `https://<subdomain>.entrecode.de/<route>?<options>`
    * Use this when no other fdk method can give you your request.
@@ -483,24 +524,6 @@ export class Fdk {
   async createTemplate(value: object) {
     const token = await this.getBestToken();
     return createTemplate({ ...this.config, token, value });
-  }
-
-  /**
-   * Edits a template.
-   * @category Admin
-   */
-  async editTemplate(templateID: string, value: object) {
-    const token = await this.getBestToken();
-    return editTemplate({ ...this.config, token, templateID, value });
-  }
-
-  /**
-   * Deletes a template.
-   * @category Admin
-   */
-  async deleteTemplate(templateID: string) {
-    const token = await this.getBestToken();
-    return deleteTemplate({ ...this.config, token, templateID });
   }
 
   // --- Asset Group ---
