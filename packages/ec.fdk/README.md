@@ -222,6 +222,7 @@ ec.fdk <command> [options]
 | `logout`         | Logout and remove stored token | — |
 | `whoami`         | Show current logged-in user | — |
 | `install-skill`  | Install Claude Code skill | — (optional `--dir <path>`) |
+| `update`         | Self-update ec.fdk        | — |
 | `resourceList`   | List any resource type    | `--resource`, `-f` for query params |
 | `resourceGet`    | Get a single resource     | `--resource`, `-f` for identifying params |
 | `resourceEdit`   | Edit a single resource    | `--resource`, `-f` for identifying params, `--data` |
@@ -310,6 +311,9 @@ ec.fdk install-skill
 
 # Install to custom directory
 ec.fdk install-skill --dir ~/entrecode/.claude
+
+# Self-update ec.fdk
+ec.fdk update
 
 # List datamanagers
 ec.fdk dmList -e stage

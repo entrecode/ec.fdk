@@ -213,6 +213,7 @@ ec.fdk deleteToken --account-id <accountID> --rid <tokenID>
 | `logout` | — |
 | `whoami` | — |
 | `install-skill` | — (optional `--dir <path>`) |
+| `update` | — |
 
 ## Options
 

@@ -15,6 +15,7 @@ Commands:
   logout                Logout and remove stored token
   whoami                Show current logged-in user
   install-skill         Install Claude Code skill (default: ~/.claude/skills, or --dir <path>)
+  update                Self-update ec.fdk and re-install skill
 
   Entry commands (require --dm, --model):
     entryList             List entries
@@ -330,7 +331,28 @@ async function main() {
     const src = require.resolve("../skill/SKILL.md");
     mkdirSync(dest, { recursive: true });
     copyFileSync(src, join(dest, "SKILL.md"));
+    fileStorageAdapter.set("skill_path", dest);
     process.stderr.write(`Installed skill to ${dest}/SKILL.md\n`);
+    return;
+  }
+
+  if (command === "update") {
+    const { execSync } = await import("node:child_process");
+    process.stderr.write("Updating ec.fdk...\n");
+    try {
+      execSync("npm i -g ec.fdk@latest", { stdio: "inherit" });
+    } catch {
+      error("Failed to update ec.fdk");
+    }
+    const skillPath = fileStorageAdapter.get("skill_path");
+    if (skillPath) {
+      const { mkdirSync, copyFileSync } = await import("node:fs");
+      const { join } = await import("node:path");
+      const src = require.resolve("../skill/SKILL.md");
+      mkdirSync(skillPath, { recursive: true });
+      copyFileSync(src, join(skillPath, "SKILL.md"));
+      process.stderr.write(`Updated skill at ${skillPath}/SKILL.md\n`);
+    }
     return;
   }
 
