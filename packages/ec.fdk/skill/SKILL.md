@@ -264,6 +264,7 @@ Filters map to entrecode filter query params:
 - **Forgetting `jq`** — always pipe through `jq` to keep output concise
 - **Wrong ID type** — `--dm` takes shortID, `--id` takes UUID for datamanager commands
 - **Using DM title as shortID** — when looking up a datamanager by title, always fetch both `shortID` and `dataManagerID` (UUID) in the first call, since entry commands need the shortID and model commands need the UUID. Example: `ec.fdk dmList -f title=HO | jq '.items[0] | {shortID, dataManagerID}'`
+- **Filtering fields with `jq` instead of `--fields`** — always use `--fields` to limit returned fields server-side first. This prevents large nested JSON fields (e.g. JSON config fields) from being transferred at all. Only use `jq` afterwards to clean up the always-present system fields (`_id`, `_created`, `_modified`, etc.).
 
 ## ec.editor4 URLs
 
