@@ -6,7 +6,7 @@ import { prompt, promptPassword } from "./prompt";
 import { loginOidc } from "./oidc";
 
 const require = createRequire(import.meta.url);
-const { version } = require("../../package.json");
+const { version } = require("../package.json");
 
 const HELP = `ec.fdk <command> [options]
 
