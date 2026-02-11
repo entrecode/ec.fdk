@@ -821,6 +821,10 @@ export class Fdk {
   setEcToken(token: string) {
     this.setToken(getEcAuthKey(this.config), token);
   }
+  /** @ignore */
+  removeEcToken() {
+    this.removeToken(getEcAuthKey(this.config));
+  }
   /**
    * Manually set public user token on the {@link Fdk.authStorage}. In most cases, you'd want to use {@link Fdk.token} instead!
    * @category Auth

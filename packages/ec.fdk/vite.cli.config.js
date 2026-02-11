@@ -14,7 +14,7 @@ export default defineConfig({
   plugins: [shebang()],
   build: {
     lib: {
-      entry: resolve(__dirname, 'src', 'cli.ts'),
+      entry: resolve(__dirname, 'src', 'cli', 'main.ts'),
       formats: ['cjs'],
       fileName: () => 'cli.cjs',
     },

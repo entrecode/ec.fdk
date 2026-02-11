@@ -1,16 +1,18 @@
 import { parseArgs } from "node:util";
 import { createRequire } from "node:module";
-import { Fdk } from "./lib/api";
-import { fileStorageAdapter } from "./lib/cli-storage";
-import { prompt, promptPassword } from "./lib/cli-prompt";
+import { Fdk } from "../lib/api";
+import { fileStorageAdapter } from "./storage";
+import { prompt, promptPassword } from "./prompt";
+import { loginOidc } from "./oidc";
 
 const require = createRequire(import.meta.url);
-const { version } = require("../package.json");
+const { version } = require("../../package.json");
 
 const HELP = `ec.fdk <command> [options]
 
 Commands:
-  login                 Login with ec credentials (interactive prompt)
+  login                 Login via browser (OIDC). Use --password for email/password prompt.
+  logout                Logout and remove stored token
 
   Entry commands (require --dm, --model):
     entryList             List entries
@@ -104,6 +106,7 @@ Options:
   --raw                 Include _links and _embedded in output
   --md                  Output entries as readable markdown
   -v, --version         Show version
+  --password              Use email/password login instead of browser
   -h, --help            Show help`;
 
 function parseFilters(filters: string[]): Record<string, string> {
@@ -229,6 +232,7 @@ async function main() {
       subdomain: { type: "string" },
       raw: { type: "boolean", default: false },
       md: { type: "boolean", default: false },
+      password: { type: "boolean", default: false },
       version: { type: "boolean", short: "v" },
       help: { type: "boolean", short: "h" },
     },
@@ -254,15 +258,33 @@ async function main() {
   const sdk = new Fdk({ env, storageAdapter: fileStorageAdapter });
 
   if (command === "login") {
-    const email = await prompt("Email: ");
-    const password = await promptPassword("Password: ");
     try {
-      await sdk.loginEc({ email, password });
+      if (values.password) {
+        const email = await prompt("Email: ");
+        const pw = await promptPassword("Password: ");
+        await sdk.loginEc({ email, password: pw });
+      } else {
+        const token = await loginOidc(env);
+        sdk.setEcToken(token);
+      }
       process.stderr.write(`Logged in to ${env} successfully.\n`);
     } catch (e: any) {
       process.stderr.write(`Login failed: ${e.message}\n`);
       process.exit(1);
     }
+    return;
+  }
+
+  if (command === "logout") {
+    try {
+      if (sdk.hasEcToken()) {
+        await sdk.logoutEc();
+      }
+    } catch {
+      // ignore server-side logout errors, still remove local token
+    }
+    sdk.removeEcToken();
+    process.stderr.write(`Logged out of ${env}.\n`);
     return;
   }
 
