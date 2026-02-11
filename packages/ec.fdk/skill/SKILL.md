@@ -263,6 +263,7 @@ Filters map to entrecode filter query params:
 - **Partial PUT on editDatamanager/editAccountClient/editInvite** — these are full PUT operations, pass the complete resource
 - **Forgetting `jq`** — always pipe through `jq` to keep output concise
 - **Wrong ID type** — `--dm` takes shortID, `--id` takes UUID for datamanager commands
+- **Using DM title as shortID** — when looking up a datamanager by title, always fetch both `shortID` and `dataManagerID` (UUID) in the first call, since entry commands need the shortID and model commands need the UUID. Example: `ec.fdk dmList -f title=HO | jq '.items[0] | {shortID, dataManagerID}'`
 
 ## ec.editor4 URLs
 
@@ -300,3 +301,5 @@ When the user asks to "open" a resource, output the full editor URL. Use `open <
 - Status/error messages go to stderr, data goes to stdout — piping always works cleanly
 - `editDatamanager`, `editAccountClient`, and `editInvite` are full PUT operations — pass the complete resource
 - `--data` accepts JSON via flag or stdin pipe (e.g. `echo '{}' | ec.fdk createEntry ...`)
+- **Keeping skill files in sync** — when updating this skill file, always apply the same changes to the source copy at `~/entrecode/ec.fdk/packages/ec.fdk/skill/SKILL.md`
+- **Publishing after updates** — after updating the skill file, prompt the user to run `cd ~/entrecode/ec.fdk/packages/ec.fdk && ./publish.sh` to publish the changes. Do not run this command yourself.
