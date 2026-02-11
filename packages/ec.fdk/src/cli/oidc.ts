@@ -46,7 +46,37 @@ const ERROR_HTML = (msg: string) =>
   `<!DOCTYPE html><html><body style="font-family:system-ui;display:flex;justify-content:center;align-items:center;height:100vh;margin:0">
 <div style="text-align:center"><h1>Login failed</h1><p>${msg}</p></div></body></html>`;
 
-export function loginOidc(env: "stage" | "live"): Promise<string> {
+export interface OidcTokens {
+  access_token: string;
+  refresh_token?: string;
+}
+
+export async function refreshAccessToken(
+  env: "stage" | "live",
+  refreshToken: string
+): Promise<OidcTokens> {
+  const { tokenEndpoint } = OIDC_CONFIG[env];
+  const res = await fetch(tokenEndpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      grant_type: "refresh_token",
+      client_id: CLIENT_ID,
+      refresh_token: refreshToken,
+    }),
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Token refresh failed: ${res.status} ${text}`);
+  }
+  const data = await res.json();
+  if (!data.access_token) {
+    throw new Error("No access_token in refresh response");
+  }
+  return { access_token: data.access_token, refresh_token: data.refresh_token };
+}
+
+export function loginOidc(env: "stage" | "live"): Promise<OidcTokens> {
   const { authEndpoint, tokenEndpoint } = OIDC_CONFIG[env];
   const verifier = generateVerifier();
   const challenge = generateChallenge(verifier);
@@ -117,7 +147,7 @@ export function loginOidc(env: "stage" | "live"): Promise<string> {
         res.writeHead(200, { "Content-Type": "text/html" });
         res.end(SUCCESS_HTML);
         cleanup();
-        resolve(accessToken);
+        resolve({ access_token: accessToken, refresh_token: tokenData.refresh_token });
       } catch (err: any) {
         res.writeHead(200, { "Content-Type": "text/html" });
         res.end(ERROR_HTML(err.message));
@@ -143,7 +173,7 @@ export function loginOidc(env: "stage" | "live"): Promise<string> {
           client_id: CLIENT_ID,
           redirect_uri: REDIRECT_URI,
           response_type: "code",
-          scope: "openid",
+          scope: "openid offline_access",
           state,
           code_challenge: challenge,
           code_challenge_method: "S256",

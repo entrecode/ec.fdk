@@ -3,7 +3,7 @@ import { createRequire } from "node:module";
 import { Fdk } from "../lib/api";
 import { fileStorageAdapter } from "./storage";
 import { prompt, promptPassword } from "./prompt";
-import { loginOidc } from "./oidc";
+import { loginOidc, refreshAccessToken } from "./oidc";
 
 const require = createRequire(import.meta.url);
 const { version } = require("../package.json");
@@ -258,6 +258,26 @@ async function main() {
 
   const sdk = new Fdk({ env, storageAdapter: fileStorageAdapter });
 
+  // Auto-refresh expired token if we have a refresh token
+  if (command !== "login" && command !== "logout") {
+    const token = sdk.getEcToken();
+    const rt = fileStorageAdapter.get(`${env}_refresh`);
+    if (token && rt) {
+      try {
+        const payload = JSON.parse(Buffer.from(token.split(".")[1], "base64url").toString());
+        if (payload.exp && payload.exp * 1000 < Date.now()) {
+          const tokens = await refreshAccessToken(env, rt);
+          sdk.setEcToken(tokens.access_token);
+          if (tokens.refresh_token) {
+            fileStorageAdapter.set(`${env}_refresh`, tokens.refresh_token);
+          }
+        }
+      } catch {
+        // refresh failed, continue with existing token
+      }
+    }
+  }
+
   if (command === "login") {
     try {
       if (values.password) {
@@ -265,8 +285,11 @@ async function main() {
         const pw = await promptPassword("Password: ");
         await sdk.loginEc({ email, password: pw });
       } else {
-        const token = await loginOidc(env);
-        sdk.setEcToken(token);
+        const tokens = await loginOidc(env);
+        sdk.setEcToken(tokens.access_token);
+        if (tokens.refresh_token) {
+          fileStorageAdapter.set(`${env}_refresh`, tokens.refresh_token);
+        }
       }
       process.stderr.write(`Logged in to ${env} successfully.\n`);
     } catch (e: any) {
@@ -305,6 +328,7 @@ async function main() {
       // ignore server-side logout errors, still remove local token
     }
     sdk.removeEcToken();
+    fileStorageAdapter.remove(`${env}_refresh`);
     process.stderr.write(`Logged out of ${env}.\n`);
     return;
   }
