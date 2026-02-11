@@ -105,7 +105,9 @@ Options:
   -s, --size <n>        Page size for list
   -p, --page <n>        Page number for list
   --sort <field>        Sort field for list
+  --fields <f1,f2>      Only return specific fields (comma-separated)
   -f, --filter <k=v>   Filter for list (repeatable, e.g. -f title~=hello -f ageFrom=5)
+                         Use -f "field=" for null, -f "field!=" for not null
   --raw                 Include _links and _embedded in output
   --md                  Output entries as readable markdown
   -v, --version         Show version
@@ -228,6 +230,7 @@ async function main() {
       page: { type: "string", short: "p" },
       sort: { type: "string" },
       filter: { type: "string", short: "f", multiple: true, default: [] },
+      fields: { type: "string" },
       rid: { type: "string" },
       "account-id": { type: "string" },
       assetgroup: { type: "string" },
@@ -378,6 +381,7 @@ async function main() {
       if (values.size) options.size = Number(values.size);
       if (values.page) options.page = Number(values.page);
       if (values.sort) options.sort = [values.sort];
+      if (values.fields) options._fields = values.fields;
       return options;
     };
 

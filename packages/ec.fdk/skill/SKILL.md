@@ -19,6 +19,13 @@ ec.fdk entryList -d <shortID> -m <model> --sort=-_created -s 1
 # List entries with filters
 ec.fdk entryList -d <shortID> -m <model> -f name~=chocolate -f createdFrom=2024-01-01
 
+# List entries with only specific fields (reduces response size)
+ec.fdk entryList -d <shortID> -m <model> --fields name,created,id
+
+# Filter for null / not null
+ec.fdk entryList -d <shortID> -m <model> -f "photo="    # photo is null/empty
+ec.fdk entryList -d <shortID> -m <model> -f "photo!="   # photo is not null/empty
+
 # Get a single entry
 ec.fdk getEntry -d <shortID> -m <model> -i <entryID>
 
@@ -232,6 +239,7 @@ ec.fdk deleteToken --account-id <accountID> --rid <tokenID>
 | `-s, --size` | Page size |
 | `-p, --page` | Page number |
 | `--sort` | Sort field (system fields: `_created`, `_modified`) |
+| `--fields` | Only return specific fields (comma-separated) |
 | `-f, --filter` | Repeatable filter (`key=value`) |
 | `--password` | Use email/password login instead of browser OIDC |
 | `--dir` | Target directory for `install-skill` (default: `~/.claude`) |
@@ -246,6 +254,8 @@ Filters map to entrecode filter query params:
 - `From` — greater than / after: `-f createdFrom=2024-01-01`
 - `To` — less than / before: `-f createdTo=2025-01-01`
 - (none) — exact match: `-f title=HO`
+- `=` (empty value) — is null/empty: `-f "photo="`
+- `!=` (empty value) — is not null/empty: `-f "photo!="`
 
 ## Common Mistakes
 
@@ -286,6 +296,7 @@ When the user asks to "open" a resource, output the full editor URL. Use `open <
 
 ## Notes
 
+- Prefer `--fields` over filtering fields with `jq` — `--fields` reduces the response on the server side
 - Status/error messages go to stderr, data goes to stdout — piping always works cleanly
 - `editDatamanager`, `editAccountClient`, and `editInvite` are full PUT operations — pass the complete resource
 - `--data` accepts JSON via flag or stdin pipe (e.g. `echo '{}' | ec.fdk createEntry ...`)
