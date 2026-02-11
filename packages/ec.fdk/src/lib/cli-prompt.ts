@@ -18,30 +18,32 @@ export function promptPassword(question: string): Promise<string> {
     stdin.resume();
     stdin.setEncoding("utf-8");
     let password = "";
-    const onData = (ch: string) => {
-      if (ch === "\u0003") {
-        // Ctrl+C
-        process.stderr.write("\n");
-        process.exit(130);
-      }
-      if (ch === "\r" || ch === "\n") {
-        stdin.setRawMode(false);
-        stdin.pause();
-        stdin.removeListener("data", onData);
-        process.stderr.write("\n");
-        resolve(password);
-        return;
-      }
-      if (ch === "\u007f" || ch === "\b") {
-        // backspace
-        if (password.length > 0) {
-          password = password.slice(0, -1);
-          process.stderr.write("\b \b");
+    const onData = (data: string) => {
+      for (const ch of data) {
+        if (ch === "\u0003") {
+          // Ctrl+C
+          process.stderr.write("\n");
+          process.exit(130);
         }
-        return;
+        if (ch === "\r" || ch === "\n") {
+          stdin.setRawMode(false);
+          stdin.pause();
+          stdin.removeListener("data", onData);
+          process.stderr.write("\n");
+          resolve(password);
+          return;
+        }
+        if (ch === "\u007f" || ch === "\b") {
+          // backspace
+          if (password.length > 0) {
+            password = password.slice(0, -1);
+            process.stderr.write("\b \b");
+          }
+          continue;
+        }
+        password += ch;
+        process.stderr.write("*");
       }
-      password += ch;
-      process.stderr.write("*");
     };
     stdin.on("data", onData);
   });
