@@ -14,6 +14,7 @@ Commands:
   login                 Login via browser (OIDC). Use --password for email/password prompt.
   logout                Logout and remove stored token
   whoami                Show current logged-in user
+  install-skill         Install Claude Code skill (default: ~/.claude/skills, or --dir <path>)
 
   Entry commands (require --dm, --model):
     entryList             List entries
@@ -234,6 +235,7 @@ async function main() {
       raw: { type: "boolean", default: false },
       md: { type: "boolean", default: false },
       password: { type: "boolean", default: false },
+      dir: { type: "string" },
       version: { type: "boolean", short: "v" },
       help: { type: "boolean", short: "h" },
     },
@@ -316,6 +318,19 @@ async function main() {
     } catch {
       error("Could not decode token");
     }
+    return;
+  }
+
+  if (command === "install-skill") {
+    const { mkdirSync, copyFileSync } = await import("node:fs");
+    const { join, resolve } = await import("node:path");
+    const { homedir } = await import("node:os");
+    const base = values.dir ? resolve(values.dir) : join(homedir(), ".claude");
+    const dest = join(base, "skills", "ec-fdk");
+    const src = require.resolve("../skill/SKILL.md");
+    mkdirSync(dest, { recursive: true });
+    copyFileSync(src, join(dest, "SKILL.md"));
+    process.stderr.write(`Installed skill to ${dest}/SKILL.md\n`);
     return;
   }
 

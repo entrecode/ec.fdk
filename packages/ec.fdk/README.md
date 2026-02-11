@@ -221,6 +221,7 @@ ec.fdk <command> [options]
 | `login`          | Login via browser (OIDC). Use `--password` for email/password prompt. | — |
 | `logout`         | Logout and remove stored token | — |
 | `whoami`         | Show current logged-in user | — |
+| `install-skill`  | Install Claude Code skill | — (optional `--dir <path>`) |
 | `resourceList`   | List any resource type    | `--resource`, `-f` for query params |
 | `resourceGet`    | Get a single resource     | `--resource`, `-f` for identifying params |
 | `resourceEdit`   | Edit a single resource    | `--resource`, `-f` for identifying params, `--data` |
@@ -263,6 +264,7 @@ ec.fdk <command> [options]
 | `--sort <field>`        | Sort field for list                               |
 | `-f, --filter <k=v>`    | Filter for list (repeatable)                     |
 | `--password`            | Use email/password login instead of browser OIDC  |
+| `--dir <path>`          | Target directory for `install-skill` (default: `~/.claude`) |
 | `--raw`                 | Include `_links` and `_embedded` in output        |
 | `--md`                  | Output entries as readable markdown table          |
 | `-v, --version`         | Show version                                      |
@@ -302,6 +304,12 @@ ec.fdk logout -e stage
 
 # Show current user
 ec.fdk whoami -e stage
+
+# Install Claude Code skill (to ~/.claude/skills/ec-fdk/)
+ec.fdk install-skill
+
+# Install to custom directory
+ec.fdk install-skill --dir ~/entrecode/.claude
 
 # List datamanagers
 ec.fdk dmList -e stage
