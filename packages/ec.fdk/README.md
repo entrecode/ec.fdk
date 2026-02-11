@@ -220,6 +220,7 @@ ec.fdk <command> [options]
 | -------------- | ------------------------- | -------------- |
 | `login`          | Login via browser (OIDC). Use `--password` for email/password prompt. | — |
 | `logout`         | Logout and remove stored token | — |
+| `whoami`         | Show current logged-in user | — |
 | `resourceList`   | List any resource type    | `--resource`, `-f` for query params |
 | `resourceGet`    | Get a single resource     | `--resource`, `-f` for identifying params |
 | `resourceEdit`   | Edit a single resource    | `--resource`, `-f` for identifying params, `--data` |
@@ -298,6 +299,9 @@ ec.fdk login -e stage --password
 
 # Logout
 ec.fdk logout -e stage
+
+# Show current user
+ec.fdk whoami -e stage
 
 # List datamanagers
 ec.fdk dmList -e stage

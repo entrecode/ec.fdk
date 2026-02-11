@@ -13,6 +13,7 @@ const HELP = `ec.fdk <command> [options]
 Commands:
   login                 Login via browser (OIDC). Use --password for email/password prompt.
   logout                Logout and remove stored token
+  whoami                Show current logged-in user
 
   Entry commands (require --dm, --model):
     entryList             List entries
@@ -271,6 +272,26 @@ async function main() {
     } catch (e: any) {
       process.stderr.write(`Login failed: ${e.message}\n`);
       process.exit(1);
+    }
+    return;
+  }
+
+  if (command === "whoami") {
+    const token = sdk.getEcToken();
+    if (!token) {
+      process.stderr.write(`Not logged in to ${env}.\n`);
+      process.exit(1);
+    }
+    try {
+      const payload = JSON.parse(Buffer.from(token.split(".")[1], "base64url").toString());
+      const info: Record<string, any> = { env };
+      if (payload.email) info.email = payload.email;
+      if (payload.sub) info.accountID = payload.sub;
+      if (payload.iss) info.issuer = payload.iss;
+      if (payload.exp) info.expires = new Date(payload.exp * 1000).toISOString();
+      process.stdout.write(JSON.stringify(info, null, 2) + "\n");
+    } catch {
+      error("Could not decode token");
     }
     return;
   }
