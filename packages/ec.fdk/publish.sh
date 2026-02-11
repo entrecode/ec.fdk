@@ -16,15 +16,19 @@ else
   echo "Keeping $CURRENT"
 fi
 
-# 2. Regenerate docs
+# 2. Run tests
+echo "Running tests..."
+npm test
+
+# 3. Regenerate docs
 echo "Building docs..."
 npm run docs
 
-# 3. Commit + push
+# 4. Commit + push
 git add -A
 git commit -m "v$NEW_VERSION"
 git push
 
-# 4. Publish (triggers prepublishOnly -> npm run build)
+# 5. Publish (triggers prepublishOnly -> npm run build)
 pnpm publish --no-git-checks
 echo "Published ec.fdk@$NEW_VERSION"
