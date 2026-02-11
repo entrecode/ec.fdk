@@ -341,11 +341,17 @@ async function main() {
 
   if (command === "update") {
     const { execSync } = await import("node:child_process");
-    process.stderr.write("Updating ec.fdk...\n");
+    process.stderr.write(`Current version: ${version}\n`);
     try {
       execSync("npm i -g ec.fdk@latest", { stdio: "inherit" });
     } catch {
       error("Failed to update ec.fdk");
+    }
+    const newVersion = execSync("ec.fdk --version", { encoding: "utf-8" }).trim();
+    if (newVersion === version) {
+      process.stderr.write(`Already on latest version ${version}.\n`);
+    } else {
+      process.stderr.write(`Updated to ${newVersion}.\n`);
     }
     const skillPath = fileStorageAdapter.get("skill_path");
     if (skillPath) {
