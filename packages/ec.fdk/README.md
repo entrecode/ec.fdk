@@ -218,7 +218,8 @@ ec.fdk <command> [options]
 
 | Command        | Description               | Required flags |
 | -------------- | ------------------------- | -------------- |
-| `login`          | Login with ec credentials | — |
+| `login`          | Login via browser (OIDC). Use `--password` for email/password prompt. | — |
+| `logout`         | Logout and remove stored token | — |
 | `resourceList`   | List any resource type    | `--resource`, `-f` for query params |
 | `resourceGet`    | Get a single resource     | `--resource`, `-f` for identifying params |
 | `resourceEdit`   | Edit a single resource    | `--resource`, `-f` for identifying params, `--data` |
@@ -260,6 +261,7 @@ ec.fdk <command> [options]
 | `-p, --page <n>`        | Page number for list                              |
 | `--sort <field>`        | Sort field for list                               |
 | `-f, --filter <k=v>`    | Filter for list (repeatable)                     |
+| `--password`            | Use email/password login instead of browser OIDC  |
 | `--raw`                 | Include `_links` and `_embedded` in output        |
 | `--md`                  | Output entries as readable markdown table          |
 | `-v, --version`         | Show version                                      |
@@ -288,8 +290,14 @@ All examples use `<PLACEHOLDER>` values — replace them with your own resource 
 ### Examples
 
 ```sh
-# Login to stage (stores token in ~/.ec-fdk/auth.json)
+# Login to stage via browser OIDC (stores token in ~/.ec-fdk/auth.json)
 ec.fdk login -e stage
+
+# Login via email/password prompt
+ec.fdk login -e stage --password
+
+# Logout
+ec.fdk logout -e stage
 
 # List datamanagers
 ec.fdk dmList -e stage
