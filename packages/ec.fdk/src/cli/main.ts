@@ -95,6 +95,9 @@ Commands:
     createToken           Create a token (--account-id)
     deleteToken           Delete a token (--account-id, --rid)
 
+  Type introspection:
+    describe              Show return type for a command
+
 Options:
   -e, --env <env>       Environment: stage|live (default: stage)
   -d, --dm <shortID>    DataManager short ID
@@ -261,6 +264,13 @@ async function main() {
   }
 
   const command = positionals[0];
+
+  if (command === "describe") {
+    const { describe } = await import("./describe");
+    describe(positionals[1]);
+    return;
+  }
+
   const env = values.env as "stage" | "live";
 
   if (env !== "stage" && env !== "live") {

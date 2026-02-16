@@ -231,6 +231,7 @@ ec.fdk <command> [options]
 | `resourceGet`    | Get a single resource     | `--resource`, `-f` for identifying params |
 | `resourceEdit`   | Edit a single resource    | `--resource`, `-f` for identifying params, `--data` |
 | `resourceDelete` | Delete a single resource  | `--resource`, `-f` for identifying params |
+| `describe`       | Show type definition for a command's return value | `<command>` |
 | `getHistory`     | Get dm-history entries    | `-f shortID=<shortID>` |
 
 ##### `resourceList` resource types
@@ -456,6 +457,19 @@ ec.fdk editAccount --account-id <accountID> --data '{"email":"user@example.com"}
 ec.fdk listTokens --account-id <accountID>
 ec.fdk createToken --account-id <accountID>
 ec.fdk deleteToken --account-id <accountID> --rid <tokenID>
+```
+
+### Describe
+
+Show the return type of any command:
+
+```sh
+# Show the type definition for a command's return value
+ec.fdk describe getAsset
+ec.fdk describe entryList
+
+# List all describable commands
+ec.fdk describe
 ```
 
 The `-f` flag maps directly to [entrecode filter query params](https://doc.entrecode.de/api-basics/#filtering). Common filter suffixes:

@@ -230,8 +230,22 @@ ec.fdk deleteToken --account-id <accountID> --rid <tokenID>
 | `login` | — (add `--password` for email/password prompt) |
 | `logout` | — |
 | `whoami` | — |
+| `describe` | `<command>` |
 | `install-skill` | — (optional `--dir <path>`) |
 | `update` | — |
+
+## Describe
+
+Show the return type of any command — useful for understanding response shapes:
+
+```sh
+ec.fdk describe getEntry
+ec.fdk describe entryList
+ec.fdk describe getAsset
+
+# List all describable commands
+ec.fdk describe
+```
 
 ## Options
 
