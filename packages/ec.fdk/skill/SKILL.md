@@ -236,12 +236,15 @@ ec.fdk deleteToken --account-id <accountID> --rid <tokenID>
 
 ## Describe
 
-Show the return type of any command — useful for understanding response shapes:
+Show the return type of any command — useful for understanding response shapes. Referenced types are printed automatically:
 
 ```sh
 ec.fdk describe getEntry
 ec.fdk describe entryList
 ec.fdk describe getAsset
+
+# Only print the main return type, omit referenced types
+ec.fdk describe getAsset --short
 
 # List all describable commands
 ec.fdk describe
@@ -271,6 +274,7 @@ ec.fdk describe
 | `--dir` | Target directory for `install-skill` (default: `~/.claude`) |
 | `--raw` | Include `_links` and `_embedded` |
 | `--md` | Output as markdown table |
+| `--short` | Only print the return type, omit referenced types (for `describe`) |
 
 ## Filter Suffixes
 

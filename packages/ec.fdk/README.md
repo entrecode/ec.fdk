@@ -274,6 +274,7 @@ ec.fdk <command> [options]
 | `--dir <path>`          | Target directory for `install-skill` (default: `~/.claude`) |
 | `--raw`                 | Include `_links` and `_embedded` in output        |
 | `--md`                  | Output entries as readable markdown table          |
+| `--short`               | Only print the return type, omit referenced types (for `describe`) |
 | `-v, --version`         | Show version                                      |
 | `-h, --help`            | Show help                                         |
 
@@ -464,9 +465,12 @@ ec.fdk deleteToken --account-id <accountID> --rid <tokenID>
 Show the return type of any command:
 
 ```sh
-# Show the type definition for a command's return value
+# Show the type definition for a command's return value (includes referenced types)
 ec.fdk describe getAsset
 ec.fdk describe entryList
+
+# Only print the main return type, omit referenced types
+ec.fdk describe getAsset --short
 
 # List all describable commands
 ec.fdk describe

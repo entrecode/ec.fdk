@@ -45,7 +45,7 @@ const commandTypeMap: Record<string, string> = {
   deleteToken: "void",
 };
 
-export function describe(command?: string): void {
+export function describe(command?: string, short?: boolean): void {
   if (!command || !commandTypeMap[command]) {
     if (command) process.stderr.write(`Unknown command: ${command}\n\n`);
     process.stderr.write(`Available commands:\n`);
@@ -70,4 +70,37 @@ export function describe(command?: string): void {
   }
 
   process.stdout.write(`type ${typeName} = ${body}\n`);
+
+  if (!short) {
+    const allNames = Object.keys(typeDefinitions);
+    const printed = new Set<string>([typeName]);
+    const queue: string[] = [];
+
+    // find refs in the main type body
+    for (const name of allNames) {
+      if (name !== typeName && new RegExp(`\\b${name}\\b`).test(body)) {
+        queue.push(name);
+        printed.add(name);
+      }
+    }
+
+    // process queue, collecting transitive refs
+    for (let i = 0; i < queue.length; i++) {
+      const refBody = typeDefinitions[queue[i]];
+      if (!refBody) continue;
+      for (const name of allNames) {
+        if (!printed.has(name) && new RegExp(`\\b${name}\\b`).test(refBody)) {
+          queue.push(name);
+          printed.add(name);
+        }
+      }
+    }
+
+    for (const name of queue) {
+      const refBody = typeDefinitions[name];
+      if (refBody) {
+        process.stdout.write(`\ntype ${name} = ${refBody}\n`);
+      }
+    }
+  }
 }

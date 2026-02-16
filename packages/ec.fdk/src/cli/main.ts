@@ -117,6 +117,7 @@ Options:
                          Use -f "field=" for null, -f "field!=" for not null
   --raw                 Include _links and _embedded in output
   --md                  Output entries as readable markdown
+  --short               Only print the return type, omit referenced types (describe)
   -v, --version         Show version
   --password              Use email/password login instead of browser
   -h, --help            Show help`;
@@ -247,6 +248,7 @@ async function main() {
       md: { type: "boolean", default: false },
       password: { type: "boolean", default: false },
       file: { type: "string", multiple: true, default: [] },
+      short: { type: "boolean", default: false },
       dir: { type: "string" },
       version: { type: "boolean", short: "v" },
       help: { type: "boolean", short: "h" },
@@ -267,7 +269,7 @@ async function main() {
 
   if (command === "describe") {
     const { describe } = await import("./describe");
-    describe(positionals[1]);
+    describe(positionals[1], values.short as boolean);
     return;
   }
 

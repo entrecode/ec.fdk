@@ -19,16 +19,6 @@ const SKIP_TYPES = new Set([
   'AssetCreateOptions', 'StorageAdapter', 'FdkConfig', 'PublicApiRoot',
 ]);
 
-function inlineListItems(types) {
-  for (const [name, body] of Object.entries(types)) {
-    if (!name.endsWith('List')) continue;
-    const m = body.match(/items:\s*(\w+)\[\]/);
-    if (m && types[m[1]]) {
-      types[name] = body.replace(`items: ${m[1]}[]`, `items: ${types[m[1]]}[]`);
-    }
-  }
-}
-
 function typeDefinitionsPlugin() {
   const virtualId = 'virtual:type-definitions';
   const resolvedId = '\0' + virtualId;
@@ -52,8 +42,6 @@ function typeDefinitionsPlugin() {
         if (SKIP_TYPES.has(name)) continue;
         types[name] = printer.printNode(ts.EmitHint.Unspecified, stmt.type, sourceFile);
       }
-
-      inlineListItems(types);
 
       return `export default ${JSON.stringify(types, null, 2)};`;
     },
