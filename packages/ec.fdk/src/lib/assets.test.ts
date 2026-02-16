@@ -140,11 +140,11 @@ describe("createAssets", () => {
     });
     const files = [new Blob(["f1"]), new Blob(["f2"])];
     const result = await assets.createAssets({
-      env: "stage", dmShortID: "abc123", assetGroup: "images", files, options: undefined,
+      env: "stage", dmShortID: "abc123", assetGroup: "images", files, options: undefined, token: "tok",
     });
     expect(mockFetcher).toHaveBeenCalledWith(
       `${DM}a/abc123/images`,
-      {},
+      { token: "tok" },
       { method: "POST", body: expect.any(FormData) },
     );
     expect(result).toEqual([{ assetID: "a-1" }, { assetID: "a-2" }]);
@@ -156,7 +156,7 @@ describe("createAssets", () => {
     });
     const files = [new Blob(["f1"])];
     const result = await assets.createAssets({
-      env: "stage", dmShortID: "abc123", assetGroup: "images", files, options: undefined,
+      env: "stage", dmShortID: "abc123", assetGroup: "images", files, options: undefined, token: "tok",
     });
     expect(result).toEqual([{ assetID: "a-1" }]);
   });
