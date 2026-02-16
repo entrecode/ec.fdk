@@ -628,6 +628,10 @@
 <td>Output entries as readable markdown table</td>
 </tr>
 <tr>
+<td><code>--short</code></td>
+<td>Only print the return type, omit referenced types (for <code>describe</code>)</td>
+</tr>
+<tr>
 <td><code>-v, --version</code></td>
 <td>Show version</td>
 </tr>
@@ -721,7 +725,7 @@
 </code><button type="button">Copy</button></pre>
 
 <a id="describe" class="tsd-anchor"></a><h3 class="tsd-anchor-link">Describe<a href="#describe" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Show the return type of any command:</p>
-<pre><code class="sh"><span class="hl-5"># Show the type definition for a command&#39;s return value</span><br/><span class="hl-0">ec.fdk</span><span class="hl-1"> </span><span class="hl-2">describe</span><span class="hl-1"> </span><span class="hl-2">getAsset</span><br/><span class="hl-0">ec.fdk</span><span class="hl-1"> </span><span class="hl-2">describe</span><span class="hl-1"> </span><span class="hl-2">entryList</span><br/><br/><span class="hl-5"># List all describable commands</span><br/><span class="hl-0">ec.fdk</span><span class="hl-1"> </span><span class="hl-2">describe</span>
+<pre><code class="sh"><span class="hl-5"># Show the type definition for a command&#39;s return value (includes referenced types)</span><br/><span class="hl-0">ec.fdk</span><span class="hl-1"> </span><span class="hl-2">describe</span><span class="hl-1"> </span><span class="hl-2">getAsset</span><br/><span class="hl-0">ec.fdk</span><span class="hl-1"> </span><span class="hl-2">describe</span><span class="hl-1"> </span><span class="hl-2">entryList</span><br/><br/><span class="hl-5"># Only print the main return type, omit referenced types</span><br/><span class="hl-0">ec.fdk</span><span class="hl-1"> </span><span class="hl-2">describe</span><span class="hl-1"> </span><span class="hl-2">getAsset</span><span class="hl-1"> </span><span class="hl-6">--short</span><br/><br/><span class="hl-5"># List all describable commands</span><br/><span class="hl-0">ec.fdk</span><span class="hl-1"> </span><span class="hl-2">describe</span>
 </code><button type="button">Copy</button></pre>
 
 <p>The <code>-f</code> flag maps directly to <a href="https://doc.entrecode.de/api-basics/#filtering" target="_blank" class="external">entrecode filter query params</a>. Common filter suffixes:</p>
