@@ -476,6 +476,34 @@ ec.fdk describe getAsset --short
 ec.fdk describe
 ```
 
+For entry commands (`getEntry`, `entryList`, `createEntry`, `editEntry`), pass `--dm` and `--model` to generate a concrete type with actual field names and types fetched from the model schema (public API, no auth required):
+
+```sh
+ec.fdk describe getEntry --dm 83cc6374 --model muffin
+# type MuffinEntry = EntryResourceBase & {
+#     name: string;
+#     amazement_factor: number;
+#     test_asset: string | null;
+#     color: string;
+# }
+#
+# type EntryResourceBase = {
+#     id: string;
+#     _created: Date;
+#     ...
+# }
+
+ec.fdk describe entryList --dm 83cc6374 --model muffin
+# type EntryList = {
+#     count: number;
+#     total: number;
+#     items: MuffinEntry[];
+# }
+# ...
+```
+
+Without `--dm`/`--model`, the generic `EntryResource` type with `[key: string]: any` is shown.
+
 The `-f` flag maps directly to [entrecode filter query params](https://doc.entrecode.de/api-basics/#filtering). Common filter suffixes:
 
 | Suffix     | Meaning              | Example                        |

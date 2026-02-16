@@ -250,6 +250,28 @@ ec.fdk describe getAsset --short
 ec.fdk describe
 ```
 
+For entry commands (`getEntry`, `entryList`, `createEntry`, `editEntry`), pass `--dm` and `--model` to generate a concrete type with actual field names and types from the model schema:
+
+```sh
+ec.fdk describe getEntry --dm 83cc6374 --model muffin
+# Output:
+# type MuffinEntry = EntryResourceBase & {
+#     name: string;
+#     amazement_factor: number;
+#     test_asset: string | null;
+#     color: string;
+# }
+# type EntryResourceBase = { id: string; _created: Date; ... }
+
+ec.fdk describe entryList --dm 83cc6374 --model muffin
+# Output:
+# type EntryList = { count: number; total: number; items: MuffinEntry[]; }
+# type MuffinEntry = EntryResourceBase & { ... }
+# type EntryResourceBase = { ... }
+```
+
+Without `--dm`/`--model`, the generic `EntryResource` type is shown (with `[key: string]: any`).
+
 ## Options
 
 | Option | Description |
