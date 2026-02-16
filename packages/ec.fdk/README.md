@@ -149,11 +149,15 @@ ec.fdk <command> [options]
 | `createAssetGroup` | Create an asset group | `--id`, `--data` |
 | `editAssetGroup`   | Edit an asset group   | `--id`, `--rid`, `--data` |
 
-#### Asset metadata
+#### Assets (`--dm` = short ID)
 
-| Command     | Description          | Required flags |
-| ----------- | -------------------- | -------------- |
-| `editAsset` | Edit asset metadata  | `--dm`, `--assetgroup`, `--rid`, `--data` |
+| Command       | Description                    | Required flags |
+| ------------- | ------------------------------ | -------------- |
+| `assetList`   | List assets                    | `--dm`, `--assetgroup` |
+| `getAsset`    | Get a single asset             | `--dm`, `--assetgroup`, `--rid` |
+| `createAsset` | Upload asset(s) from local file | `--dm`, `--assetgroup`, `--file` (repeatable) |
+| `editAsset`   | Edit asset metadata            | `--dm`, `--assetgroup`, `--rid`, `--data` |
+| `deleteAsset` | Delete an asset                | `--dm`, `--assetgroup`, `--rid` |
 
 #### DM Client (`--id` = DM UUID)
 
@@ -256,7 +260,8 @@ ec.fdk <command> [options]
 | `-i, --id <id>`         | Entry ID or DataManager UUID (context-dependent)  |
 | `--rid <id>`            | Resource ID (model, template, role, client, asset group, invite, etc.) |
 | `--account-id <id>`     | Account ID                                        |
-| `--assetgroup <name>`   | Asset group name (for `editAsset`)                |
+| `--assetgroup <name>`   | Asset group name (for asset commands)             |
+| `--file <path>`         | Local file path for `createAsset` (repeatable)    |
 | `--resource <name>`     | Resource name (for `resource*` commands)           |
 | `--subdomain <name>`    | Subdomain override (for `resource*` commands)      |
 | `--data <json>`         | JSON data (for create/edit, or pipe via stdin)    |
@@ -404,8 +409,13 @@ ec.fdk createTemplate --data '{"name":"My Template","collection":{"id":"<collect
 ec.fdk createAssetGroup --id <dataManagerID> --data '{"assetGroupID":"photos"}'
 ec.fdk editAssetGroup --id <dataManagerID> --rid <assetGroup> --data '{"public":true}'
 
-# Asset metadata
+# Assets
+ec.fdk assetList --dm <shortID> --assetgroup <assetGroup>
+ec.fdk getAsset --dm <shortID> --assetgroup <assetGroup> --rid <assetID>
+ec.fdk createAsset --dm <shortID> --assetgroup <assetGroup> --file ./photo.jpg
+ec.fdk createAsset --dm <shortID> --assetgroup <assetGroup> --file ./a.jpg --file ./b.png
 ec.fdk editAsset --dm <shortID> --assetgroup <assetGroup> --rid <assetID> --data '{"title":"sunset"}'
+ec.fdk deleteAsset --dm <shortID> --assetgroup <assetGroup> --rid <assetID>
 
 # DM client
 ec.fdk editDmClient --id <dataManagerID> --rid <clientID> --data '{"callbackURL":"https://example.com/cb"}'

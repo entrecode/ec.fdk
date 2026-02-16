@@ -149,8 +149,13 @@ ec.fdk createTemplate --data '{"name":"My Template","collection":{"id":"<collect
 ec.fdk createAssetGroup --id <dataManagerID> --data '{"assetGroupID":"photos"}'
 ec.fdk editAssetGroup --id <dataManagerID> --rid <assetGroup> --data '{"public":true}'
 
-# Asset metadata
+# Assets (--dm = short ID, --assetgroup required)
+ec.fdk assetList --dm <shortID> --assetgroup <assetGroup> | jq '.items'
+ec.fdk getAsset --dm <shortID> --assetgroup <assetGroup> --rid <assetID>
+ec.fdk createAsset --dm <shortID> --assetgroup <assetGroup> --file ./photo.jpg
+ec.fdk createAsset --dm <shortID> --assetgroup <assetGroup> --file ./a.jpg --file ./b.png
 ec.fdk editAsset --dm <shortID> --assetgroup <assetGroup> --rid <assetID> --data '{"title":"sunset"}'
+ec.fdk deleteAsset --dm <shortID> --assetgroup <assetGroup> --rid <assetID>
 
 # DM client
 ec.fdk editDmClient --id <dataManagerID> --rid <clientID> --data '{"callbackURL":"https://example.com/cb"}'
@@ -210,6 +215,12 @@ ec.fdk deleteToken --account-id <accountID> --rid <tokenID>
 | `createModel` | `--id`, `--data` |
 | `editModel` | `--id`, `--rid`, `--data` |
 | `deleteModel` | `--id`, `--rid` |
+| **Assets** (`--dm` = short ID) | |
+| `assetList` | `--dm`, `--assetgroup` |
+| `getAsset` | `--dm`, `--assetgroup`, `--rid` |
+| `createAsset` | `--dm`, `--assetgroup`, `--file` (repeatable) |
+| `editAsset` | `--dm`, `--assetgroup`, `--rid`, `--data` |
+| `deleteAsset` | `--dm`, `--assetgroup`, `--rid` |
 | **Generic resource** | |
 | `resourceList` | `--resource` |
 | `resourceGet` | `--resource`, `-f` filters |
@@ -232,7 +243,8 @@ ec.fdk deleteToken --account-id <accountID> --rid <tokenID>
 | `-i, --id` | Entry ID or DataManager UUID (context-dependent) |
 | `--rid` | Resource ID (model, role, client, asset group, invite, token, etc.) |
 | `--account-id` | Account ID |
-| `--assetgroup` | Asset group name (for `editAsset`) |
+| `--assetgroup` | Asset group name (for asset commands) |
+| `--file` | File path for `createAsset` (repeatable for multiple files) |
 | `--resource` | Resource name (for `resource*` commands) |
 | `--subdomain` | Subdomain override (for `resource*` commands, default: `datamanager`) |
 | `--data` | JSON data (via flag or stdin pipe) |

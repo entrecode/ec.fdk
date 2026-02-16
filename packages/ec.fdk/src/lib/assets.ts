@@ -73,6 +73,7 @@ export async function createAssets({
   assetGroup,
   files,
   options,
+  token,
 }): Promise<AssetResource[]> {
   expect({ env, dmShortID, assetGroup, files });
   const url = apiURL(`a/${dmShortID}/${assetGroup}`, env);
@@ -87,7 +88,7 @@ export async function createAssets({
   }
   const list = await fetcher(
     url,
-    {},
+    { token },
     {
       method: "POST",
       body: formData,

@@ -53,8 +53,12 @@ Commands:
     createAssetGroup      Create an asset group (--data)
     editAssetGroup        Edit an asset group (--rid, --data)
 
-  Asset metadata:
+  Asset metadata (--dm = short ID):
+    assetList             List assets (--dm, --assetgroup)
+    getAsset              Get a single asset (--dm, --assetgroup, --rid)
+    createAsset           Upload asset(s) (--dm, --assetgroup, --file, repeatable)
     editAsset             Edit asset metadata (--dm, --assetgroup, --rid, --data)
+    deleteAsset           Delete an asset (--dm, --assetgroup, --rid)
 
   DM Client (--id = DM UUID):
     editDmClient          Edit a DM client (--rid, --data)
@@ -239,6 +243,7 @@ async function main() {
       raw: { type: "boolean", default: false },
       md: { type: "boolean", default: false },
       password: { type: "boolean", default: false },
+      file: { type: "string", multiple: true, default: [] },
       dir: { type: "string" },
       version: { type: "boolean", short: "v" },
       help: { type: "boolean", short: "h" },
@@ -565,12 +570,56 @@ async function main() {
       }
 
       // --- Asset metadata ---
+      case "assetList": {
+        if (!values.dm) error("--dm (short ID) is required for assetList");
+        if (!values.assetgroup) error("--assetgroup is required for assetList");
+        result = await sdk.dm(values.dm).assetGroup(values.assetgroup).assetList(listOpts());
+        break;
+      }
+      case "getAsset": {
+        if (!values.dm) error("--dm (short ID) is required for getAsset");
+        if (!values.assetgroup) error("--assetgroup is required for getAsset");
+        if (!values.rid) error("--rid (asset ID) is required for getAsset");
+        result = await sdk.dm(values.dm).assetGroup(values.assetgroup).getAsset(values.rid);
+        break;
+      }
+      case "createAsset": {
+        if (!values.dm) error("--dm (short ID) is required for createAsset");
+        if (!values.assetgroup) error("--assetgroup is required for createAsset");
+        const files = values.file as string[];
+        if (!files.length) error("--file is required for createAsset (repeatable for multiple files)");
+        const { readFileSync } = await import("node:fs");
+        const { basename, resolve } = await import("node:path");
+        const ag = sdk.dm(values.dm).assetGroup(values.assetgroup);
+        if (files.length === 1) {
+          const filePath = resolve(files[0]);
+          const buf = readFileSync(filePath);
+          const file = new Blob([buf]);
+          const name = basename(filePath);
+          result = await ag.createAsset({ file, name, options: {} });
+        } else {
+          const blobs = files.map((f) => {
+            const filePath = resolve(f);
+            const buf = readFileSync(filePath);
+            return new Blob([buf]);
+          });
+          result = await ag.createAssets({ files: blobs, options: {} });
+        }
+        break;
+      }
       case "editAsset": {
         if (!values.dm) error("--dm (short ID) is required for editAsset");
         if (!values.assetgroup) error("--assetgroup is required for editAsset");
         if (!values.rid) error("--rid (asset ID) is required for editAsset");
         const data = await getJsonData(values.data);
         result = await sdk.dm(values.dm).assetGroup(values.assetgroup).editAsset(values.rid, data);
+        break;
+      }
+      case "deleteAsset": {
+        if (!values.dm) error("--dm (short ID) is required for deleteAsset");
+        if (!values.assetgroup) error("--assetgroup is required for deleteAsset");
+        if (!values.rid) error("--rid (asset ID) is required for deleteAsset");
+        result = await sdk.dm(values.dm).assetGroup(values.assetgroup).deleteAsset(values.rid);
         break;
       }
 
