@@ -1,4 +1,31 @@
 import typeDefinitions from "virtual:type-definitions";
+import { getSchema } from "../lib/entries";
+
+const schemaTypeToTS: Record<string, string> = {
+  text: "string",
+  formattedText: "string",
+  string: "string",
+  url: "string",
+  email: "string",
+  phone: "string",
+  number: "number",
+  decimal: "number",
+  boolean: "boolean",
+  datetime: "Date",
+  json: "Record<string, any>",
+  object: "Record<string, any>",
+  entry: "string",
+  entries: "string[]",
+  asset: "string",
+  assets: "string[]",
+  location: "{ latitude: number; longitude: number }",
+  account: "string",
+  role: "string",
+  date: "string",
+  period: "string",
+};
+
+const entryCommands = new Set(["entryList", "getEntry", "createEntry", "editEntry"]);
 
 const commandTypeMap: Record<string, string> = {
   entryList: "EntryList",
@@ -45,7 +72,11 @@ const commandTypeMap: Record<string, string> = {
   deleteToken: "void",
 };
 
-export function describe(command?: string, short?: boolean): void {
+export async function describe(
+  command?: string,
+  short?: boolean,
+  opts?: { dm?: string; model?: string; env?: string }
+): Promise<void> {
   if (!command || !commandTypeMap[command]) {
     if (command) process.stderr.write(`Unknown command: ${command}\n\n`);
     process.stderr.write(`Available commands:\n`);
@@ -101,6 +132,31 @@ export function describe(command?: string, short?: boolean): void {
       if (refBody) {
         process.stdout.write(`\ntype ${name} = ${refBody}\n`);
       }
+    }
+  }
+
+  // Dynamic entry type from schema
+  if (opts?.dm && opts?.model && entryCommands.has(command)) {
+    try {
+      const props = await getSchema({
+        env: opts.env || "stage",
+        dmShortID: opts.dm,
+        model: opts.model,
+        withMetadata: false,
+      });
+      const modelName = opts.model.charAt(0).toUpperCase() + opts.model.slice(1);
+      const lines: string[] = [];
+      for (const [field, def] of Object.entries(props as Record<string, any>)) {
+        const tsType = schemaTypeToTS[def.type] || "any";
+        const nullable = def.required ? "" : " | null";
+        lines.push(`    ${field}: ${tsType}${nullable};`);
+      }
+      process.stdout.write(`\n// Dynamic fields for model "${opts.model}":\n`);
+      process.stdout.write(`type ${modelName}Entry = {\n${lines.join("\n")}\n}\n`);
+    } catch (e: any) {
+      process.stderr.write(
+        `Warning: could not fetch schema for ${opts.model}: ${e.message}\n`
+      );
     }
   }
 }

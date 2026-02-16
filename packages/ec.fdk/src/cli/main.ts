@@ -269,7 +269,11 @@ async function main() {
 
   if (command === "describe") {
     const { describe } = await import("./describe");
-    describe(positionals[1], values.short as boolean);
+    await describe(positionals[1], values.short as boolean, {
+      dm: values.dm,
+      model: values.model,
+      env: values.env as string,
+    });
     return;
   }
 
