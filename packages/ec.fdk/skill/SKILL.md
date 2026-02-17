@@ -114,13 +114,13 @@ ec.fdk resourceDelete --resource role -f dataManagerID=<dataManagerID> -f roleID
 
 | `--resource` | `--subdomain` | Typical filters |
 | --- | --- | --- |
+| `dm-account` | — | `-f dataManagerID=<dataManagerID>` |
+| `dm-client` | — | `-f dataManagerID=<dataManagerID>` |
 | `model` | — | `-f dataManagerID=<dataManagerID>` |
 | `assetgroup` | — | `-f dataManagerID=<dataManagerID>` |
-| `client` | — | `-f dataManagerID=<dataManagerID>` |
 | `role` | — | `-f dataManagerID=<dataManagerID>` |
-| `account` | — | `-f dataManagerID=<dataManagerID>` |
-| `template` | — | — |
 | `tag` | — | `-f dataManagerID=<dataManagerID>` |
+| `template` | — | — |
 | `account` | `accounts` | — |
 | `client` | `accounts` | — |
 | `group` | `accounts` | — |
@@ -330,15 +330,17 @@ Without `--dm`/`--model`, the generic `EntryResource` type is shown (with `[key:
 For resource commands (`resourceList`, `resourceGet`, `resourceEdit`), pass `--resource` to get the specific typed return:
 
 ```sh
-ec.fdk describe resourceList --resource account
+ec.fdk describe resourceList --resource dm-account
 # Output:
-# type AccountList = { count: number; total: number; items: AccountResource[]; }
-# type AccountResource = { accountID: string; email: string | null; ... }
+# type DmAccountList = { count: number; total: number; items: DmAccountResource[]; }
+# type DmAccountResource = { accountID: string; email: string | null; ... }
 
 ec.fdk describe resourceGet --resource client
 # Output:
 # type ClientResource = { clientID: string; clientName: string; ... }
 ```
+
+Note: `account` and `client` refer to Account Server resources. Use `dm-account` and `dm-client` for DM-level resources (different, smaller types).
 
 Without `--resource`, the generic `ResourceList` type is shown.
 

@@ -7,9 +7,11 @@ const resourceCommands = new Set(["resourceList", "resourceGet", "resourceEdit"]
 
 const resourceListTypeMap: Record<string, string> = {
   account: "AccountList",
+  "dm-account": "DmAccountList",
   group: "GroupList",
   role: "RoleList",
   client: "ClientList",
+  "dm-client": "DmClientList",
   invite: "InviteList",
   template: "TemplateList",
   assetgroup: "AssetGroupList",
@@ -19,9 +21,11 @@ const resourceListTypeMap: Record<string, string> = {
 
 const resourceItemTypeMap: Record<string, string> = {
   account: "AccountResource",
+  "dm-account": "DmAccountResource",
   group: "GroupResource",
   role: "RoleResource",
   client: "ClientResource",
+  "dm-client": "DmClientResource",
   invite: "InviteResource",
   template: "TemplateResource",
   assetgroup: "AssetGroupResource",

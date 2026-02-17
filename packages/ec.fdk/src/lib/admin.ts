@@ -27,6 +27,12 @@ import { expect, query, apiURL, fetcher } from "./util";
 
 const jsonHeaders = { "Content-Type": "application/json" };
 
+/** Maps virtual resource names to actual API path segments. */
+const resourcePathMap: Record<string, string> = {
+  "dm-account": "account",
+  "dm-client": "client",
+};
+
 /** @ignore */
 export async function getDatamanager(config: AdminDmConfig): Promise<DatamanagerResource> {
   // https://datamanager.cachena.entrecode.de/?_list=true&page=1&size=25
@@ -72,7 +78,8 @@ export async function resourceList(config: AdminResourceListConfig): Promise<Res
   expect({ env, subdomain, resource });
   options = { size: 25, page: 1, _list: true, ...options };
   const q = query(options);
-  const url = apiURL(`${resource}?${q}`, env, subdomain);
+  const path = resourcePathMap[resource] ?? resource;
+  const url = apiURL(`${path}?${q}`, env, subdomain);
   const { count, total, _embedded } = await fetcher(url, config);
   let items = _embedded ? _embedded[Object.keys(_embedded)[0]] : [];
   items = !Array.isArray(items) ? [items] : items;
@@ -84,7 +91,8 @@ export async function resourceGet(config: AdminResourceListConfig): Promise<any>
   let { env, resource, options = {}, subdomain = "datamanager" } = config;
   expect({ env, subdomain, resource });
   const q = query(options);
-  const url = apiURL(`${resource}?${q}`, env, subdomain);
+  const path = resourcePathMap[resource] ?? resource;
+  const url = apiURL(`${path}?${q}`, env, subdomain);
   return fetcher(url, config);
 }
 
@@ -93,7 +101,8 @@ export async function resourceEdit(config: AdminResourceListConfig & { value: an
   let { env, resource, options = {}, subdomain = "datamanager", value } = config;
   expect({ env, subdomain, resource, value });
   const q = query(options);
-  const url = apiURL(`${resource}?${q}`, env, subdomain);
+  const path = resourcePathMap[resource] ?? resource;
+  const url = apiURL(`${path}?${q}`, env, subdomain);
   return fetcher(url, config, {
     method: "PUT",
     body: JSON.stringify(value),
@@ -106,7 +115,8 @@ export async function resourceDelete(config: AdminResourceListConfig): Promise<R
   let { env, resource, options = {}, subdomain = "datamanager" } = config;
   expect({ env, subdomain, resource });
   const q = query(options);
-  const url = apiURL(`${resource}?${q}`, env, subdomain);
+  const path = resourcePathMap[resource] ?? resource;
+  const url = apiURL(`${path}?${q}`, env, subdomain);
   return fetcher(url, { ...config, rawRes: true }, {
     method: "DELETE",
     headers: jsonHeaders,

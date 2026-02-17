@@ -28,9 +28,11 @@ export type AssetResource = {
 /** Maps resource names to their list types. Used by Fdk.resourceList() for typed returns. */
 export interface ResourceRegistry {
   account: AccountList;
+  'dm-account': DmAccountList;
   group: GroupList;
   role: RoleList;
   client: ClientList;
+  'dm-client': DmClientList;
   invite: InviteList;
   template: TemplateList;
   assetgroup: AssetGroupList;
@@ -42,9 +44,11 @@ export interface ResourceRegistry {
 /** Maps resource names to their item types. Used by Fdk.resourceGet() for typed returns. */
 export interface ResourceItemRegistry {
   account: AccountResource;
+  'dm-account': DmAccountResource;
   group: GroupResource;
   role: RoleResource;
   client: ClientResource;
+  'dm-client': DmClientResource;
   invite: InviteResource;
   template: TemplateResource;
   assetgroup: AssetGroupResource;
