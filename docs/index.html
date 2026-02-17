@@ -526,7 +526,7 @@
 </tr>
 <tr>
 <td><code>--resource &lt;name&gt;</code></td>
-<td>Resource name (for <code>resource*</code> commands)</td>
+<td>Resource name (for <code>resource*</code> commands and <code>describe</code>)</td>
 </tr>
 <tr>
 <td><code>--subdomain &lt;name&gt;</code></td>
@@ -723,6 +723,11 @@
 </code><button type="button">Copy</button></pre>
 
 <p>Without <code>--dm</code>/<code>--model</code>, the generic <code>EntryResource</code> type with <code>[key: string]: any</code> is shown.</p>
+<p>For resource commands (<code>resourceList</code>, <code>resourceGet</code>, <code>resourceEdit</code>), pass <code>--resource</code> to get the specific typed return:</p>
+<pre><code class="sh"><span class="hl-0">ec.fdk</span><span class="hl-1"> </span><span class="hl-2">describe</span><span class="hl-1"> </span><span class="hl-2">resourceList</span><span class="hl-1"> </span><span class="hl-6">--resource</span><span class="hl-1"> </span><span class="hl-2">account</span><br/><span class="hl-5"># type AccountList = {</span><br/><span class="hl-5">#     count: number;</span><br/><span class="hl-5">#     total: number;</span><br/><span class="hl-5">#     items: AccountResource[];</span><br/><span class="hl-5"># }</span><br/><span class="hl-5"># type AccountResource = { accountID: string; email: string | null; ... }</span><br/><br/><span class="hl-0">ec.fdk</span><span class="hl-1"> </span><span class="hl-2">describe</span><span class="hl-1"> </span><span class="hl-2">resourceGet</span><span class="hl-1"> </span><span class="hl-6">--resource</span><span class="hl-1"> </span><span class="hl-2">client</span><br/><span class="hl-5"># type ClientResource = { clientID: string; clientName: string; ... }</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Without <code>--resource</code>, the generic <code>ResourceList</code> type is shown.</p>
 <a id="filtering" class="tsd-anchor"></a><h3 class="tsd-anchor-link">Filtering<a href="#filtering" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>The <code>-f</code> flag maps directly to <a href="https://doc.entrecode.de/api-basics/#filtering" target="_blank" class="external">entrecode filter query params</a>. Common filter suffixes:</p>
 <table>
 <thead>
