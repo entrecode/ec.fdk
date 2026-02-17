@@ -2,298 +2,298 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/modules.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/index.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/classes/Fdk.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
-	</url>
-	<url>
-		<loc>https://entrecode.github.io/ec.fdk/functions/act.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
-	</url>
-	<url>
-		<loc>https://entrecode.github.io/ec.fdk/functions/fdk-1.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
-	</url>
-	<url>
-		<loc>https://entrecode.github.io/ec.fdk/functions/sdkOptions.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
-	</url>
-	<url>
-		<loc>https://entrecode.github.io/ec.fdk/functions/getEntryShortID.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
-	</url>
-	<url>
-		<loc>https://entrecode.github.io/ec.fdk/functions/getEntryEnv.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
-	</url>
-	<url>
-		<loc>https://entrecode.github.io/ec.fdk/functions/getEntryAsset.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/functions/filterOptions.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
+	</url>
+	<url>
+		<loc>https://entrecode.github.io/ec.fdk/functions/act.html</loc>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
+	</url>
+	<url>
+		<loc>https://entrecode.github.io/ec.fdk/functions/fdk-1.html</loc>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
+	</url>
+	<url>
+		<loc>https://entrecode.github.io/ec.fdk/functions/sdkOptions.html</loc>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
+	</url>
+	<url>
+		<loc>https://entrecode.github.io/ec.fdk/functions/getEntryShortID.html</loc>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
+	</url>
+	<url>
+		<loc>https://entrecode.github.io/ec.fdk/functions/getEntryEnv.html</loc>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
+	</url>
+	<url>
+		<loc>https://entrecode.github.io/ec.fdk/functions/getEntryAsset.html</loc>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/functions/fileVariant.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/functions/getFileVariants.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/functions/raw.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/interfaces/ModelRegistry.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/interfaces/ModelOverrides.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/SdkFilter.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/SdkFilterOptions.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/HalLink.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/HalLinks.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/Thumbnail.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/AssetFile.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/AssetResource.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/EntryResourceBase.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/EntryResource.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/TypedEntry.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/EntryInput.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/TypedEntryList.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/EntryFieldSchema.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/EntrySchema.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/EntryList.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/PublicApiRoot.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/DatamanagerResource.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/DatamanagerList.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/AssetList.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/ResourceList.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/ModelFieldConfig.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/HookDefinition.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/PolicyDefinition.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/SyncDefinition.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/ModelResource.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/ModelList.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/GenericListOptions.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/EntryListOptions.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/AssetCreateOptions.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/StorageAdapter.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/TemplateResource.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/TemplateList.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/AssetGroupSettings.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/AssetGroupResource.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/RoleResource.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/ClientResource.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/GroupResource.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/InviteResource.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/AccountResource.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/DeviceInfo.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/TokenResource.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/FdkConfig.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/AdminConfig.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/AdminListConfig.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/AdminDmConfig.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/AdminDmListConfig.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/AdminResourceListConfig.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/AdminCreateConfig.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/AdminDmCreateConfig.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/AdminEditConfig.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/AdminDeleteConfig.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/AssetGroupList.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/RoleList.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/ClientList.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/DmAccountList.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/GroupList.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/InviteList.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/AccountList.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 	<url>
 		<loc>https://entrecode.github.io/ec.fdk/types/TokenList.html</loc>
-		<lastmod>2026-02-17T12:02:51.482Z</lastmod>
+		<lastmod>2026-02-17T12:19:29.887Z</lastmod>
 	</url>
 </urlset>
