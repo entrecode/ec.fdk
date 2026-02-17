@@ -1,11 +1,33 @@
-import {
+import type {
+  AccountResource,
+  AdminConfig,
+  AdminDmConfig,
+  AdminDmListConfig,
+  AdminListConfig,
+  AdminResourceListConfig,
   AssetCreateOptions,
+  AssetGroupResource,
+  AssetList,
+  AssetResource,
+  ClientResource,
+  DatamanagerList,
+  DatamanagerResource,
   EntryInput,
   EntryListOptions,
+  EntryResource,
   EntrySchema,
   FdkConfig,
   GenericListOptions,
+  GroupResource,
+  InviteResource,
+  ModelList,
+  ModelResource,
+  PublicApiRoot,
+  ResourceList,
+  RoleResource,
   StorageAdapter,
+  TemplateResource,
+  TokenResource,
   TypedEntry,
   TypedEntryList,
 } from "../types";
@@ -99,6 +121,72 @@ const {
  * The call to `expect` shows which keys are expected to be set.
  *
  */
+type ActBase = { env?: string; token?: string; dmShortID: string };
+
+// --- Entry actions ---
+export function act<M extends string>(config: { action: 'entryList'; model: M; options?: EntryListOptions<M> } & ActBase): Promise<TypedEntryList<M>>;
+export function act<M extends string>(config: { action: 'getEntry'; model: M; entryID: string } & ActBase): Promise<TypedEntry<M>>;
+export function act<M extends string>(config: { action: 'createEntry'; model: M; value: EntryInput<M> } & ActBase): Promise<TypedEntry<M>>;
+export function act<M extends string>(config: { action: 'editEntry'; model: M; entryID: string; value: Partial<EntryInput<M>> } & ActBase): Promise<TypedEntry<M>>;
+export function act<M extends string>(config: { action: 'deleteEntry'; model: M; entryID: string } & ActBase): Promise<void>;
+export function act(config: { action: 'publicApi' } & ActBase): Promise<PublicApiRoot>;
+export function act(config: { action: 'mapEntries'; model: string; options?: GenericListOptions } & ActBase & { fn: (entry: EntryResource) => EntryResource }): Promise<EntryResource[]>;
+export function act(config: { action: 'getSchema'; model: string; withMetadata?: boolean } & ActBase): Promise<EntrySchema>;
+// --- Asset actions ---
+export function act(config: { action: 'getAsset'; assetGroup: string; assetID: string } & ActBase): Promise<AssetResource>;
+export function act(config: { action: 'assetList'; assetGroup: string; options?: GenericListOptions } & ActBase): Promise<AssetList>;
+export function act(config: { action: 'createAsset'; assetGroup: string; file: any; name?: string; options?: AssetCreateOptions } & ActBase): Promise<AssetResource>;
+export function act(config: { action: 'createAssets'; assetGroup: string; files: any[]; options?: AssetCreateOptions } & ActBase): Promise<AssetResource[]>;
+export function act(config: { action: 'deleteAsset'; assetGroup: string; assetID: string } & ActBase): Promise<void>;
+// --- Auth actions ---
+export function act(config: { action: 'loginPublic'; email: string; password: string } & ActBase): Promise<any>;
+export function act(config: { action: 'loginEc'; env: string; email: string; password: string }): Promise<{ token: string }>;
+export function act(config: { action: 'logoutPublic' } & ActBase): Promise<any>;
+export function act(config: { action: 'logoutEc'; env: string; token: string }): Promise<any>;
+export function act(config: { action: 'getPublicAuthKey'; dmShortID: string }): any;
+export function act(config: { action: 'getEcAuthKey'; env: string }): any;
+// --- Admin actions ---
+export function act(config: { action: 'getDatamanager' } & AdminDmConfig): Promise<DatamanagerResource>;
+export function act(config: { action: 'dmList' } & AdminListConfig): Promise<DatamanagerList>;
+export function act(config: { action: 'modelList' } & AdminDmListConfig): Promise<ModelList>;
+export function act(config: { action: 'resourceList' } & AdminResourceListConfig): Promise<ResourceList>;
+export function act(config: { action: 'resourceGet' } & AdminResourceListConfig): Promise<any>;
+export function act(config: { action: 'resourceEdit'; value: any } & AdminResourceListConfig): Promise<any>;
+export function act(config: { action: 'resourceDelete' } & AdminResourceListConfig): Promise<Response>;
+export function act<T = any>(config: { action: 'raw'; route?: string; subdomain?: string; options?: Record<string, any>; rawRes?: boolean } & Partial<AdminConfig>): Promise<T>;
+export function act(config: { action: 'createDatamanager'; value: Partial<DatamanagerResource> } & AdminConfig): Promise<DatamanagerResource>;
+export function act(config: { action: 'editDatamanager'; value: Partial<DatamanagerResource> } & AdminDmConfig): Promise<DatamanagerResource>;
+export function act(config: { action: 'deleteDatamanager' } & AdminDmConfig): Promise<Response>;
+export function act(config: { action: 'createModel'; value: Partial<ModelResource> } & AdminDmConfig): Promise<ModelResource>;
+export function act(config: { action: 'editModel'; modelID: string; value: Partial<ModelResource> } & AdminDmConfig): Promise<ModelResource>;
+export function act(config: { action: 'deleteModel'; modelID: string } & AdminDmConfig): Promise<Response>;
+export function act(config: { action: 'createTemplate'; value: Partial<TemplateResource> } & AdminConfig): Promise<TemplateResource>;
+export function act(config: { action: 'createAssetGroup'; value: Partial<AssetGroupResource> } & AdminDmConfig): Promise<AssetGroupResource>;
+export function act(config: { action: 'editAssetGroup'; assetGroupID: string; value: Partial<AssetGroupResource> } & AdminDmConfig): Promise<AssetGroupResource>;
+export function act(config: { action: 'editAsset'; dmShortID: string; assetGroup: string; assetID: string; value: Partial<AssetResource> } & AdminConfig): Promise<AssetResource>;
+export function act(config: { action: 'editDmClient'; clientID: string; value: Partial<ClientResource> } & AdminDmConfig): Promise<ClientResource>;
+export function act(config: { action: 'createRole'; value: Partial<RoleResource> } & AdminDmConfig): Promise<RoleResource>;
+export function act(config: { action: 'editRole'; roleID: string; value: Partial<RoleResource> } & AdminDmConfig): Promise<RoleResource>;
+export function act(config: { action: 'deleteRole'; roleID: string } & AdminDmConfig): Promise<Response>;
+export function act(config: { action: 'editDmAccount'; accountID: string; value: Partial<AccountResource> } & AdminDmConfig): Promise<AccountResource>;
+export function act(config: { action: 'deleteDmAccount'; accountID: string } & AdminDmConfig): Promise<Response>;
+export function act(config: { action: 'getStats' } & AdminListConfig): Promise<any>;
+export function act(config: { action: 'getHistory' } & AdminListConfig): Promise<any>;
+export function act(config: { action: 'createAccountClient'; value: Partial<ClientResource> } & AdminConfig): Promise<ClientResource>;
+export function act(config: { action: 'editAccountClient'; clientID: string; value: Partial<ClientResource> } & AdminConfig): Promise<ClientResource>;
+export function act(config: { action: 'deleteAccountClient'; clientID: string } & AdminConfig): Promise<Response>;
+export function act(config: { action: 'createGroup'; value: Partial<GroupResource> } & AdminConfig): Promise<GroupResource>;
+export function act(config: { action: 'editGroup'; groupID: string; value: Partial<GroupResource> } & AdminConfig): Promise<GroupResource>;
+export function act(config: { action: 'deleteGroup'; groupID: string } & AdminConfig): Promise<Response>;
+export function act(config: { action: 'createInvite'; value: Partial<InviteResource> } & AdminConfig): Promise<InviteResource>;
+export function act(config: { action: 'editInvite'; inviteID: string; value: Partial<InviteResource> } & AdminConfig): Promise<InviteResource>;
+export function act(config: { action: 'deleteInvite'; inviteID: string } & AdminConfig): Promise<Response>;
+export function act(config: { action: 'editAccount'; accountID: string; value: Partial<AccountResource> } & AdminConfig): Promise<AccountResource>;
+export function act(config: { action: 'listTokens'; accountID: string } & AdminConfig): Promise<TokenResource[]>;
+export function act(config: { action: 'createToken'; accountID: string } & AdminConfig): Promise<TokenResource>;
+export function act(config: { action: 'deleteToken'; accountID: string; accessTokenID: string } & AdminConfig): Promise<Response>;
+// --- Catch-all ---
+export function act(config: Record<string, any>): Promise<any>;
 export function act(config: Record<string, any>): Promise<any> {
   const { action } = config;
   expect({ action });
