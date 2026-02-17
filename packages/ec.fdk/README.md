@@ -232,6 +232,7 @@ ec.fdk <command> [options]
 | `resourceEdit`   | Edit a single resource    | `--resource`, `-f` for identifying params, `--data` |
 | `resourceDelete` | Delete a single resource  | `--resource`, `-f` for identifying params |
 | `describe`       | Show type definition for a command's return value | `<command>` |
+| `typegen`        | Generate typed entry APIs (.d.ts) for a datamanager | `--dm` (optional `--out <path>`) |
 | `getHistory`     | Get dm-history entries    | `-f shortID=<shortID>` |
 
 ##### `resourceList` resource types
@@ -275,6 +276,7 @@ ec.fdk <command> [options]
 | `--raw`                 | Include `_links` and `_embedded` in output        |
 | `--md`                  | Output entries as readable markdown table          |
 | `--short`               | Only print the return type, omit referenced types (for `describe`) |
+| `--out <path>`          | Output file path for `typegen` (default: `./ec.fdk.d.ts`) |
 | `-v, --version`         | Show version                                      |
 | `-h, --help`            | Show help                                         |
 
@@ -459,6 +461,47 @@ ec.fdk listTokens --account-id <accountID>
 ec.fdk createToken --account-id <accountID>
 ec.fdk deleteToken --account-id <accountID> --rid <tokenID>
 ```
+
+### Typegen — Typed Entry APIs
+
+Generate a `.d.ts` declaration file that gives you type-safe entry APIs with autocomplete for all models in a datamanager:
+
+```sh
+# Requires login first
+ec.fdk login -e stage
+
+# Generate types
+ec.fdk typegen --dm <shortID> --env stage --out ./ec.fdk.d.ts
+```
+
+Place the generated file in your TypeScript project. After that, `model()` carries the model name as a type parameter, so all entry methods return typed results:
+
+```ts
+import { fdk } from 'ec.fdk';
+
+const muffin = await fdk('stage').dm('<shortID>').model('muffin').getEntry('abc');
+muffin.name;           // string — autocomplete works
+muffin.amazement_factor; // number
+muffin.bogus;          // type error
+
+await fdk('stage').dm('<shortID>').model('muffin').createEntry({
+  name: 'Blueberry',       // required string
+  amazement_factor: 9,     // required number
+  color: 'blue',           // required string
+});
+
+await fdk('stage').dm('<shortID>').model('muffin').editEntry('abc', {
+  name: 'Updated',         // partial — only changed fields needed
+});
+```
+
+Without a generated file, everything falls back to the default `EntryResource` type with `[key: string]: unknown` — fully backwards-compatible.
+
+| Option | Description |
+| ------ | ----------- |
+| `--dm <shortID>` | DataManager short ID (required) |
+| `--env <env>` | `stage` (default) or `live` |
+| `--out <path>` | Output file path (default: `./ec.fdk.d.ts`) |
 
 ### Describe
 

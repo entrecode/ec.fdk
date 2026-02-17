@@ -231,8 +231,33 @@ ec.fdk deleteToken --account-id <accountID> --rid <tokenID>
 | `logout` | — |
 | `whoami` | — |
 | `describe` | `<command>` |
+| `typegen` | `--dm` (optional `--out <path>`) |
 | `install-skill` | — (optional `--dir <path>`) |
 | `update` | — |
+
+## Typegen — Typed Entry APIs
+
+Generate a `.d.ts` declaration file for type-safe entry APIs. Requires login.
+
+```sh
+ec.fdk typegen --dm <shortID> --env stage --out ./ec.fdk.d.ts
+```
+
+This introspects all models of a datamanager and produces a declaration file with module augmentation. When placed in a TypeScript project, `model("muffin")` gives autocomplete and type checking for muffin fields:
+
+```ts
+const muffin = await fdk('stage').dm('<shortID>').model('muffin').getEntry('abc');
+muffin.name;           // string — autocomplete works
+muffin.bogus;          // type error
+
+await fdk('stage').dm('<shortID>').model('muffin').createEntry({
+  name: 'Blueberry',  // typed — required fields enforced
+  amazement_factor: 9,
+  color: 'blue',
+});
+```
+
+Without a generated file, everything falls back to `EntryResource` with `[key: string]: unknown` — fully backwards-compatible.
 
 ## Describe
 
@@ -297,6 +322,7 @@ Without `--dm`/`--model`, the generic `EntryResource` type is shown (with `[key:
 | `--raw` | Include `_links` and `_embedded` |
 | `--md` | Output as markdown table |
 | `--short` | Only print the return type, omit referenced types (for `describe`) |
+| `--out` | Output file path for `typegen` (default: `./ec.fdk.d.ts`) |
 
 ## Filter Suffixes
 

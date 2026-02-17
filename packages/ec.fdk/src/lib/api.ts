@@ -1,9 +1,12 @@
 import {
   AssetCreateOptions,
+  EntryInput,
   EntrySchema,
   FdkConfig,
   GenericListOptions,
   StorageAdapter,
+  TypedEntry,
+  TypedEntryList,
 } from "src/types";
 import * as actions from "./actions";
 import { expect } from "./util";
@@ -156,7 +159,7 @@ function cleanResult(result: any) {
   return cleanEntry(result);
 }
 
-export class Fdk {
+export class Fdk<TModel extends string = string> {
   /** @ignore */
   config: any;
   /** @ignore */
@@ -172,7 +175,7 @@ export class Fdk {
     this.config = config;
   }
   /** @ignore */
-  set(obj) {
+  set(obj): Fdk<TModel> {
     // "copy on write"
     return new Fdk({ ...this.config, ...obj });
   }
@@ -195,7 +198,7 @@ export class Fdk {
    * // non-public model
    * const secrets = await fdk("stage").token(token).dm("83cc6374").model("secret").entryList()
    */
-  async entryList(options: GenericListOptions) {
+  async entryList(options: GenericListOptions = {}): Promise<TypedEntryList<TModel>> {
     const token = await this.getBestToken();
     return entryList({ ...this.config, options, token }).then((r) => this.maybeClean(r));
   }
@@ -222,7 +225,7 @@ export class Fdk {
    * @example
    * const muffin = await fdk("stage").dm("83cc6374").model("muffin").getEntry("1gOtzWvrdq")
    */
-  async getEntry(entryID: string) {
+  async getEntry(entryID: string): Promise<TypedEntry<TModel>> {
     const token = await this.getBestToken();
     return getEntry({ ...this.config, entryID, token }).then((r) => this.maybeClean(r));
   }
@@ -240,7 +243,7 @@ export class Fdk {
    *  .model("muffin")
    *  .editEntrySafe("1gOtzWvrdq", { name: "test", _modified: "2020-01-01T00:00:00.000Z"})
    */
-  async editEntrySafe(entryID: string, value: object) {
+  async editEntrySafe(entryID: string, value: Partial<EntryInput<TModel>> & { _modified: Date | string }): Promise<TypedEntry<TModel>> {
     const token = await this.getBestToken();
     return editEntry({ ...this.config, entryID, token, value, safePut: true }).then((r) => this.maybeClean(r));
   }
@@ -358,7 +361,7 @@ export class Fdk {
    * @example
    * const entry = await fdk("stage").dm("83cc6374").model("muffin").createEntry({ name: 'test' })
    */
-  async createEntry(value: object) {
+  async createEntry(value: EntryInput<TModel>): Promise<TypedEntry<TModel>> {
     const token = await this.getBestToken();
     return createEntry({ ...this.config, token, value }).then((r) => this.maybeClean(r));
   }
@@ -371,7 +374,7 @@ export class Fdk {
    * @example
    * const entry = await fdk("stage").dm("83cc6374").model("muffin").editEntry("1gOtzWvrdq", { name: "test" })
    */
-  async editEntry(entryID: string, value: object) {
+  async editEntry(entryID: string, value: Partial<EntryInput<TModel>>): Promise<TypedEntry<TModel>> {
     const token = await this.getBestToken();
     return editEntry({ ...this.config, entryID, token, value }).then((r) => this.maybeClean(r));
   }
@@ -912,8 +915,8 @@ export class Fdk {
    * @category Entries
    * @param model name of the model
    */
-  model(model: string) {
-    return this.set({ model });
+  model<M extends string>(model: M): Fdk<M> {
+    return this.set({ model }) as unknown as Fdk<M>;
   }
   /**
    * Sets the token to use in requests. Intended for usage with a fixed token in NodeJS.

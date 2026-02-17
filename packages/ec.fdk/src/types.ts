@@ -25,7 +25,11 @@ export type AssetResource = {
   thumbnails?: Thumbnail[];
 };
 
-export type EntryResource = Record<string, unknown> & {
+// Empty by default — filled by generated declaration files via module augmentation
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface ModelRegistry {}
+
+export type EntryResourceBase = {
   id: string;
   _created: Date;
   _creator: string;
@@ -36,7 +40,24 @@ export type EntryResource = Record<string, unknown> & {
   _modified: Date;
   created: Date;
   modified: Date;
-  [key: string]: unknown; // Dynamic properties
+};
+
+export type EntryResource = EntryResourceBase & { [key: string]: unknown };
+
+export type TypedEntry<M extends string> =
+  M extends keyof ModelRegistry
+    ? EntryResourceBase & ModelRegistry[M]
+    : EntryResource;
+
+export type EntryInput<M extends string> =
+  M extends keyof ModelRegistry
+    ? ModelRegistry[M]
+    : Record<string, unknown>;
+
+export type TypedEntryList<M extends string> = {
+  count: number;
+  total: number;
+  items: TypedEntry<M>[];
 };
 
 export type EntryFieldSchema = {

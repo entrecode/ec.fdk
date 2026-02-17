@@ -97,6 +97,7 @@ Commands:
 
   Type introspection:
     describe              Show return type for a command
+    typegen               Generate typed entry APIs (.d.ts) for a datamanager
 
 Options:
   -e, --env <env>       Environment: stage|live (default: stage)
@@ -118,6 +119,7 @@ Options:
   --raw                 Include _links and _embedded in output
   --md                  Output entries as readable markdown
   --short               Only print the return type, omit referenced types (describe)
+  --out <path>          Output file path for typegen (default: ./ec.fdk.d.ts)
   -v, --version         Show version
   --password              Use email/password login instead of browser
   -h, --help            Show help`;
@@ -250,6 +252,7 @@ async function main() {
       file: { type: "string", multiple: true, default: [] },
       short: { type: "boolean", default: false },
       dir: { type: "string" },
+      out: { type: "string" },
       version: { type: "boolean", short: "v" },
       help: { type: "boolean", short: "h" },
     },
@@ -273,6 +276,21 @@ async function main() {
       dm: values.dm,
       model: values.model,
       env: values.env as string,
+    });
+    return;
+  }
+
+  if (command === "typegen") {
+    if (!values.dm) error("--dm (short ID) is required for typegen");
+    const { typegen } = await import("./typegen");
+    const sdk = new Fdk({ env: values.env as "stage" | "live", storageAdapter: fileStorageAdapter });
+    const token = sdk.getEcToken();
+    if (!token) error("You must be logged in to use typegen. Run: ec.fdk login");
+    await typegen({
+      dm: values.dm,
+      env: values.env as string,
+      out: values.out || "./ec.fdk.d.ts",
+      token,
     });
     return;
   }

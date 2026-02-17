@@ -1,29 +1,6 @@
 import typeDefinitions from "virtual:type-definitions";
 import { getSchema } from "../lib/entries";
-
-const schemaTypeToTS: Record<string, string> = {
-  text: "string",
-  formattedText: "string",
-  string: "string",
-  url: "string",
-  email: "string",
-  phone: "string",
-  number: "number",
-  decimal: "number",
-  boolean: "boolean",
-  datetime: "Date",
-  json: "Record<string, any>",
-  object: "Record<string, any>",
-  entry: "string",
-  entries: "string[]",
-  asset: "string",
-  assets: "string[]",
-  location: "{ latitude: number; longitude: number }",
-  account: "string",
-  role: "string",
-  date: "string",
-  period: "string",
-};
+import { schemaTypeToTS } from "./schema-types";
 
 const entryCommands = new Set(["entryList", "getEntry", "createEntry", "editEntry"]);
 
