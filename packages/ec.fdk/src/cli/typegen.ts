@@ -68,7 +68,7 @@ export async function typegen(opts: {
         const optional = !def.required;
         const sep = optional ? "?: " : ": ";
         const nullable = optional ? " | null" : "";
-        fields.push(`      ${field}${sep}${tsType}${nullable};`);
+        fields.push(`      ${field}${sep}${tsType}${nullable}; // ${def.type}`);
       }
 
       // Use a safe identifier: replace non-alphanumeric with underscores
