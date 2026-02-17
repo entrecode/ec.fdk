@@ -366,6 +366,9 @@ ec.fdk entryList -d <shortID> -m muffin -f name~=chocolate
 ec.fdk entryList -d <shortID> -m muffin -f amazement_factorFrom=5 -f amazement_factorTo=10
 ec.fdk entryList -d <shortID> -m muffin -f createdFrom=2024-01-01
 
+# Load multiple entries by ID (comma-separated)
+ec.fdk entryList -d <shortID> -m muffin -f "id=abc123,def456,ghi789"
+
 # Filter datamanagers
 ec.fdk dmList -f title~=myproject
 
@@ -582,6 +585,8 @@ The `-f` flag maps directly to [entrecode filter query params](https://doc.entre
 | `~`        | Search (contains)    | `-f name~=chocolate`           |
 | `From`     | Greater than / after | `-f createdFrom=2024-01-01`    |
 | `To`       | Less than / before   | `-f createdTo=2025-01-01`      |
+| `,`        | Any of (OR)          | `-f id=id1,id2,id3`            |
+| `!`        | Not null             | `-f active!=`                  |
 | (none)     | Exact match          | `-f amazement_factor=10`       |
 
 Status/error messages go to stderr, data goes to stdout — so piping always works cleanly.

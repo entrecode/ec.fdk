@@ -26,6 +26,9 @@ ec.fdk entryList -d <shortID> -m <model> --fields name,created,id
 ec.fdk entryList -d <shortID> -m <model> -f "photo="    # photo is null/empty
 ec.fdk entryList -d <shortID> -m <model> -f "photo!="   # photo is not null/empty
 
+# Load multiple entries by ID in one request (comma-separated, much faster than fetching each separately)
+ec.fdk entryList -d <shortID> -m <model> -f "id=abc123,def456,ghi789"
+
 # Get a single entry
 ec.fdk getEntry -d <shortID> -m <model> -i <entryID>
 
@@ -359,6 +362,7 @@ Filters map to entrecode filter query params:
 - `~` — search (contains): `-f name~=chocolate`
 - `From` — greater than / after: `-f createdFrom=2024-01-01`
 - `To` — less than / before: `-f createdTo=2025-01-01`
+- `,` — any of (OR, comma-separated): `-f "id=abc123,def456,ghi789"`
 - (none) — exact match: `-f title=HO`
 - `=` (empty value) — is null/empty: `-f "photo="`
 - `!=` (empty value) — is not null/empty: `-f "photo!="`
