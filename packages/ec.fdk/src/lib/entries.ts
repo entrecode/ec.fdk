@@ -342,5 +342,5 @@ export function getEntryAsset(
   entry: EntryResource
 ): AssetResource {
   const shortID = getEntryShortID(entry);
-  return entry._embedded[`${shortID}:${entry._modelTitle}/${field}/asset`];
+  return entry._embedded![`${shortID}:${entry._modelTitle}/${field}/asset`] as AssetResource;
 }

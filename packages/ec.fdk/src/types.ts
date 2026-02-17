@@ -1,39 +1,46 @@
+export type HalLink = { href: string; templated?: boolean; profile?: string; title?: string };
+export type HalLinks = Record<string, HalLink | undefined> & {
+  self?: HalLink;
+  collection?: HalLink;
+};
+export type Thumbnail = { url: string; dimension: number };
+
 export type AssetFile = {
   url: string;
   size: number;
-  resolution: Record<string, any>;
+  resolution: { width: number; height: number };
 };
 
 export type AssetResource = {
   assetID: string;
   created: Date;
-  files: any[];
-  tags: (string | any)[];
+  files: AssetFile[];
+  tags: string[];
   title: string;
   type: string;
   mimetype: string;
   duplicates: number;
   file: AssetFile;
   fileVariants: AssetFile[];
-  thumbnails?: any[];
+  thumbnails?: Thumbnail[];
 };
 
-export type EntryResource = Record<string, any> & {
+export type EntryResource = Record<string, unknown> & {
   id: string;
   _created: Date;
   _creator: string;
-  _embedded: any;
-  _links: any;
+  _embedded?: Record<string, unknown>;
+  _links?: HalLinks;
   _modelTitle: string;
   _modelTitleField: string;
   _modified: Date;
   created: Date;
   modified: Date;
-  [key: string]: any; // Dynamic properties
+  [key: string]: unknown; // Dynamic properties
 };
 
 export type EntryFieldSchema = {
-  default: any;
+  default: unknown;
   description: string;
   readOnly: boolean;
   required: boolean;
@@ -49,21 +56,21 @@ export type EntryList = {
   items: EntryResource[];
 };
 
-export type PublicApiRoot = any; // TODO
+export type PublicApiRoot = { _links: HalLinks; [key: string]: unknown };
 
 export type DatamanagerResource = {
   created: string;
   dataManagerID: string;
   defaultLocale: string;
   description: string;
-  config: any;
+  config: Record<string, unknown>;
   hexColor: string;
   locales: string[];
   rights: string[];
   publicAssetRights: string[];
   shortID: string;
   title: string;
-  _links: any;
+  _links?: HalLinks;
 };
 
 export type DatamanagerList = {
@@ -81,11 +88,11 @@ export type AssetList = {
 export type ResourceList = {
   count: number;
   total: number;
-  items: any[];
+  items: unknown[];
 };
 
 export type ModelFieldConfig = {
-  default: any;
+  default: unknown;
   description: string;
   localizable: boolean;
   mutable: boolean;
@@ -98,22 +105,22 @@ export type ModelFieldConfig = {
 };
 
 export type ModelResource = {
-  config: any;
+  config: Record<string, unknown>;
   created: string;
   description: string;
   fields: ModelFieldConfig[];
   hasEntries: boolean;
   hexColor: string;
-  hooks: any[];
-  lastSyncs: any[];
+  hooks: unknown[];
+  lastSyncs: unknown[];
   locales: string[];
   modelID: string;
   modified: string;
-  policies: any[];
-  sync: any;
+  policies: unknown[];
+  sync: unknown;
   title: string;
   titleField: string;
-  _links: any;
+  _links?: HalLinks;
 };
 
 export type ModelList = {
@@ -148,10 +155,10 @@ export type TemplateResource = {
   templateID: string;
   name: string;
   version: string;
-  dataSchema: any;
-  template: any;
-  collection: any;
-  [key: string]: any;
+  dataSchema: Record<string, unknown>;
+  template: string;
+  collection: string | null;
+  [key: string]: unknown;
 };
 
 export type TemplateList = {
@@ -164,64 +171,62 @@ export type AssetGroupResource = {
   assetGroupID: string;
   dataManagerID: string;
   public: boolean;
-  settings: any;
-  [key: string]: any;
+  settings: Record<string, unknown>;
+  [key: string]: unknown;
 };
 
 export type RoleResource = {
   roleID: string;
   name: string;
   label: string;
-  accounts: string[];
+  accountsCount: number;
   addRegistered: boolean;
   addUnregistered: boolean;
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 export type ClientResource = {
   clientID: string;
-  callbackURL: string;
-  tokenMethod: string;
+  callbackURL: string | null;
+  tokenMethod: string[];
   disableStrategies: string[];
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 export type GroupResource = {
   groupID: string;
   name: string;
-  permissions: any[];
-  [key: string]: any;
+  permissions: string[];
+  [key: string]: unknown;
 };
 
 export type InviteResource = {
-  inviteID: string;
+  invite: string;
   email: string;
   groups: string[];
-  permissions: any[];
-  [key: string]: any;
+  permissions: string[];
+  [key: string]: unknown;
 };
 
 export type AccountResource = {
   accountID: string;
-  email: string;
-  created: string;
+  email: string | null;
+  created: string | null;
   hasPassword: boolean;
-  permissions: any[];
-  groups: string[];
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 export type TokenResource = {
   accessTokenID: string;
-  created: string;
-  device: string;
+  issued: string;
+  device: Record<string, unknown>;
   isCurrent: boolean;
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 export type FdkConfig = {
   storageAdapter?: StorageAdapter;
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 // --- Admin config types ---
@@ -232,7 +237,7 @@ export type AdminConfig = {
 };
 
 export type AdminListConfig = AdminConfig & {
-  options?: Record<string, any>;
+  options?: Record<string, unknown>;
 };
 
 export type AdminDmConfig = AdminConfig & {
@@ -240,7 +245,7 @@ export type AdminDmConfig = AdminConfig & {
 };
 
 export type AdminDmListConfig = AdminDmConfig & {
-  options?: Record<string, any>;
+  options?: Record<string, unknown>;
 };
 
 export type AdminResourceListConfig = AdminListConfig & {
@@ -248,15 +253,15 @@ export type AdminResourceListConfig = AdminListConfig & {
   subdomain?: string;
 };
 
-export type AdminCreateConfig<T = Record<string, any>> = AdminConfig & {
+export type AdminCreateConfig<T = Record<string, unknown>> = AdminConfig & {
   value: T;
 };
 
-export type AdminDmCreateConfig<T = Record<string, any>> = AdminDmConfig & {
+export type AdminDmCreateConfig<T = Record<string, unknown>> = AdminDmConfig & {
   value: T;
 };
 
-export type AdminEditConfig<K extends string, T = Record<string, any>> = AdminConfig & {
+export type AdminEditConfig<K extends string, T = Record<string, unknown>> = AdminConfig & {
   value: T;
 } & { [P in K]: string };
 

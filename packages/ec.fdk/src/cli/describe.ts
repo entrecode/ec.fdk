@@ -123,8 +123,8 @@ export async function describe(
       const entryBody = typeDefinitions["EntryResource"];
       if (entryBody) {
         let cleaned = entryBody
-          .replace(/Record<string,\s*any>\s*&\s*/, "")
-          .replace(/\s*\[key: string\]: any;[^\n]*\n?/, "\n");
+          .replace(/Record<string,\s*(?:any|unknown)>\s*&\s*/, "")
+          .replace(/\s*\[key: string\]: (?:any|unknown);[^\n]*\n?/, "\n");
         typeDefinitions["EntryResourceBase"] = cleaned;
         delete typeDefinitions["EntryResource"];
         // Update body/typeName references if this command returns EntryResource directly
