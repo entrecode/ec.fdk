@@ -23,7 +23,9 @@ import type {
   ModelList,
   ModelResource,
   PublicApiRoot,
+  ResourceItemRegistry,
   ResourceList,
+  ResourceRegistry,
   RoleResource,
   StorageAdapter,
   TemplateResource,
@@ -149,7 +151,7 @@ export function act(config: { action: 'getEcAuthKey'; env: string }): any;
 export function act(config: { action: 'getDatamanager' } & AdminDmConfig): Promise<DatamanagerResource>;
 export function act(config: { action: 'dmList' } & AdminListConfig): Promise<DatamanagerList>;
 export function act(config: { action: 'modelList' } & AdminDmListConfig): Promise<ModelList>;
-export function act(config: { action: 'resourceList' } & AdminResourceListConfig): Promise<ResourceList>;
+export function act<R extends string>(config: { action: 'resourceList'; resource: R } & Omit<AdminResourceListConfig, 'resource'>): Promise<R extends keyof ResourceRegistry ? ResourceRegistry[R] : ResourceList>;
 export function act(config: { action: 'resourceGet' } & AdminResourceListConfig): Promise<any>;
 export function act(config: { action: 'resourceEdit'; value: any } & AdminResourceListConfig): Promise<any>;
 export function act(config: { action: 'resourceDelete' } & AdminResourceListConfig): Promise<Response>;
@@ -248,7 +250,7 @@ function cleanResult(result: any) {
   return cleanEntry(result);
 }
 
-export class Fdk<TModel extends string = string> {
+export class Fdk<TModel extends string = string, TResource extends string = string> {
   /** @ignore */
   config: any;
   /** @ignore */
@@ -264,7 +266,7 @@ export class Fdk<TModel extends string = string> {
     this.config = config;
   }
   /** @ignore */
-  set(obj): Fdk<TModel> {
+  set(obj): Fdk<TModel, TResource> {
     // "copy on write"
     return new Fdk({ ...this.config, ...obj });
   }
@@ -489,9 +491,11 @@ export class Fdk<TModel extends string = string> {
    * @example
    * const res = await fdk("stage").resource("template").resourceList()
    */
-  async resourceList(options: GenericListOptions) {
+  async resourceList(options: GenericListOptions = {}): Promise<
+    TResource extends keyof ResourceRegistry ? ResourceRegistry[TResource] : ResourceList
+  > {
     const token = await this.getBestToken();
-    return resourceList({ ...this.config, options, token });
+    return resourceList({ ...this.config, options, token }) as any;
   }
 
   /**
@@ -502,9 +506,11 @@ export class Fdk<TModel extends string = string> {
    * @example
    * const model = await fdk("stage").resource("model").resourceGet({ dataManagerID: 'x', modelID: 'y' })
    */
-  async resourceGet(options: Record<string, any>) {
+  async resourceGet(options: Record<string, any>): Promise<
+    TResource extends keyof ResourceItemRegistry ? ResourceItemRegistry[TResource] : any
+  > {
     const token = await this.getBestToken();
-    return resourceGet({ ...this.config, options, token });
+    return resourceGet({ ...this.config, options, token }) as any;
   }
 
   /**
@@ -1004,8 +1010,8 @@ export class Fdk<TModel extends string = string> {
    * @category Entries
    * @param model name of the model
    */
-  model<M extends string>(model: M): Fdk<M> {
-    return this.set({ model }) as unknown as Fdk<M>;
+  model<M extends string>(model: M): Fdk<M, TResource> {
+    return this.set({ model }) as unknown as Fdk<M, TResource>;
   }
   /**
    * Sets the token to use in requests. Intended for usage with a fixed token in NodeJS.
@@ -1060,8 +1066,8 @@ export class Fdk<TModel extends string = string> {
    * @param resource name of the resource
    * @category Admin
    */
-  resource(resource: string) {
-    return this.set({ resource });
+  resource<R extends string>(resource: R): Fdk<TModel, R> {
+    return this.set({ resource }) as unknown as Fdk<TModel, R>;
   }
   /**
    * Sets the route to use.

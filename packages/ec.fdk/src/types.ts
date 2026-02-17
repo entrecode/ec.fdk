@@ -25,6 +25,32 @@ export type AssetResource = {
   thumbnails?: Thumbnail[];
 };
 
+/** Maps resource names to their list types. Used by Fdk.resourceList() for typed returns. */
+export interface ResourceRegistry {
+  account: AccountList;
+  group: GroupList;
+  role: RoleList;
+  client: ClientList;
+  invite: InviteList;
+  template: TemplateList;
+  assetgroup: AssetGroupList;
+  model: ModelList;
+  token: TokenList;
+}
+
+/** Maps resource names to their item types. Used by Fdk.resourceGet() for typed returns. */
+export interface ResourceItemRegistry {
+  account: AccountResource;
+  group: GroupResource;
+  role: RoleResource;
+  client: ClientResource;
+  invite: InviteResource;
+  template: TemplateResource;
+  assetgroup: AssetGroupResource;
+  model: ModelResource;
+  token: TokenResource;
+}
+
 // Empty by default — filled by generated declaration files via module augmentation
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ModelRegistry {}
@@ -86,14 +112,40 @@ export type EntryList = {
   items: EntryResource[];
 };
 
-export type PublicApiRoot = { _links: HalLinks; [key: string]: unknown };
+export type PublicApiModel = {
+  title: string;
+  modelID: string;
+  description: string;
+  titleField: string;
+  hexColor: string;
+  config: Record<string, unknown>;
+  _ref: string;
+};
+
+export type PublicApiRoot = {
+  _links: HalLinks;
+  dataManagerID: string;
+  defaultLocale: string;
+  description: string;
+  locales: string[];
+  title: string;
+  config: Record<string, unknown>;
+  account: unknown;
+  models: PublicApiModel[];
+  [key: string]: unknown;
+};
+
+export type DatamanagerConfig = {
+  assetSettings?: AssetGroupSettings;
+  [key: string]: unknown;
+};
 
 export type DatamanagerResource = {
   created: string;
   dataManagerID: string;
   defaultLocale: string;
   description: string;
-  config: Record<string, unknown>;
+  config: DatamanagerConfig;
   hexColor: string;
   locales: string[];
   rights: string[];
@@ -310,6 +362,7 @@ export type InviteResource = {
 export type AccountResource = {
   accountID: string;
   email: string | null;
+  name?: string;
   created: string | null;
   hasPassword: boolean;
   [key: string]: unknown;
