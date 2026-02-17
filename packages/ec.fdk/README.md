@@ -105,137 +105,81 @@ ec.fdk <command> [options]
 
 ### Commands
 
-#### Entry commands (require `--dm`, `--model`)
-
-| Command       | Description      | Required flags    |
-| ------------- | ---------------- | ----------------- |
-| `entryList`   | List entries     | `--dm`, `--model` |
-| `getEntry`    | Get a single entry | `--dm`, `--model`, `--id` |
-| `createEntry` | Create an entry  | `--dm`, `--model`, `--data` |
-| `editEntry`   | Edit an entry    | `--dm`, `--model`, `--id`, `--data` |
-| `deleteEntry` | Delete an entry  | `--dm`, `--model`, `--id` |
-| `getSchema`   | Get model schema | `--dm`, `--model` |
-
-#### Datamanager (`--id` = DM UUID)
-
-| Command             | Description          | Required flags |
-| ------------------- | -------------------- | -------------- |
-| `dmList`            | List datamanagers    | — |
-| `getDatamanager`    | Get a datamanager    | `--id` |
+| Command | Description | Required flags |
+| --- | --- | --- |
+| **Entries** | `--dm` = shortID, `--model` required | |
+| `entryList` | List entries | `--dm`, `--model` |
+| `getEntry` | Get a single entry | `--dm`, `--model`, `--id` |
+| `createEntry` | Create an entry | `--dm`, `--model`, `--data` |
+| `editEntry` | Edit an entry | `--dm`, `--model`, `--id`, `--data` |
+| `deleteEntry` | Delete an entry | `--dm`, `--model`, `--id` |
+| `getSchema` | Get model schema | `--dm`, `--model` |
+| **Datamanagers** | `--id` = DM UUID | |
+| `dmList` | List datamanagers | — |
+| `getDatamanager` | Get a datamanager | `--id` |
 | `createDatamanager` | Create a datamanager | `--data` |
-| `editDatamanager`   | Edit a datamanager (full PUT) | `--id`, `--data` |
+| `editDatamanager` | Edit a datamanager (full PUT) | `--id`, `--data` |
 | `deleteDatamanager` | Delete a datamanager | `--id` |
-| `getStats`          | Get datamanager stats | — |
-
-#### Model (`--id` = DM UUID)
-
-| Command       | Description    | Required flags |
-| ------------- | -------------- | -------------- |
-| `modelList`   | List models    | `--id` |
+| `getStats` | Get datamanager stats | — |
+| **Models** | `--id` = DM UUID | |
+| `modelList` | List models | `--id` |
 | `createModel` | Create a model | `--id`, `--data` |
-| `editModel`   | Edit a model   | `--id`, `--rid`, `--data` |
+| `editModel` | Edit a model | `--id`, `--rid`, `--data` |
 | `deleteModel` | Delete a model | `--id`, `--rid` |
-
-#### Template
-
-| Command          | Description       | Required flags |
-| ---------------- | ----------------- | -------------- |
+| **Templates** | | |
 | `createTemplate` | Create a template | `--data` |
-
-#### Asset Group (`--id` = DM UUID)
-
-| Command            | Description           | Required flags |
-| ------------------ | --------------------- | -------------- |
+| **Asset Groups** | `--id` = DM UUID | |
 | `createAssetGroup` | Create an asset group | `--id`, `--data` |
-| `editAssetGroup`   | Edit an asset group   | `--id`, `--rid`, `--data` |
-
-#### Assets (`--dm` = short ID)
-
-| Command       | Description                    | Required flags |
-| ------------- | ------------------------------ | -------------- |
-| `assetList`   | List assets                    | `--dm`, `--assetgroup` |
-| `getAsset`    | Get a single asset             | `--dm`, `--assetgroup`, `--rid` |
+| `editAssetGroup` | Edit an asset group | `--id`, `--rid`, `--data` |
+| **Assets** | `--dm` = shortID | |
+| `assetList` | List assets | `--dm`, `--assetgroup` |
+| `getAsset` | Get a single asset | `--dm`, `--assetgroup`, `--rid` |
 | `createAsset` | Upload asset(s) from local file | `--dm`, `--assetgroup`, `--file` (repeatable) |
-| `editAsset`   | Edit asset metadata            | `--dm`, `--assetgroup`, `--rid`, `--data` |
-| `deleteAsset` | Delete an asset                | `--dm`, `--assetgroup`, `--rid` |
-
-#### DM Client (`--id` = DM UUID)
-
-| Command        | Description      | Required flags |
-| -------------- | ---------------- | -------------- |
+| `editAsset` | Edit asset metadata | `--dm`, `--assetgroup`, `--rid`, `--data` |
+| `deleteAsset` | Delete an asset | `--dm`, `--assetgroup`, `--rid` |
+| **DM Clients** | `--id` = DM UUID | |
 | `editDmClient` | Edit a DM client | `--id`, `--rid`, `--data` |
-
-#### Role (`--id` = DM UUID)
-
-| Command      | Description   | Required flags |
-| ------------ | ------------- | -------------- |
+| **Roles** | `--id` = DM UUID | |
 | `createRole` | Create a role | `--id`, `--data` |
-| `editRole`   | Edit a role   | `--id`, `--rid`, `--data` |
+| `editRole` | Edit a role | `--id`, `--rid`, `--data` |
 | `deleteRole` | Delete a role | `--id`, `--rid` |
-
-#### DM Account (`--id` = DM UUID)
-
-| Command           | Description        | Required flags |
-| ----------------- | ------------------ | -------------- |
-| `editDmAccount`   | Edit a DM account  | `--id`, `--account-id`, `--data` |
+| **DM Accounts** | `--id` = DM UUID | |
+| `editDmAccount` | Edit a DM account | `--id`, `--account-id`, `--data` |
 | `deleteDmAccount` | Delete a DM account | `--id`, `--account-id` |
-
-#### Account Client
-
-| Command               | Description             | Required flags |
-| --------------------- | ----------------------- | -------------- |
+| **Account Clients** | | |
 | `createAccountClient` | Create an account client | `--data` |
-| `editAccountClient`   | Edit an account client  | `--rid`, `--data` |
+| `editAccountClient` | Edit an account client | `--rid`, `--data` |
 | `deleteAccountClient` | Delete an account client | `--rid` |
-
-#### Group
-
-| Command       | Description    | Required flags |
-| ------------- | -------------- | -------------- |
+| **Groups** | | |
 | `createGroup` | Create a group | `--data` |
-| `editGroup`   | Edit a group   | `--rid`, `--data` |
+| `editGroup` | Edit a group | `--rid`, `--data` |
 | `deleteGroup` | Delete a group | `--rid` |
-
-#### Invite
-
-| Command        | Description     | Required flags |
-| -------------- | --------------- | -------------- |
+| **Invites** | | |
 | `createInvite` | Create an invite | `--data` |
-| `editInvite`   | Edit an invite  | `--rid`, `--data` |
+| `editInvite` | Edit an invite | `--rid`, `--data` |
 | `deleteInvite` | Delete an invite | `--rid` |
-
-#### Account
-
-| Command       | Description    | Required flags |
-| ------------- | -------------- | -------------- |
+| **Accounts** | | |
 | `editAccount` | Edit an account | `--account-id`, `--data` |
-
-#### Tokens
-
-| Command       | Description    | Required flags |
-| ------------- | -------------- | -------------- |
-| `listTokens`  | List tokens    | `--account-id` |
+| **Tokens** | | |
+| `listTokens` | List tokens | `--account-id` |
 | `createToken` | Create a token | `--account-id` |
 | `deleteToken` | Delete a token | `--account-id`, `--rid` |
+| **Generic Resources** | | |
+| `resourceList` | List any resource type | `--resource`, `-f` |
+| `resourceGet` | Get a single resource | `--resource`, `-f` |
+| `resourceEdit` | Edit a single resource | `--resource`, `-f`, `--data` |
+| `resourceDelete` | Delete a single resource | `--resource`, `-f` |
+| **Other** | | |
+| `login` | Login via browser (OIDC). Use `--password` for email/password. | — |
+| `logout` | Logout and remove stored token | — |
+| `whoami` | Show current logged-in user | — |
+| `describe` | Show type definition for a command's return value | `<command>` |
+| `typegen` | Generate typed entry APIs (.d.ts) | `--dm` |
+| `getHistory` | Get dm-history entries | `-f shortID=<shortID>` |
+| `install-skill` | Install Claude Code skill | — |
+| `update` | Self-update ec.fdk | — |
 
-#### Other
-
-| Command        | Description               | Required flags |
-| -------------- | ------------------------- | -------------- |
-| `login`          | Login via browser (OIDC). Use `--password` for email/password prompt. | — |
-| `logout`         | Logout and remove stored token | — |
-| `whoami`         | Show current logged-in user | — |
-| `install-skill`  | Install Claude Code skill | — (optional `--dir <path>`) |
-| `update`         | Self-update ec.fdk        | — |
-| `resourceList`   | List any resource type    | `--resource`, `-f` for query params |
-| `resourceGet`    | Get a single resource     | `--resource`, `-f` for identifying params |
-| `resourceEdit`   | Edit a single resource    | `--resource`, `-f` for identifying params, `--data` |
-| `resourceDelete` | Delete a single resource  | `--resource`, `-f` for identifying params |
-| `describe`       | Show type definition for a command's return value | `<command>` |
-| `typegen`        | Generate typed entry APIs (.d.ts) for a datamanager | `--dm` (optional `--models`, `--out`) |
-| `getHistory`     | Get dm-history entries    | `-f shortID=<shortID>` |
-
-##### `resourceList` resource types
+**resourceList resource types:**
 
 | `--resource` | `--subdomain` | Typical filters |
 | --- | --- | --- |
@@ -376,7 +320,7 @@ ec.fdk dmList -f title~=myproject
 ec.fdk entryList -d <shortID> -m muffin | jq '.items | length'
 ```
 
-### Admin examples
+### Admin Examples
 
 ```sh
 # Datamanager stats
@@ -516,8 +460,6 @@ Without a generated file, everything falls back to the default `EntryResource` t
 | `--models <a,b,c>` | Only generate types for these models (comma-separated) |
 | `--out <path>` | Output file path (default: `./ec.fdk.generated.<shortID>.d.ts`) |
 
-#### Overriding Field Types
-
 JSON/object fields are generated as `unknown` since the schema has no structure info. You can refine these types by augmenting `ModelOverrides` in a separate file (so re-running `typegen` won't overwrite your changes):
 
 ```ts
@@ -578,6 +520,8 @@ ec.fdk describe entryList --dm 83cc6374 --model muffin
 
 Without `--dm`/`--model`, the generic `EntryResource` type with `[key: string]: any` is shown.
 
+### Filtering
+
 The `-f` flag maps directly to [entrecode filter query params](https://doc.entrecode.de/api-basics/#filtering). Common filter suffixes:
 
 | Suffix     | Meaning              | Example                        |
@@ -591,7 +535,7 @@ The `-f` flag maps directly to [entrecode filter query params](https://doc.entre
 
 Status/error messages go to stderr, data goes to stdout — so piping always works cleanly.
 
-## migration from ec.sdk
+## Migration from ec.sdk
 
 ec.fdk won't change / decorate data returned from ec APIs. For example, an entry returned from the datamanager will be returned as is.
 Advantages:
