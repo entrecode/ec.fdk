@@ -232,7 +232,7 @@ ec.fdk <command> [options]
 | `resourceEdit`   | Edit a single resource    | `--resource`, `-f` for identifying params, `--data` |
 | `resourceDelete` | Delete a single resource  | `--resource`, `-f` for identifying params |
 | `describe`       | Show type definition for a command's return value | `<command>` |
-| `typegen`        | Generate typed entry APIs (.d.ts) for a datamanager | `--dm` (optional `--out <path>`) |
+| `typegen`        | Generate typed entry APIs (.d.ts) for a datamanager | `--dm` (optional `--models`, `--out`) |
 | `getHistory`     | Get dm-history entries    | `-f shortID=<shortID>` |
 
 ##### `resourceList` resource types
@@ -276,7 +276,8 @@ ec.fdk <command> [options]
 | `--raw`                 | Include `_links` and `_embedded` in output        |
 | `--md`                  | Output entries as readable markdown table          |
 | `--short`               | Only print the return type, omit referenced types (for `describe`) |
-| `--out <path>`          | Output file path for `typegen` (default: `./ec.fdk.generated.d.ts`) |
+| `--models <a,b,c>`      | Only generate types for these models (comma-separated, `typegen` only) |
+| `--out <path>`          | Output file path for `typegen` (default: `./ec.fdk.generated.<shortID>.d.ts`) |
 | `-v, --version`         | Show version                                      |
 | `-h, --help`            | Show help                                         |
 
@@ -470,9 +471,17 @@ Generate a `.d.ts` declaration file that gives you type-safe entry APIs with aut
 # Requires login first
 ec.fdk login -e stage
 
-# Generate types
+# Generate types for all models (output: ./ec.fdk.generated.<shortID>.d.ts)
 ec.fdk typegen --dm <shortID> --env stage
+
+# Generate types for specific models only (faster, smaller output)
+ec.fdk typegen --dm <shortID> --models site,settings,membership_config
+
+# Custom output path
+ec.fdk typegen --dm <shortID> --out ./types/my-dm.d.ts
 ```
+
+The generated file includes a `// Regenerate:` comment with the exact command used, making it easy to re-run later.
 
 Place the generated file in your TypeScript project. After that, `model()` carries the model name as a type parameter, so all entry methods return typed results:
 
@@ -501,7 +510,8 @@ Without a generated file, everything falls back to the default `EntryResource` t
 | ------ | ----------- |
 | `--dm <shortID>` | DataManager short ID (required) |
 | `--env <env>` | `stage` (default) or `live` |
-| `--out <path>` | Output file path (default: `./ec.fdk.generated.d.ts`) |
+| `--models <a,b,c>` | Only generate types for these models (comma-separated) |
+| `--out <path>` | Output file path (default: `./ec.fdk.generated.<shortID>.d.ts`) |
 
 #### Overriding Field Types
 

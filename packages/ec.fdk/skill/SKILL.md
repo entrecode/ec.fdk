@@ -231,7 +231,7 @@ ec.fdk deleteToken --account-id <accountID> --rid <tokenID>
 | `logout` | — |
 | `whoami` | — |
 | `describe` | `<command>` |
-| `typegen` | `--dm` (optional `--out <path>`) |
+| `typegen` | `--dm` (optional `--models`, `--out`) |
 | `install-skill` | — (optional `--dir <path>`) |
 | `update` | — |
 
@@ -240,10 +240,19 @@ ec.fdk deleteToken --account-id <accountID> --rid <tokenID>
 Generate a `.d.ts` declaration file for type-safe entry APIs. Requires login.
 
 ```sh
+# Generate types for all models (output: ./ec.fdk.generated.<shortID>.d.ts)
 ec.fdk typegen --dm <shortID> --env stage
+
+# Generate types for specific models only (faster, smaller output)
+ec.fdk typegen --dm <shortID> --models site,settings,membership_config
+
+# Custom output path
+ec.fdk typegen --dm <shortID> --out ./types/my-dm.d.ts
 ```
 
-This introspects all models of a datamanager and produces a declaration file with module augmentation. When placed in a TypeScript project, `model("muffin")` gives autocomplete and type checking for muffin fields:
+The generated file includes a `// Regenerate:` comment with the exact command used, making it easy to re-run later.
+
+This introspects models of a datamanager and produces a declaration file with module augmentation. When placed in a TypeScript project, `model("muffin")` gives autocomplete and type checking for muffin fields:
 
 ```ts
 const muffin = await fdk('stage').dm('<shortID>').model('muffin').getEntry('abc');
@@ -340,7 +349,8 @@ Without `--dm`/`--model`, the generic `EntryResource` type is shown (with `[key:
 | `--raw` | Include `_links` and `_embedded` |
 | `--md` | Output as markdown table |
 | `--short` | Only print the return type, omit referenced types (for `describe`) |
-| `--out` | Output file path for `typegen` (default: `./ec.fdk.generated.d.ts`) |
+| `--models` | Only generate types for these models (comma-separated, `typegen` only) |
+| `--out` | Output file path for `typegen` (default: `./ec.fdk.generated.<shortID>.d.ts`) |
 
 ## Filter Suffixes
 

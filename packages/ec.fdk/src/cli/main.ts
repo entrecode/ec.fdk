@@ -119,7 +119,8 @@ Options:
   --raw                 Include _links and _embedded in output
   --md                  Output entries as readable markdown
   --short               Only print the return type, omit referenced types (describe)
-  --out <path>          Output file path for typegen (default: ./ec.fdk.generated.d.ts)
+  --models <a,b,c>      Only generate types for these models (comma-separated, typegen only)
+  --out <path>          Output file path for typegen (default: ./ec.fdk.generated.<shortID>.d.ts)
   -v, --version         Show version
   --password              Use email/password login instead of browser
   -h, --help            Show help`;
@@ -253,6 +254,7 @@ async function main() {
       short: { type: "boolean", default: false },
       dir: { type: "string" },
       out: { type: "string" },
+      models: { type: "string" },
       version: { type: "boolean", short: "v" },
       help: { type: "boolean", short: "h" },
     },
@@ -289,8 +291,9 @@ async function main() {
     await typegen({
       dm: values.dm,
       env: values.env as string,
-      out: values.out || "./ec.fdk.generated.d.ts",
+      out: values.out || `./ec.fdk.generated.${values.dm}.d.ts`,
       token,
+      models: values.models ? values.models.split(",").map((s) => s.trim()) : undefined,
     });
     return;
   }
