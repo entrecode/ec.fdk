@@ -200,7 +200,21 @@ export type GenericListOptions = {
   page?: number;
   size?: number;
   sort?: string;
+  [key: string]: unknown;
 };
+
+type FilterKeys<T> = {
+  [K in keyof T & string as K | `${K}~` | `${K}From` | `${K}To`]?: string;
+};
+
+type SystemFilterKeys = {
+  [K in '_created' | '_modified' | '_creator' | 'id' as K | `${K}~` | `${K}From` | `${K}To`]?: string;
+};
+
+export type EntryListOptions<M extends string> =
+  M extends keyof ModelRegistry
+    ? GenericListOptions & FilterKeys<ModelRegistry[M]> & SystemFilterKeys
+    : GenericListOptions;
 
 /** see https://doc.entrecode.de/datamanager/resources/asset/#relations_1 */
 export type AssetCreateOptions = {

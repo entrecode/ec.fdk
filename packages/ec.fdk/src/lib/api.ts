@@ -1,6 +1,7 @@
 import {
   AssetCreateOptions,
   EntryInput,
+  EntryListOptions,
   EntrySchema,
   FdkConfig,
   GenericListOptions,
@@ -198,7 +199,7 @@ export class Fdk<TModel extends string = string> {
    * // non-public model
    * const secrets = await fdk("stage").token(token).dm("83cc6374").model("secret").entryList()
    */
-  async entryList(options: GenericListOptions = {}): Promise<TypedEntryList<TModel>> {
+  async entryList(options: EntryListOptions<TModel> = {} as EntryListOptions<TModel>): Promise<TypedEntryList<TModel>> {
     const token = await this.getBestToken();
     return entryList({ ...this.config, options, token }).then((r) => this.maybeClean(r));
   }
