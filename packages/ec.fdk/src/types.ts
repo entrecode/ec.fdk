@@ -40,7 +40,7 @@ export type EntryResource = Record<string, unknown> & {
 };
 
 export type EntryFieldSchema = {
-  default: unknown;
+  default: string | number | boolean | null;
   description: string;
   readOnly: boolean;
   required: boolean;
@@ -92,7 +92,8 @@ export type ResourceList = {
 };
 
 export type ModelFieldConfig = {
-  default: unknown;
+  config: Record<string, unknown> | null;
+  default: string | number | boolean | null;
   description: string;
   localizable: boolean;
   mutable: boolean;
@@ -104,6 +105,41 @@ export type ModelFieldConfig = {
   validation: string | null;
 };
 
+export type HookDefinition = {
+  hook: 'before' | 'after' | 'event';
+  type: string;
+  methods: ('get' | 'put' | 'post' | 'delete')[];
+  config: Record<string, unknown>;
+  conditions?: Record<string, unknown> | null;
+  description?: string;
+  hookID?: string;
+};
+
+export type PolicyDefinition = {
+  method: 'get' | 'put' | 'post' | 'delete';
+  modelID?: string;
+  restrictToFields?: string[];
+  public?: boolean;
+  ecPermissionCondition?: boolean;
+  roles?: string[];
+  conditions?: Record<string, unknown> | null;
+};
+
+export type SyncDefinition = {
+  locale: string;
+  requests: {
+    uri: string;
+    method?: string;
+    body?: Record<string, unknown>;
+    headers?: Record<string, string>;
+    responseMapping?: Record<string, unknown>;
+  }[];
+  pathToArray: string;
+  remoteID: Record<string, unknown>;
+  itemMapping: Record<string, unknown>;
+  [key: string]: unknown;
+};
+
 export type ModelResource = {
   config: Record<string, unknown>;
   created: string;
@@ -111,13 +147,13 @@ export type ModelResource = {
   fields: ModelFieldConfig[];
   hasEntries: boolean;
   hexColor: string;
-  hooks: unknown[];
-  lastSyncs: unknown[];
+  hooks: HookDefinition[];
+  lastSyncs: Record<string, unknown>[];
   locales: string[];
   modelID: string;
   modified: string;
-  policies: unknown[];
-  sync: unknown;
+  policies: PolicyDefinition[];
+  sync: SyncDefinition | null;
   title: string;
   titleField: string;
   _links?: HalLinks;
@@ -167,11 +203,30 @@ export type TemplateList = {
   items: TemplateResource[];
 };
 
+export type AssetGroupSettings = {
+  urlExpiration?: string | null;
+  disabledTypes?: string[];
+  imageSizes?: number[];
+  thumbSizes?: number[];
+  preserveFilenames?: boolean;
+  includeAssetIDInPath?: boolean;
+  thumbMimeType?: string | null;
+  variantMimeType?: string | null;
+  jpegQuality?: number;
+  autoDelete?: string | null;
+  deletePermanently?: string;
+  defaultVariants?: number[];
+  additionalVariants?: string[] | null;
+  optimize?: boolean | null;
+  download?: boolean;
+  [key: string]: unknown;
+};
+
 export type AssetGroupResource = {
   assetGroupID: string;
   dataManagerID: string;
   public: boolean;
-  settings: Record<string, unknown>;
+  settings: AssetGroupSettings;
   [key: string]: unknown;
 };
 
@@ -216,10 +271,19 @@ export type AccountResource = {
   [key: string]: unknown;
 };
 
+export type DeviceInfo = {
+  browser: string;
+  version: string;
+  os: string;
+  platform: string;
+  source: string;
+  [key: string]: unknown;
+};
+
 export type TokenResource = {
   accessTokenID: string;
   issued: string;
-  device: Record<string, unknown>;
+  device: DeviceInfo;
   isCurrent: boolean;
   [key: string]: unknown;
 };
