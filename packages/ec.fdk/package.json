@@ -19,7 +19,7 @@
   },
   "scripts": {
     "build": "vite build && vite build --config vite.cli.config.js && tsc",
-    "build:cli": "vite build --config vite.cli.config.js && chmod +x dist/cli.cjs",
+    "build:cli": "vite build --config vite.cli.config.js && chmod +x dist/cli.cjs && tsc",
     "postbuild": "chmod +x dist/cli.cjs",
     "prepublishOnly": "npm run build",
     "docs": "typedoc --out ../../docs",
