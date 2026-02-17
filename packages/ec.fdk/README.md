@@ -276,7 +276,7 @@ ec.fdk <command> [options]
 | `--raw`                 | Include `_links` and `_embedded` in output        |
 | `--md`                  | Output entries as readable markdown table          |
 | `--short`               | Only print the return type, omit referenced types (for `describe`) |
-| `--out <path>`          | Output file path for `typegen` (default: `./ec.fdk.d.ts`) |
+| `--out <path>`          | Output file path for `typegen` (default: `./ec.fdk.generated.d.ts`) |
 | `-v, --version`         | Show version                                      |
 | `-h, --help`            | Show help                                         |
 
@@ -471,7 +471,7 @@ Generate a `.d.ts` declaration file that gives you type-safe entry APIs with aut
 ec.fdk login -e stage
 
 # Generate types
-ec.fdk typegen --dm <shortID> --env stage --out ./ec.fdk.d.ts
+ec.fdk typegen --dm <shortID> --env stage
 ```
 
 Place the generated file in your TypeScript project. After that, `model()` carries the model name as a type parameter, so all entry methods return typed results:
@@ -501,7 +501,7 @@ Without a generated file, everything falls back to the default `EntryResource` t
 | ------ | ----------- |
 | `--dm <shortID>` | DataManager short ID (required) |
 | `--env <env>` | `stage` (default) or `live` |
-| `--out <path>` | Output file path (default: `./ec.fdk.d.ts`) |
+| `--out <path>` | Output file path (default: `./ec.fdk.generated.d.ts`) |
 
 #### Overriding Field Types
 

@@ -119,7 +119,7 @@ Options:
   --raw                 Include _links and _embedded in output
   --md                  Output entries as readable markdown
   --short               Only print the return type, omit referenced types (describe)
-  --out <path>          Output file path for typegen (default: ./ec.fdk.d.ts)
+  --out <path>          Output file path for typegen (default: ./ec.fdk.generated.d.ts)
   -v, --version         Show version
   --password              Use email/password login instead of browser
   -h, --help            Show help`;
@@ -289,7 +289,7 @@ async function main() {
     await typegen({
       dm: values.dm,
       env: values.env as string,
-      out: values.out || "./ec.fdk.d.ts",
+      out: values.out || "./ec.fdk.generated.d.ts",
       token,
     });
     return;

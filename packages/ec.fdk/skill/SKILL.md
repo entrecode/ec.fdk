@@ -240,7 +240,7 @@ ec.fdk deleteToken --account-id <accountID> --rid <tokenID>
 Generate a `.d.ts` declaration file for type-safe entry APIs. Requires login.
 
 ```sh
-ec.fdk typegen --dm <shortID> --env stage --out ./ec.fdk.d.ts
+ec.fdk typegen --dm <shortID> --env stage
 ```
 
 This introspects all models of a datamanager and produces a declaration file with module augmentation. When placed in a TypeScript project, `model("muffin")` gives autocomplete and type checking for muffin fields:
@@ -340,7 +340,7 @@ Without `--dm`/`--model`, the generic `EntryResource` type is shown (with `[key:
 | `--raw` | Include `_links` and `_embedded` |
 | `--md` | Output as markdown table |
 | `--short` | Only print the return type, omit referenced types (for `describe`) |
-| `--out` | Output file path for `typegen` (default: `./ec.fdk.d.ts`) |
+| `--out` | Output file path for `typegen` (default: `./ec.fdk.generated.d.ts`) |
 
 ## Filter Suffixes
 
