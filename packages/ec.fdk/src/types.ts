@@ -283,13 +283,19 @@ export type StorageAdapter = {
   remove: (key: string) => void;
 };
 
+export type TemplateCollection = {
+  id: string;
+  name: string;
+  order: string[];
+};
+
 export type TemplateResource = {
   templateID: string;
   name: string;
   version: string;
   dataSchema: Record<string, unknown>;
   template: string;
-  collection: string | null;
+  collection: TemplateCollection[];
   [key: string]: unknown;
 };
 
@@ -323,6 +329,7 @@ export type AssetGroupResource = {
   dataManagerID: string;
   public: boolean;
   settings: AssetGroupSettings;
+  policies: PolicyDefinition[];
   [key: string]: unknown;
 };
 
@@ -338,9 +345,19 @@ export type RoleResource = {
 
 export type ClientResource = {
   clientID: string;
+  clientName: string;
+  clientType: string;
   callbackURL: string | null;
+  grantTypes: string[];
   tokenMethod: string[];
   disableStrategies: string[];
+  redirectURIs: string[];
+  postLogoutRedirectURIs: string[];
+  config: Record<string, unknown>;
+  authUIOrigin: string;
+  logoURI: string;
+  clientSecret: string;
+  tokenEndpointAuthMethod: string;
   [key: string]: unknown;
 };
 
@@ -351,11 +368,18 @@ export type GroupResource = {
   [key: string]: unknown;
 };
 
+export type InviteGroup = {
+  name: string;
+  groupID: string;
+};
+
 export type InviteResource = {
   invite: string;
   email: string;
-  groups: string[];
+  groups: InviteGroup[];
   permissions: string[];
+  created: string;
+  expires: string;
   [key: string]: unknown;
 };
 
@@ -363,6 +387,12 @@ export type AccountResource = {
   accountID: string;
   email: string | null;
   name?: string;
+  company?: string;
+  givenName?: string;
+  middleName?: string;
+  familyName?: string;
+  birthdate?: string;
+  gender?: string;
   created: string | null;
   hasPassword: boolean;
   [key: string]: unknown;
@@ -380,7 +410,10 @@ export type DeviceInfo = {
 export type TokenResource = {
   accessTokenID: string;
   issued: string;
+  validUntil: string;
   device: DeviceInfo;
+  ipAddress: string;
+  ipAddressLocation: unknown;
   isCurrent: boolean;
   [key: string]: unknown;
 };
