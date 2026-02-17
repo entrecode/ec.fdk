@@ -1,4 +1,4 @@
-import { AssetList, AssetResource } from "src/types";
+import { AssetList, AssetResource } from "../types";
 import { apiURL, expect, fetcher, query } from "./util";
 
 /** @ignore */

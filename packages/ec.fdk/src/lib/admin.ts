@@ -20,7 +20,7 @@ import {
   RoleResource,
   TemplateResource,
   TokenResource,
-} from "src/types";
+} from "../types";
 import { expect, query, apiURL, fetcher } from "./util";
 
 const jsonHeaders = { "Content-Type": "application/json" };

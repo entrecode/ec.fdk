@@ -7,7 +7,7 @@ import {
   StorageAdapter,
   TypedEntry,
   TypedEntryList,
-} from "src/types";
+} from "../types";
 import * as actions from "./actions";
 import { expect } from "./util";
 export * from "./util";

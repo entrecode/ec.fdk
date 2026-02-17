@@ -3,7 +3,7 @@ import {
   EntryList,
   EntryResource,
   PublicApiRoot,
-} from "src/types";
+} from "../types";
 import { apiURL, apis, expect, fetcher, query } from "./util";
 
 let systemFields = [
