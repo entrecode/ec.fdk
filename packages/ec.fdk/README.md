@@ -242,7 +242,7 @@ ec.fdk <command> [options]
 | `--account-id <id>`     | Account ID                                        |
 | `--assetgroup <name>`   | Asset group name (for asset commands)             |
 | `--file <path>`         | Local file path for `createAsset` (repeatable)    |
-| `--resource <name>`     | Resource name (for `resource*` commands)           |
+| `--resource <name>`     | Resource name (for `resource*` commands and `describe`) |
 | `--subdomain <name>`    | Subdomain override (for `resource*` commands)      |
 | `--data <json>`         | JSON data (for create/edit, or pipe via stdin)    |
 | `-s, --size <n>`        | Page size for list                                |
@@ -553,6 +553,23 @@ ec.fdk describe entryList --dm 83cc6374 --model muffin
 ```
 
 Without `--dm`/`--model`, the generic `EntryResource` type with `[key: string]: any` is shown.
+
+For resource commands (`resourceList`, `resourceGet`, `resourceEdit`), pass `--resource` to get the specific typed return:
+
+```sh
+ec.fdk describe resourceList --resource account
+# type AccountList = {
+#     count: number;
+#     total: number;
+#     items: AccountResource[];
+# }
+# type AccountResource = { accountID: string; email: string | null; ... }
+
+ec.fdk describe resourceGet --resource client
+# type ClientResource = { clientID: string; clientName: string; ... }
+```
+
+Without `--resource`, the generic `ResourceList` type is shown.
 
 ### Filtering
 

@@ -327,6 +327,21 @@ ec.fdk describe entryList --dm 83cc6374 --model muffin
 
 Without `--dm`/`--model`, the generic `EntryResource` type is shown (with `[key: string]: any`).
 
+For resource commands (`resourceList`, `resourceGet`, `resourceEdit`), pass `--resource` to get the specific typed return:
+
+```sh
+ec.fdk describe resourceList --resource account
+# Output:
+# type AccountList = { count: number; total: number; items: AccountResource[]; }
+# type AccountResource = { accountID: string; email: string | null; ... }
+
+ec.fdk describe resourceGet --resource client
+# Output:
+# type ClientResource = { clientID: string; clientName: string; ... }
+```
+
+Without `--resource`, the generic `ResourceList` type is shown.
+
 ## Options
 
 | Option | Description |
@@ -339,7 +354,7 @@ Without `--dm`/`--model`, the generic `EntryResource` type is shown (with `[key:
 | `--account-id` | Account ID |
 | `--assetgroup` | Asset group name (for asset commands) |
 | `--file` | File path for `createAsset` (repeatable for multiple files) |
-| `--resource` | Resource name (for `resource*` commands) |
+| `--resource` | Resource name (for `resource*` commands and `describe`) |
 | `--subdomain` | Subdomain override (for `resource*` commands, default: `datamanager`) |
 | `--data` | JSON data (via flag or stdin pipe) |
 | `-s, --size` | Page size |

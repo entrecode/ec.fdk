@@ -96,7 +96,7 @@ Commands:
     deleteToken           Delete a token (--account-id, --rid)
 
   Type introspection:
-    describe              Show return type for a command
+    describe              Show return type for a command (use --resource for resource commands)
     typegen               Generate typed entry APIs (.d.ts) for a datamanager
 
 Options:
@@ -278,6 +278,7 @@ async function main() {
       dm: values.dm,
       model: values.model,
       env: values.env as string,
+      resource: values.resource,
     });
     return;
   }

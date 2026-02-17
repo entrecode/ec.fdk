@@ -16,7 +16,7 @@ const SKIP_TYPES = new Set([
   'AdminConfig', 'AdminListConfig', 'AdminDmConfig', 'AdminDmListConfig',
   'AdminResourceListConfig', 'AdminCreateConfig', 'AdminDmCreateConfig',
   'AdminEditConfig', 'AdminDeleteConfig', 'GenericListOptions',
-  'AssetCreateOptions', 'StorageAdapter', 'FdkConfig', 'PublicApiRoot',
+  'AssetCreateOptions', 'StorageAdapter', 'FdkConfig',
 ]);
 
 function typeDefinitionsPlugin() {

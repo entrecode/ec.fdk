@@ -3,6 +3,31 @@ import { getSchema } from "../lib/entries";
 import { schemaTypeToTS } from "./schema-types";
 
 const entryCommands = new Set(["entryList", "getEntry", "createEntry", "editEntry"]);
+const resourceCommands = new Set(["resourceList", "resourceGet", "resourceEdit"]);
+
+const resourceListTypeMap: Record<string, string> = {
+  account: "AccountList",
+  group: "GroupList",
+  role: "RoleList",
+  client: "ClientList",
+  invite: "InviteList",
+  template: "TemplateList",
+  assetgroup: "AssetGroupList",
+  model: "ModelList",
+  token: "TokenList",
+};
+
+const resourceItemTypeMap: Record<string, string> = {
+  account: "AccountResource",
+  group: "GroupResource",
+  role: "RoleResource",
+  client: "ClientResource",
+  invite: "InviteResource",
+  template: "TemplateResource",
+  assetgroup: "AssetGroupResource",
+  model: "ModelResource",
+  token: "TokenResource",
+};
 
 const commandTypeMap: Record<string, string> = {
   entryList: "EntryList",
@@ -38,6 +63,22 @@ const commandTypeMap: Record<string, string> = {
   editAccount: "AccountResource",
   listTokens: "TokenList",
   createToken: "TokenResource",
+  publicApi: "PublicApiRoot",
+  resourceList: "ResourceList",
+  resourceGet: "any",
+  resourceEdit: "any",
+  resourceDelete: "void",
+  createAssets: "AssetResource",
+  mapEntries: "EntryResource",
+  getStats: "any",
+  getHistory: "any",
+  raw: "any",
+  loginEc: "any",
+  loginPublic: "any",
+  logoutEc: "void",
+  logoutPublic: "void",
+  getEcAuthKey: "any",
+  getPublicAuthKey: "any",
   deleteEntry: "void",
   deleteDatamanager: "void",
   deleteModel: "void",
@@ -52,7 +93,7 @@ const commandTypeMap: Record<string, string> = {
 export async function describe(
   command?: string,
   short?: boolean,
-  opts?: { dm?: string; model?: string; env?: string }
+  opts?: { dm?: string; model?: string; env?: string; resource?: string }
 ): Promise<void> {
   if (!command || !commandTypeMap[command]) {
     if (command) process.stderr.write(`Unknown command: ${command}\n\n`);
@@ -64,10 +105,26 @@ export async function describe(
     process.exit(command ? 2 : 0);
   }
 
-  const typeName = commandTypeMap[command];
+  let typeName = commandTypeMap[command];
+
+  // Override type when --resource is provided for resource commands
+  if (opts?.resource && resourceCommands.has(command)) {
+    const map = command === "resourceList" ? resourceListTypeMap : resourceItemTypeMap;
+    const resolved = map[opts.resource];
+    if (resolved) {
+      typeName = resolved;
+    } else {
+      process.stderr.write(`Unknown resource: ${opts.resource}. Known resources: ${Object.keys(map).join(", ")}\n`);
+    }
+  }
 
   if (typeName === "void") {
     process.stdout.write("This command returns no data.\n");
+    return;
+  }
+
+  if (typeName === "any") {
+    process.stdout.write("This command returns untyped data (any).\n");
     return;
   }
 
