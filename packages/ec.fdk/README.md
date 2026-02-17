@@ -518,7 +518,7 @@ Without a generated file, everything falls back to the default `EntryResource` t
 
 #### Overriding Field Types
 
-JSON/object fields are generated as `Record<string, any>` since the schema has no structure info. You can refine these types by augmenting `ModelOverrides` in a separate file (so re-running `typegen` won't overwrite your changes):
+JSON/object fields are generated as `unknown` since the schema has no structure info. You can refine these types by augmenting `ModelOverrides` in a separate file (so re-running `typegen` won't overwrite your changes):
 
 ```ts
 // ec.fdk.overrides.d.ts

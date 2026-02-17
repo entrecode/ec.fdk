@@ -273,7 +273,7 @@ Without a generated file, everything falls back to `EntryResource` with `[key: s
 
 ### Overriding Field Types
 
-JSON/object fields are generated as `Record<string, any>`. To refine them, augment `ModelOverrides` in a separate `.d.ts` file (won't be touched by `typegen`):
+JSON/object fields are generated as `unknown`. To refine them, augment `ModelOverrides` in a separate `.d.ts` file (won't be touched by `typegen`):
 
 ```ts
 // ec.fdk.overrides.d.ts
