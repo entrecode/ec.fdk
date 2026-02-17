@@ -332,8 +332,11 @@ export type TokenResource = {
   [key: string]: unknown;
 };
 
+export type Fetcher = (url: string, config?: { token?: string; rawRes?: boolean }, options?: RequestInit) => Promise<any>;
+
 export type FdkConfig = {
   storageAdapter?: StorageAdapter;
+  fetcher?: Fetcher;
   [key: string]: unknown;
 };
 

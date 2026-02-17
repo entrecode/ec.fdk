@@ -41,20 +41,22 @@ function withoutUndefinedValues(entryLike) {
 export async function publicApi(config): Promise<PublicApiRoot> {
   let { env, dmShortID } = config;
   expect({ env, dmShortID });
+  const _fetch = config.fetcher || fetcher;
   // name~ = search
   const url = apiURL(`api/${dmShortID}`, env);
-  return fetcher(url, config);
+  return _fetch(url, config);
 }
 
 /** @ignore */
 export async function entryList(config): Promise<EntryList> {
   let { env, dmShortID, model, options = {} } = config;
   expect({ env, dmShortID, model });
+  const _fetch = config.fetcher || fetcher;
   options = { size: 50, page: 1, _list: true, ...options };
   // name~ = search
   const q = query(options);
   const url = apiURL(`api/${dmShortID}/${model}?${q}`, env);
-  const { count, total, _embedded } = await fetcher(url, config);
+  const { count, total, _embedded } = await _fetch(url, config);
 
   let items = _embedded ? _embedded[`${dmShortID}:${model}`] : [];
   items = !Array.isArray(items) ? [items] : items;
@@ -62,30 +64,22 @@ export async function entryList(config): Promise<EntryList> {
 }
 
 /** @ignore */
-export function getEntry({
-  env,
-  dmShortID,
-  model,
-  entryID,
-  token,
-}): Promise<EntryResource> {
+export function getEntry(config): Promise<EntryResource> {
+  const { env, dmShortID, model, entryID, token } = config;
   expect({ env, dmShortID, model, entryID });
+  const _fetch = config.fetcher || fetcher;
   const q = query({ _id: entryID });
   const url = apiURL(`api/${dmShortID}/${model}?${q}`, env);
-  return fetcher(url, { token });
+  return _fetch(url, { token });
 }
 
 /** @ignore */
-export async function createEntry({
-  env,
-  dmShortID,
-  model,
-  value,
-  token,
-}): Promise<EntryResource> {
+export async function createEntry(config): Promise<EntryResource> {
+  const { env, dmShortID, model, value, token } = config;
   expect({ env, dmShortID, model, value });
+  const _fetch = config.fetcher || fetcher;
   const url = apiURL(`api/${dmShortID}/${model}`, env);
-  const res = await fetcher(
+  const res = await _fetch(
     url,
     { token },
     {
@@ -100,19 +94,10 @@ export async function createEntry({
 }
 
 /** @ignore */
-export async function editEntry({
-  env,
-  dmShortID,
-  model,
-  entryID,
-  value,
-  token,
-  safePut = false,
-}: Partial<EntryOptions> & {
-  value: any;
-  safePut?: boolean;
-}): Promise<EntryResource> {
+export async function editEntry(config): Promise<EntryResource> {
+  let { env, dmShortID, model, entryID, value, token, safePut = false } = config;
   expect({ env, dmShortID, model, entryID, value });
+  const _fetch = config.fetcher || fetcher;
   const headers = {
     "Content-Type": "application/json",
   };
@@ -127,7 +112,7 @@ export async function editEntry({
   value = withoutUndefinedValues(value);
   value = withoutSystemFields(value);
 
-  const res = await fetcher(
+  const res = await _fetch(
     url,
     { token },
     {
@@ -139,26 +124,14 @@ export async function editEntry({
   return res;
 }
 
-type EntryOptions = {
-  env: string;
-  dmShortID: string;
-  model: string;
-  entryID: string;
-  token: string;
-};
-
 /** @ignore */
-export function deleteEntry({
-  env,
-  dmShortID,
-  model,
-  entryID,
-  token,
-}: Partial<EntryOptions>): Promise<void> {
+export function deleteEntry(config): Promise<void> {
+  const { env, dmShortID, model, entryID, token } = config;
   expect({ env, dmShortID, model, entryID });
+  const _fetch = config.fetcher || fetcher;
   // console.log("edit entry", dmShortID, model, entryID, value);
   const url = apiURL(`api/${dmShortID}/${model}?_id=${entryID}`, env);
-  return fetcher(
+  return _fetch(
     url,
     { token, rawRes: true },
     {
@@ -196,11 +169,13 @@ export async function mapEntries(config, fn): Promise<EntryResource[]> {
 // error handling problems detail etc.. alles in message werfen oder ec.errors nehmen?
 
 /** @ignore */
-export async function getSchema({ env, dmShortID, model, withMetadata }) {
+export async function getSchema(config) {
+  const { env, dmShortID, model, withMetadata } = config;
   // https://datamanager.cachena.entrecode.de/api/schema/fb5dbaab/addon_config
   expect({ env, dmShortID, model });
+  const _fetch = config.fetcher || fetcher;
   const url = apiURL(`api/schema/${dmShortID}/${model}`, env);
-  const res = await fetcher(url);
+  const res = await _fetch(url);
   const schema = res?.allOf?.[1];
   if (typeof schema.properties !== "object") {
     throw new Error(

@@ -1,3 +1,5 @@
+export type { Fetcher } from "../types";
+
 /** @ignore */
 export async function fetcher(
   url,

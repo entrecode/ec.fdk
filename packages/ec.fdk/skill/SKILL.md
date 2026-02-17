@@ -406,6 +406,24 @@ When the user asks to "open" a resource, output the full editor URL. Use `open <
 | Account | `/accounts/{accountID}` |
 | Apps | `/apps` |
 
+## Custom Fetcher (Library API)
+
+The ec.fdk library supports a custom `fetcher` to replace the built-in HTTP layer. Use `.set({ fetcher })` to inject it. This is useful for mock/test modes — intercept all requests without monkey-patching `globalThis.fetch`:
+
+```ts
+import { fdk } from 'ec.fdk';
+
+const mockFetcher = async (url, config, options) => {
+  // return fixture data based on URL pattern matching
+  // must return parsed JSON in entrecode API shape (with _embedded, count, total)
+};
+
+const api = fdk('stage').token('my-token').set({ fetcher: mockFetcher });
+// all calls through api now use mockFetcher instead of real HTTP
+```
+
+The fetcher signature is `(url: string, config?: { token?: string; rawRes?: boolean }, options?: RequestInit) => Promise<any>`. The `Fetcher` type is exported from `ec.fdk`.
+
 ## Notes
 
 - Prefer `--fields` over filtering fields with `jq` — `--fields` reduces the response on the server side

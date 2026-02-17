@@ -2,17 +2,13 @@ import { AssetList, AssetResource } from "../types";
 import { apiURL, expect, fetcher, query } from "./util";
 
 /** @ignore */
-export async function getAsset({
-  env,
-  dmShortID,
-  assetGroup,
-  assetID,
-  token,
-}): Promise<AssetResource> {
+export async function getAsset(config): Promise<AssetResource> {
+  const { env, dmShortID, assetGroup, assetID, token } = config;
   expect({ env, dmShortID, assetGroup, assetID });
+  const _fetch = config.fetcher || fetcher;
   const q = query({ assetID: assetID });
   const url = apiURL(`a/${dmShortID}/${assetGroup}?${q}`, env);
-  const { _embedded } = await fetcher(url, { token });
+  const { _embedded } = await _fetch(url, { token });
   return _embedded ? _embedded["ec:dm-asset"] : undefined;
 }
 
@@ -20,11 +16,12 @@ export async function getAsset({
 export async function assetList(config): Promise<AssetList> {
   let { env, dmShortID, assetGroup, token, options = {} } = config;
   expect({ env, dmShortID, assetGroup });
+  const _fetch = config.fetcher || fetcher;
   options = { size: 50, page: 1, _list: true, ...options };
   // name~ = search
   const q = query(options);
   const url = apiURL(`a/${dmShortID}/${assetGroup}?${q}`, env);
-  const { count, total, _embedded } = await fetcher(url, { token });
+  const { count, total, _embedded } = await _fetch(url, { token });
   let items = _embedded ? _embedded["ec:dm-asset"] : [];
   items = !Array.isArray(items) ? [items] : items;
   return { count, total, items };
@@ -33,16 +30,10 @@ export async function assetList(config): Promise<AssetList> {
 /**
  * @ignore
  */
-export async function createAsset({
-  env,
-  dmShortID,
-  assetGroup,
-  token,
-  file,
-  name,
-  options,
-}): Promise<AssetResource> {
+export async function createAsset(config): Promise<AssetResource> {
+  const { env, dmShortID, assetGroup, token, file, name, options } = config;
   expect({ env, dmShortID, assetGroup, file });
+  const _fetch = config.fetcher || fetcher;
 
   const url = apiURL(`a/${dmShortID}/${assetGroup}`, env);
   const formData = new FormData();
@@ -53,7 +44,7 @@ export async function createAsset({
     });
   }
 
-  const list = await fetcher(
+  const list = await _fetch(
     url,
     { token },
     {
@@ -67,15 +58,10 @@ export async function createAsset({
 /**
  * @ignore
  */
-export async function createAssets({
-  env,
-  dmShortID,
-  assetGroup,
-  files,
-  options,
-  token,
-}): Promise<AssetResource[]> {
+export async function createAssets(config): Promise<AssetResource[]> {
+  const { env, dmShortID, assetGroup, files, options, token } = config;
   expect({ env, dmShortID, assetGroup, files });
+  const _fetch = config.fetcher || fetcher;
   const url = apiURL(`a/${dmShortID}/${assetGroup}`, env);
   const formData = new FormData();
   files.forEach((file: any) => {
@@ -86,7 +72,7 @@ export async function createAssets({
       formData.append(key, options[key]);
     });
   }
-  const list = await fetcher(
+  const list = await _fetch(
     url,
     { token },
     {
@@ -103,16 +89,12 @@ export async function createAssets({
 /**
  * @ignore
  */
-export async function deleteAsset({
-  env,
-  dmShortID,
-  assetGroup,
-  assetID,
-  token,
-}) {
+export async function deleteAsset(config) {
+  const { env, dmShortID, assetGroup, assetID, token } = config;
   expect({ env, dmShortID, assetGroup, assetID });
+  const _fetch = config.fetcher || fetcher;
   const url = apiURL(`a/${dmShortID}/${assetGroup}/${assetID}`, env);
-  await fetcher(
+  await _fetch(
     url,
     { token, rawRes: true },
     {

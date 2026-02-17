@@ -86,6 +86,40 @@ function App() {
 }
 ```
 
+## Custom Fetcher
+
+You can replace the built-in HTTP fetcher with a custom function via `.set({ fetcher })`. This is useful for testing and mock modes — intercept all ec.fdk requests without monkey-patching `globalThis.fetch`:
+
+```js
+import { fdk } from 'ec.fdk';
+
+const mockFetcher = async (url, config, options) => {
+  // return fixture data based on URL
+  if (url.includes('/api/myShortID/settings')) {
+    return {
+      count: 1, total: 1,
+      _embedded: { 'myShortID:settings': [{ subdomain: 'test' }] },
+    };
+  }
+  return { count: 0, total: 0, _embedded: {} };
+};
+
+const api = fdk('stage')
+  .token('my-token')
+  .set({ fetcher: mockFetcher });
+
+// uses mockFetcher instead of real HTTP — works with the full chaining API
+const list = await api.dm('myShortID').model('settings').entryList();
+```
+
+The custom fetcher has the same signature as the internal fetcher: `(url: string, config?: { token?: string; rawRes?: boolean }, options?: RequestInit) => Promise<any>`. It must return parsed JSON (not a `Response` object) in the same shape as the entrecode API.
+
+The `Fetcher` type is exported for convenience:
+
+```ts
+import type { Fetcher } from 'ec.fdk';
+```
+
 ## CLI
 
 ec.fdk also ships a CLI for quick shell-based interaction with entrecode APIs. Output is JSON, so you can pipe it into `jq` and friends.
