@@ -71,7 +71,7 @@ const commandTypeMap: Record<string, string> = {
   createAssets: "AssetResource",
   mapEntries: "EntryResource",
   getStats: "any",
-  getHistory: "any",
+  getHistory: "HistoryList",
   raw: "any",
   loginEc: "any",
   loginPublic: "any",

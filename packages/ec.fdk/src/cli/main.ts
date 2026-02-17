@@ -781,7 +781,7 @@ async function main() {
       case "listTokens": {
         if (!values["account-id"]) error("--account-id is required for listTokens");
         const tokens = await sdk.listTokens(values["account-id"]);
-        result = values.raw ? tokens : tokens.map(cleanItem);
+        result = values.raw ? tokens : { ...tokens, items: tokens.items.map(cleanItem) };
         break;
       }
       case "createToken": {

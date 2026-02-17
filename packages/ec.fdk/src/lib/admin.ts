@@ -19,7 +19,9 @@ import {
   ResourceList,
   RoleResource,
   TemplateResource,
+  TokenList,
   TokenResource,
+  HistoryList,
 } from "../types";
 import { expect, query, apiURL, fetcher } from "./util";
 
@@ -417,7 +419,7 @@ export async function getStats(config: AdminListConfig): Promise<any> {
 // --- History ---
 
 /** @ignore */
-export async function getHistory(config: AdminListConfig): Promise<any> {
+export async function getHistory(config: AdminListConfig): Promise<HistoryList> {
   let { env, token, options = {} } = config;
   expect({ env });
   const q = query(options);
@@ -583,14 +585,15 @@ export async function editAccount(
 /** @ignore */
 export async function listTokens(
   config: AdminConfig & { accountID: string },
-): Promise<TokenResource[]> {
+): Promise<TokenList> {
   let { env, token, accountID } = config;
   expect({ env, accountID });
   const q = query({ accountID });
   const url = apiURL(`account/tokens?${q}`, env, "accounts");
   const res = await fetcher(url, { token });
   let items = res?._embedded?.["ec:account/token"] ?? [];
-  return !Array.isArray(items) ? [items] : items;
+  items = !Array.isArray(items) ? [items] : items;
+  return { count: items.length, total: res?.count ?? items.length, items };
 }
 
 /** @ignore */

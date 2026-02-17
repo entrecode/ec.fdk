@@ -36,6 +36,7 @@ export interface ResourceRegistry {
   assetgroup: AssetGroupList;
   model: ModelList;
   token: TokenList;
+  tag: TagList;
 }
 
 /** Maps resource names to their item types. Used by Fdk.resourceGet() for typed returns. */
@@ -49,6 +50,7 @@ export interface ResourceItemRegistry {
   assetgroup: AssetGroupResource;
   model: ModelResource;
   token: TokenResource;
+  tag: TagResource;
 }
 
 // Empty by default — filled by generated declaration files via module augmentation
@@ -487,7 +489,7 @@ export type ClientList = {
 export type DmAccountList = {
   count: number;
   total: number;
-  items: AccountResource[];
+  items: DmAccountResource[];
 };
 
 export type GroupList = {
@@ -512,4 +514,61 @@ export type TokenList = {
   count: number;
   total: number;
   items: TokenResource[];
+};
+
+export type TagResource = {
+  tag: string;
+  count: number;
+  [key: string]: unknown;
+};
+
+export type TagList = {
+  count: number;
+  total: number;
+  items: TagResource[];
+};
+
+export type DmAccountResource = {
+  accountID: string;
+  email: string | null;
+  hasPassword: boolean;
+  oauth: string[];
+  created: string;
+  pending: boolean;
+  pendingUpdated: string;
+  blocked: boolean;
+  _links?: HalLinks;
+  [key: string]: unknown;
+};
+
+export type DmClientResource = {
+  clientID: string;
+  callbackURL: string;
+  tokenMethod: string[];
+  disableStrategies: string[];
+  hexColor: string;
+  [key: string]: unknown;
+};
+
+export type DmClientList = {
+  count: number;
+  total: number;
+  items: DmClientResource[];
+};
+
+export type HistoryResource = {
+  type: string;
+  entryID: string;
+  modelID: string;
+  shortID: string;
+  timestamp: string;
+  data: unknown;
+  user: { accountID: string; userType: string };
+  [key: string]: unknown;
+};
+
+export type HistoryList = {
+  count: number;
+  total: number;
+  items: HistoryResource[];
 };
