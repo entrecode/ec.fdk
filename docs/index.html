@@ -468,7 +468,7 @@
 <tr>
 <td><code>typegen</code></td>
 <td>Generate typed entry APIs (.d.ts) for a datamanager</td>
-<td><code>--dm</code> (optional <code>--out &lt;path&gt;</code>)</td>
+<td><code>--dm</code> (optional <code>--models</code>, <code>--out</code>)</td>
 </tr>
 <tr>
 <td><code>getHistory</code></td>
@@ -637,8 +637,12 @@
 <td>Only print the return type, omit referenced types (for <code>describe</code>)</td>
 </tr>
 <tr>
+<td><code>--models &lt;a,b,c&gt;</code></td>
+<td>Only generate types for these models (comma-separated, <code>typegen</code> only)</td>
+</tr>
+<tr>
 <td><code>--out &lt;path&gt;</code></td>
-<td>Output file path for <code>typegen</code> (default: <code>./ec.fdk.generated.d.ts</code>)</td>
+<td>Output file path for <code>typegen</code> (default: <code>./ec.fdk.generated.&lt;shortID&gt;.d.ts</code>)</td>
 </tr>
 <tr>
 <td><code>-v, --version</code></td>
@@ -734,9 +738,10 @@
 </code><button type="button">Copy</button></pre>
 
 <a id="typegen--typed-entry-apis" class="tsd-anchor"></a><h3 class="tsd-anchor-link">Typegen — Typed Entry APIs<a href="#typegen--typed-entry-apis" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Generate a <code>.d.ts</code> declaration file that gives you type-safe entry APIs with autocomplete for all models in a datamanager:</p>
-<pre><code class="sh"><span class="hl-5"># Requires login first</span><br/><span class="hl-0">ec.fdk</span><span class="hl-1"> </span><span class="hl-2">login</span><span class="hl-1"> </span><span class="hl-6">-e</span><span class="hl-1"> </span><span class="hl-2">stage</span><br/><br/><span class="hl-5"># Generate types</span><br/><span class="hl-0">ec.fdk</span><span class="hl-1"> </span><span class="hl-2">typegen</span><span class="hl-1"> </span><span class="hl-6">--dm</span><span class="hl-1"> &lt;</span><span class="hl-2">shortI</span><span class="hl-1">D&gt; </span><span class="hl-6">--env</span><span class="hl-1"> </span><span class="hl-2">stage</span>
+<pre><code class="sh"><span class="hl-5"># Requires login first</span><br/><span class="hl-0">ec.fdk</span><span class="hl-1"> </span><span class="hl-2">login</span><span class="hl-1"> </span><span class="hl-6">-e</span><span class="hl-1"> </span><span class="hl-2">stage</span><br/><br/><span class="hl-5"># Generate types for all models (output: ./ec.fdk.generated.&lt;shortID&gt;.d.ts)</span><br/><span class="hl-0">ec.fdk</span><span class="hl-1"> </span><span class="hl-2">typegen</span><span class="hl-1"> </span><span class="hl-6">--dm</span><span class="hl-1"> &lt;</span><span class="hl-2">shortI</span><span class="hl-1">D&gt; </span><span class="hl-6">--env</span><span class="hl-1"> </span><span class="hl-2">stage</span><br/><br/><span class="hl-5"># Generate types for specific models only (faster, smaller output)</span><br/><span class="hl-0">ec.fdk</span><span class="hl-1"> </span><span class="hl-2">typegen</span><span class="hl-1"> </span><span class="hl-6">--dm</span><span class="hl-1"> &lt;</span><span class="hl-2">shortI</span><span class="hl-1">D&gt; </span><span class="hl-6">--models</span><span class="hl-1"> </span><span class="hl-2">site,settings,membership_config</span><br/><br/><span class="hl-5"># Custom output path</span><br/><span class="hl-0">ec.fdk</span><span class="hl-1"> </span><span class="hl-2">typegen</span><span class="hl-1"> </span><span class="hl-6">--dm</span><span class="hl-1"> &lt;</span><span class="hl-2">shortI</span><span class="hl-1">D&gt; </span><span class="hl-6">--out</span><span class="hl-1"> </span><span class="hl-2">./types/my-dm.d.ts</span>
 </code><button type="button">Copy</button></pre>
 
+<p>The generated file includes a <code>// Regenerate:</code> comment with the exact command used, making it easy to re-run later.</p>
 <p>Place the generated file in your TypeScript project. After that, <code>model()</code> carries the model name as a type parameter, so all entry methods return typed results:</p>
 <pre><code class="ts"><span class="hl-3">import</span><span class="hl-1"> { </span><span class="hl-4">fdk</span><span class="hl-1"> } </span><span class="hl-3">from</span><span class="hl-1"> </span><span class="hl-2">&#39;ec.fdk&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">muffin</span><span class="hl-1"> = </span><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">fdk</span><span class="hl-1">(</span><span class="hl-2">&#39;stage&#39;</span><span class="hl-1">).</span><span class="hl-0">dm</span><span class="hl-1">(</span><span class="hl-2">&#39;&lt;shortID&gt;&#39;</span><span class="hl-1">).</span><span class="hl-0">model</span><span class="hl-1">(</span><span class="hl-2">&#39;muffin&#39;</span><span class="hl-1">).</span><span class="hl-0">getEntry</span><span class="hl-1">(</span><span class="hl-2">&#39;abc&#39;</span><span class="hl-1">);</span><br/><span class="hl-4">muffin</span><span class="hl-1">.</span><span class="hl-4">name</span><span class="hl-1">;           </span><span class="hl-5">// string — autocomplete works</span><br/><span class="hl-4">muffin</span><span class="hl-1">.</span><span class="hl-4">amazement_factor</span><span class="hl-1">; </span><span class="hl-5">// number</span><br/><span class="hl-4">muffin</span><span class="hl-1">.</span><span class="hl-4">bogus</span><span class="hl-1">;          </span><span class="hl-5">// type error</span><br/><br/><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">fdk</span><span class="hl-1">(</span><span class="hl-2">&#39;stage&#39;</span><span class="hl-1">).</span><span class="hl-0">dm</span><span class="hl-1">(</span><span class="hl-2">&#39;&lt;shortID&gt;&#39;</span><span class="hl-1">).</span><span class="hl-0">model</span><span class="hl-1">(</span><span class="hl-2">&#39;muffin&#39;</span><span class="hl-1">).</span><span class="hl-0">createEntry</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-4">name:</span><span class="hl-1"> </span><span class="hl-2">&#39;Blueberry&#39;</span><span class="hl-1">,       </span><span class="hl-5">// required string</span><br/><span class="hl-1">  </span><span class="hl-4">amazement_factor:</span><span class="hl-1"> </span><span class="hl-8">9</span><span class="hl-1">,     </span><span class="hl-5">// required number</span><br/><span class="hl-1">  </span><span class="hl-4">color:</span><span class="hl-1"> </span><span class="hl-2">&#39;blue&#39;</span><span class="hl-1">,           </span><span class="hl-5">// required string</span><br/><span class="hl-1">});</span><br/><br/><span class="hl-3">await</span><span class="hl-1"> </span><span class="hl-0">fdk</span><span class="hl-1">(</span><span class="hl-2">&#39;stage&#39;</span><span class="hl-1">).</span><span class="hl-0">dm</span><span class="hl-1">(</span><span class="hl-2">&#39;&lt;shortID&gt;&#39;</span><span class="hl-1">).</span><span class="hl-0">model</span><span class="hl-1">(</span><span class="hl-2">&#39;muffin&#39;</span><span class="hl-1">).</span><span class="hl-0">editEntry</span><span class="hl-1">(</span><span class="hl-2">&#39;abc&#39;</span><span class="hl-1">, {</span><br/><span class="hl-1">  </span><span class="hl-4">name:</span><span class="hl-1"> </span><span class="hl-2">&#39;Updated&#39;</span><span class="hl-1">,         </span><span class="hl-5">// partial — only changed fields needed</span><br/><span class="hl-1">});</span>
 </code><button type="button">Copy</button></pre>
@@ -759,8 +764,12 @@
 <td><code>stage</code> (default) or <code>live</code></td>
 </tr>
 <tr>
+<td><code>--models &lt;a,b,c&gt;</code></td>
+<td>Only generate types for these models (comma-separated)</td>
+</tr>
+<tr>
 <td><code>--out &lt;path&gt;</code></td>
-<td>Output file path (default: <code>./ec.fdk.generated.d.ts</code>)</td>
+<td>Output file path (default: <code>./ec.fdk.generated.&lt;shortID&gt;.d.ts</code>)</td>
 </tr>
 </tbody>
 </table>
