@@ -503,6 +503,24 @@ Without a generated file, everything falls back to the default `EntryResource` t
 | `--env <env>` | `stage` (default) or `live` |
 | `--out <path>` | Output file path (default: `./ec.fdk.d.ts`) |
 
+#### Overriding Field Types
+
+JSON/object fields are generated as `Record<string, any>` since the schema has no structure info. You can refine these types by augmenting `ModelOverrides` in a separate file (so re-running `typegen` won't overwrite your changes):
+
+```ts
+// ec.fdk.overrides.d.ts
+export {};
+declare module "ec.fdk" {
+  interface ModelOverrides {
+    "restaurant": {
+      cuisine?: { italian: boolean; maxSeats: number } | null;
+    };
+  }
+}
+```
+
+Only the fields you list are overridden — all other fields keep their generated types.
+
 ### Describe
 
 Show the return type of any command:

@@ -29,6 +29,15 @@ export type AssetResource = {
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ModelRegistry {}
 
+// Augment this interface in a separate .d.ts file to override field types (e.g. JSON fields)
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface ModelOverrides {}
+
+type ApplyOverrides<M extends string, T> =
+  M extends keyof ModelOverrides
+    ? Omit<T, keyof ModelOverrides[M]> & ModelOverrides[M]
+    : T;
+
 export type EntryResourceBase = {
   id: string;
   _created: Date;
@@ -46,12 +55,12 @@ export type EntryResource = EntryResourceBase & { [key: string]: unknown };
 
 export type TypedEntry<M extends string> =
   M extends keyof ModelRegistry
-    ? EntryResourceBase & ModelRegistry[M]
+    ? EntryResourceBase & ApplyOverrides<M, ModelRegistry[M]>
     : EntryResource;
 
 export type EntryInput<M extends string> =
   M extends keyof ModelRegistry
-    ? ModelRegistry[M]
+    ? ApplyOverrides<M, ModelRegistry[M]>
     : Record<string, unknown>;
 
 export type TypedEntryList<M extends string> = {

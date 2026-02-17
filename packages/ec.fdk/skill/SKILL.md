@@ -259,6 +259,24 @@ await fdk('stage').dm('<shortID>').model('muffin').createEntry({
 
 Without a generated file, everything falls back to `EntryResource` with `[key: string]: unknown` — fully backwards-compatible.
 
+### Overriding Field Types
+
+JSON/object fields are generated as `Record<string, any>`. To refine them, augment `ModelOverrides` in a separate `.d.ts` file (won't be touched by `typegen`):
+
+```ts
+// ec.fdk.overrides.d.ts
+export {};
+declare module "ec.fdk" {
+  interface ModelOverrides {
+    "restaurant": {
+      cuisine?: { italian: boolean; maxSeats: number } | null;
+    };
+  }
+}
+```
+
+Only listed fields are overridden — all other fields keep their generated types.
+
 ## Describe
 
 Show the return type of any command — useful for understanding response shapes. Referenced types are printed automatically:
