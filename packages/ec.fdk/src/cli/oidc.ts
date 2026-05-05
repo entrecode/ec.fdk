@@ -90,7 +90,17 @@ export function loginOidc(env: "stage" | "live"): Promise<OidcTokens> {
         return;
       }
 
-      const params = new URL(req.url, "http://localhost").searchParams;
+      let params: URLSearchParams;
+      if (req.method === "POST") {
+        const body = await new Promise<string>((resolve) => {
+          let data = "";
+          req.on("data", (chunk) => (data += chunk));
+          req.on("end", () => resolve(data));
+        });
+        params = new URLSearchParams(body);
+      } else {
+        params = new URL(req.url, "http://localhost").searchParams;
+      }
       const code = params.get("code");
       const returnedState = params.get("state");
       const error = params.get("error");
@@ -173,6 +183,7 @@ export function loginOidc(env: "stage" | "live"): Promise<OidcTokens> {
           client_id: CLIENT_ID,
           redirect_uri: REDIRECT_URI,
           response_type: "code",
+          response_mode: "query",
           scope: "openid offline_access",
           state,
           code_challenge: challenge,
