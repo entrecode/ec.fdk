@@ -2,6 +2,8 @@ import {
   AssetResource,
   EntryList,
   EntryResource,
+  Fetcher,
+  GenericListOptions,
   PublicApiRoot,
 } from "../types";
 import { apiURL, apis, expect, fetcher, query } from "./util";
@@ -144,13 +146,23 @@ export function deleteEntry(config): Promise<void> {
 }
 
 /** @ignore */
-export async function mapEntries(config, fn): Promise<EntryResource[]> {
+export async function mapEntries<R = EntryResource>(
+  config: {
+    env: string;
+    dmShortID: string;
+    model: string;
+    options?: GenericListOptions;
+    token?: string;
+    fetcher?: Fetcher;
+  },
+  fn: (entry: EntryResource) => R | Promise<R>,
+): Promise<R[]> {
   let { env, dmShortID, model, options = {} } = config;
   expect({ env, dmShortID, model });
   config.options = { size: 50, page: 1, _list: true, ...options };
   let processed = 0,
     total;
-  let res = [];
+  let res: R[] = [];
   while (total === undefined || processed < total) {
     const list = await entryList(config);
     for (let entry of list.items) {
@@ -158,7 +170,7 @@ export async function mapEntries(config, fn): Promise<EntryResource[]> {
     }
     processed += list.items.length;
     total = list.total;
-    config.options.page++;
+    config.options.page!++;
     // console.log(`processed ${processed}/${total}`);
   }
   return res;

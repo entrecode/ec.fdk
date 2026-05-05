@@ -133,7 +133,7 @@ export function act<M extends string>(config: { action: 'createEntry'; model: M;
 export function act<M extends string>(config: { action: 'editEntry'; model: M; entryID: string; value: Partial<EntryInput<M>> } & ActBase): Promise<TypedEntry<M>>;
 export function act<M extends string>(config: { action: 'deleteEntry'; model: M; entryID: string } & ActBase): Promise<void>;
 export function act(config: { action: 'publicApi' } & ActBase): Promise<PublicApiRoot>;
-export function act(config: { action: 'mapEntries'; model: string; options?: GenericListOptions } & ActBase & { fn: (entry: EntryResource) => EntryResource }): Promise<EntryResource[]>;
+export function act<M extends string, R = TypedEntry<M>>(config: { action: 'mapEntries'; model: M; options?: GenericListOptions; fn: (entry: TypedEntry<M>) => R | Promise<R> } & ActBase): Promise<R[]>;
 export function act(config: { action: 'getSchema'; model: string; withMetadata?: boolean } & ActBase): Promise<EntrySchema>;
 export function act(config: { action: 'getPermissions' } & ActBase): Promise<string[]>;
 // --- Asset actions ---
@@ -297,8 +297,11 @@ export class Fdk<TModel extends string = string, TResource extends string = stri
   }
 
   /**
-   * Maps over entry list.
+   * Maps over entry list. Auto-paginates through all pages, applying `fn` to each entry and
+   * collecting the results. The equivalent of ec.sdk's `entryList(...).getAllItems()` when used
+   * as `mapEntries((e) => e)`.
    *
+   * @param fn function called per entry; the return type drives the result element type
    * @param options options for entry list request.
    * @category Entries
    * @example
@@ -306,10 +309,16 @@ export class Fdk<TModel extends string = string, TResource extends string = stri
    * const muffins = fdk("stage").dm("83cc6374").model("muffin")
    * const res = await muffin.mapEntries((entry) => muffin.editEntry(entry.id, { name: entry.name + "!" }));
    * console.log("res", res);
+   * @example
+   * // identity = "give me everything"
+   * const all = await fdk("stage").dm("83cc6374").model("muffin").mapEntries((e) => e);
    */
-  async mapEntries(fn, options: GenericListOptions = {}) {
+  async mapEntries<R = TypedEntry<TModel>>(
+    fn: (entry: TypedEntry<TModel>) => R | Promise<R>,
+    options: GenericListOptions = {},
+  ): Promise<R[]> {
     const token = await this.getBestToken();
-    return mapEntries({ ...this.config, options, token }, fn);
+    return mapEntries({ ...this.config, options, token }, fn as (entry: EntryResource) => R | Promise<R>);
   }
   /**
    * Loads a single entry. Expects `dmShortID` / `model` to be set.
