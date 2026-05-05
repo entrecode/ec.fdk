@@ -24,6 +24,7 @@ Commands:
     editEntry             Edit an entry (--id, --data)
     deleteEntry           Delete an entry (--id)
     getSchema             Get model schema
+    getPermissions        Get current token's permission strings on the DM (--dm)
 
   Admin list commands:
     dmList                List datamanagers
@@ -496,6 +497,11 @@ async function main() {
       }
       case "getHistory": {
         result = await sdk.getHistory(listOpts());
+        break;
+      }
+      case "getPermissions": {
+        if (!values.dm) error("--dm is required");
+        result = await sdk.dm(values.dm as string).getPermissions();
         break;
       }
 

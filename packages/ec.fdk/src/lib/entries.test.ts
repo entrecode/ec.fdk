@@ -298,6 +298,41 @@ describe("getSchema", () => {
   });
 });
 
+// --- getPermissions ---
+
+describe("getPermissions", () => {
+  it("fetches the permissions endpoint with token", async () => {
+    mockFetcher.mockResolvedValue({ permissions: ["entry:muffin:read", "entry:muffin:write"] });
+    const result = await entries.getPermissions({ env: "stage", dmShortID: "abc123", token: "tk" });
+    expect(mockFetcher).toHaveBeenCalledWith(
+      `${DM}api/abc123/_permissions`,
+      { token: "tk" },
+    );
+    expect(result).toEqual(["entry:muffin:read", "entry:muffin:write"]);
+  });
+
+  it("returns empty array when permissions field is missing", async () => {
+    mockFetcher.mockResolvedValue({ permissions: [] });
+    const result = await entries.getPermissions({ env: "stage", dmShortID: "abc123" });
+    expect(result).toEqual([]);
+  });
+
+  it("returns empty array when response has no permissions key", async () => {
+    mockFetcher.mockResolvedValue({});
+    const result = await entries.getPermissions({ env: "stage", dmShortID: "abc123" });
+    expect(result).toEqual([]);
+  });
+
+  it("works without a token (anonymous)", async () => {
+    mockFetcher.mockResolvedValue({ permissions: [] });
+    await entries.getPermissions({ env: "stage", dmShortID: "abc123" });
+    expect(mockFetcher).toHaveBeenCalledWith(
+      `${DM}api/abc123/_permissions`,
+      { token: undefined },
+    );
+  });
+});
+
 // --- sdkOptions / filterOptions ---
 
 describe("sdkOptions", () => {

@@ -165,8 +165,24 @@ export async function mapEntries(config, fn): Promise<EntryResource[]> {
 }
 
 // TBD:
-// checkPermission,
 // error handling problems detail etc.. alles in message werfen oder ec.errors nehmen?
+
+/**
+ * Loads the permission strings the current token holder has on a datamanager.
+ * Returns the raw shiro-style permission array — pair with `shiro-trie` (or any
+ * matcher) on the consumer side to evaluate concrete checks. Anonymous callers
+ * get an empty array.
+ *
+ * @ignore
+ */
+export async function getPermissions(config): Promise<string[]> {
+  const { env, dmShortID, token } = config;
+  expect({ env, dmShortID });
+  const _fetch = config.fetcher || fetcher;
+  const url = apiURL(`api/${dmShortID}/_permissions`, env);
+  const res = await _fetch(url, { token });
+  return res?.permissions ?? [];
+}
 
 /** @ignore */
 export async function getSchema(config) {

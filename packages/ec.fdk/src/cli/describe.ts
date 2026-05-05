@@ -39,6 +39,7 @@ const commandTypeMap: Record<string, string> = {
   createEntry: "EntryResource",
   editEntry: "EntryResource",
   getSchema: "EntrySchema",
+  getPermissions: "string[]",
   assetList: "AssetList",
   getAsset: "AssetResource",
   createAsset: "AssetResource",
@@ -129,6 +130,11 @@ export async function describe(
 
   if (typeName === "any") {
     process.stdout.write("This command returns untyped data (any).\n");
+    return;
+  }
+
+  if (typeName === "string[]") {
+    process.stdout.write("type Result = string[];\n");
     return;
   }
 

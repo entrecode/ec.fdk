@@ -50,6 +50,7 @@ const {
   editEntry,
   deleteEntry,
   getSchema,
+  getPermissions,
   loginPublic,
   loginEc,
   logoutEc,
@@ -134,6 +135,7 @@ export function act<M extends string>(config: { action: 'deleteEntry'; model: M;
 export function act(config: { action: 'publicApi' } & ActBase): Promise<PublicApiRoot>;
 export function act(config: { action: 'mapEntries'; model: string; options?: GenericListOptions } & ActBase & { fn: (entry: EntryResource) => EntryResource }): Promise<EntryResource[]>;
 export function act(config: { action: 'getSchema'; model: string; withMetadata?: boolean } & ActBase): Promise<EntrySchema>;
+export function act(config: { action: 'getPermissions' } & ActBase): Promise<string[]>;
 // --- Asset actions ---
 export function act(config: { action: 'getAsset'; assetGroup: string; assetID: string } & ActBase): Promise<AssetResource>;
 export function act(config: { action: 'assetList'; assetGroup: string; options?: GenericListOptions } & ActBase): Promise<AssetList>;
@@ -1083,6 +1085,22 @@ export class Fdk<TModel extends string = string, TResource extends string = stri
    */
   publicApi() {
     return publicApi(this.config);
+  }
+
+  /**
+   * Returns the shiro-style permission strings the current token holder has on
+   * this datamanager. Expects `dmShortID` to be set; pass a `token` for
+   * non-anonymous results. Pair the returned array with `shiro-trie` (or any
+   * matcher) on the consumer side to evaluate concrete checks.
+   *
+   * @category Entries
+   * @example
+   * const perms = await fdk("stage").token(token).dm("83cc6374").getPermissions()
+   * // perms = ["entry:muffin:read", "entry:muffin:write", ...]
+   */
+  async getPermissions(): Promise<string[]> {
+    const token = await this.getBestToken();
+    return getPermissions({ ...this.config, token });
   }
 
   /**

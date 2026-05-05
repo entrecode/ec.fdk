@@ -35,6 +35,9 @@ ec.fdk getEntry -d <shortID> -m <model> -i <entryID>
 # Get model schema (returns field names as top-level keys)
 ec.fdk getSchema -d <shortID> -m <model> | jq 'keys'
 
+# Get current token's shiro-style permission strings on a DM (empty array if anonymous)
+ec.fdk getPermissions -d <shortID>
+
 # Create an entry
 ec.fdk createEntry -d <shortID> -m <model> --data '{"name":"new","value":10}'
 
@@ -206,6 +209,7 @@ ec.fdk deleteToken --account-id <accountID> --rid <tokenID>
 | `editEntry` | `--dm`, `--model`, `--id`, `--data` |
 | `deleteEntry` | `--dm`, `--model`, `--id` |
 | `getSchema` | `--dm`, `--model` |
+| `getPermissions` | `--dm` |
 | **Datamanager** (`--id` = DM UUID) | |
 | `dmList` | — |
 | `getDatamanager` | `--id` |
