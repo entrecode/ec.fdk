@@ -239,8 +239,47 @@ ec.fdk deleteToken --account-id <accountID> --rid <tokenID>
 | `whoami` | — |
 | `describe` | `<command>` |
 | `typegen` | `--dm` (optional `--models`, `--out`) |
+| `record` | `--dm`, `--models` (optional `--size`, `--out`) |
 | `install-skill` | — (optional `--dir <path>`) |
 | `update` | — |
+
+## Record — Fixture Snapshots for Testing
+
+Record a snapshot of real DM entries as a typed fixture file. Requires login. Same args as `typegen`.
+
+```sh
+# Record up to 5 entries per model (default)
+ec.fdk record --dm <shortID> --models title,redirect --out src/ec.fdk.fixtures.ts
+
+# Record more entries per model
+ec.fdk record --dm <shortID> --models title,redirect --size 10 --out src/ec.fdk.fixtures.ts
+```
+
+Output is a plain `.ts` module — commit it alongside the typegen `.d.ts` file.
+
+## Testing — `ec.fdk/testing`
+
+Use recorded fixtures in tests via `ec.fdk/testing`. Two exports:
+
+**`createFdkMock(fixtures)`** — in-memory interface-level mock for React SPAs. Each call returns an isolated `structuredClone`; CRUD mutates it. Inject at the `dm` level in test setup:
+
+```ts
+import { createFdkMock } from 'ec.fdk/testing';
+import { fixtures } from './ec.fdk.fixtures';
+
+const mock = createFdkMock(fixtures);
+// <FdkContext.Provider value={mock as unknown as Fdk}>
+const list = await mock.model('title').entryList();
+```
+
+**`createMockFetcher(fixtures)`** — fetcher-level mock for SSR apps. Drop-in for `fdk.set({ fetcher: ... })`:
+
+```ts
+import { createMockFetcher } from 'ec.fdk/testing';
+const api = fdk('stage').set({ fetcher: createMockFetcher(fixtures) });
+```
+
+**`FdkMockable<M>`** — the interface type both mocks satisfy; use for typing test helpers.
 
 ## Typegen — Typed Entry APIs
 
@@ -373,8 +412,8 @@ Without `--resource`, the generic `ResourceList` type is shown.
 | `--raw` | Include `_links` and `_embedded` |
 | `--md` | Output as markdown table |
 | `--short` | Only print the return type, omit referenced types (for `describe`) |
-| `--models` | Only generate types for these models (comma-separated, `typegen` only) |
-| `--out` | Output file path for `typegen` (default: `./ec.fdk.generated.<shortID>.d.ts`) |
+| `--models` | Models to include, comma-separated (`typegen` + `record`) |
+| `--out` | Output file path for `typegen`/`record` |
 
 ## Filter Suffixes
 

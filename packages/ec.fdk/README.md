@@ -444,6 +444,38 @@ ec.fdk createToken --account-id <accountID>
 ec.fdk deleteToken --account-id <accountID> --rid <tokenID>
 ```
 
+### Record — Fixture Snapshots for Testing
+
+Record a snapshot of real DM entries as a typed fixture file for use with `ec.fdk/testing`:
+
+```sh
+# Record up to 5 entries per model (default)
+ec.fdk record --dm <shortID> --models title,redirect --out src/ec.fdk.fixtures.ts
+
+# Record more entries per model
+ec.fdk record --dm <shortID> --models title,redirect --size 10 --out src/ec.fdk.fixtures.ts
+```
+
+The generated file is a plain `.ts` module with typed fixture arrays:
+
+```ts
+// ec.fdk.fixtures.ts (generated — safe to commit)
+import type { TypedEntry } from 'ec.fdk';
+
+export const fixtures = {
+  title: [...] as TypedEntry<'title'>[],
+  redirect: [...] as TypedEntry<'redirect'>[],
+};
+```
+
+| Option | Description |
+| ------ | ----------- |
+| `--dm <shortID>` | DataManager short ID (required) |
+| `--models <a,b,c>` | Models to record (required, comma-separated) |
+| `--env <env>` | `stage` (default) or `live` |
+| `-s, --size <n>` | Entries per model (default: 5) |
+| `--out <path>` | Output file path (default: `./ec.fdk.fixtures.<shortID>.ts`) |
+
 ### Typegen — Typed Entry APIs
 
 Generate a `.d.ts` declaration file that gives you type-safe entry APIs with autocomplete for all models in a datamanager:
@@ -587,6 +619,57 @@ The `-f` flag maps directly to [entrecode filter query params](https://doc.entre
 | (none)     | Exact match          | `-f amazement_factor=10`       |
 
 Status/error messages go to stderr, data goes to stdout — so piping always works cleanly.
+
+## Testing
+
+`ec.fdk/testing` provides utilities for testing apps that use ec.fdk, without real HTTP calls.
+
+### `createFdkMock` — for React SPAs
+
+Returns an in-memory implementation of the ec.fdk model interface backed by recorded fixture data. CRUD operations mutate an isolated `structuredClone` of the fixtures — call `createFdkMock` fresh per test for isolation.
+
+```ts
+import { createFdkMock } from 'ec.fdk/testing';
+import { fixtures } from './ec.fdk.fixtures';
+
+const mock = createFdkMock(fixtures);
+
+// Inject at the dm level — cast is intentional, lives in test setup only
+// e.g. in a React context provider:
+// <FdkContext.Provider value={mock as unknown as Fdk}>
+
+// Direct usage:
+const list = await mock.model('title').entryList();
+const entry = await mock.model('title').getEntry('Q5xDkSKPTd');
+await mock.model('title').editEntry('Q5xDkSKPTd', { name: 'Dr.' });
+await mock.model('title').createEntry({ name: 'Prof.' });
+await mock.model('title').deleteEntry('Q5xDkSKPTd');
+```
+
+### `createMockFetcher` — for SSR apps
+
+Returns a custom fetcher function backed by recorded fixture data. Drop-in for `fdk.set({ fetcher: ... })` — handles all entry URL patterns without real HTTP.
+
+```ts
+import { fdk } from 'ec.fdk';
+import { createMockFetcher } from 'ec.fdk/testing';
+import { fixtures } from './ec.fdk.fixtures';
+
+const api = fdk('stage').set({ fetcher: createMockFetcher(fixtures) });
+
+// All calls through api now use fixture data — no network
+const list = await api.dm('myShortID').model('title').entryList();
+```
+
+### `FdkMockable<M>` — interface for typing test helpers
+
+The interface subset that both `createFdkMock` and custom mocks should satisfy:
+
+```ts
+import type { FdkMockable } from 'ec.fdk/testing';
+
+function renderWithMock(mock: FdkMockable) { /* ... */ }
+```
 
 ## Migration from ec.sdk
 
