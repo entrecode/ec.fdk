@@ -7,9 +7,12 @@ export default defineConfig({
   plugins: [],
   build: {
     lib: {
-      entry: resolve(__dirname, "src", "index.ts"),
+      entry: {
+        index: resolve(__dirname, "src", "index.ts"),
+        testing: resolve(__dirname, "src", "testing.ts"),
+      },
       formats: ["es", "cjs"],
-      fileName: (ext) => ({ es: "index.mjs", cjs: "index.cjs" }[ext]),
+      fileName: (ext, name) => ({ es: `${name}.mjs`, cjs: `${name}.cjs` }[ext]),
     },
     rollupOptions: {
       external: [...Object.keys(pkg.dependencies || {})],

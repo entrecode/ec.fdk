@@ -6,6 +6,18 @@
   "bin": {
     "ec.fdk": "./dist/cli.cjs"
   },
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./testing": {
+      "import": "./dist/testing.mjs",
+      "require": "./dist/testing.cjs",
+      "types": "./dist/testing.d.ts"
+    }
+  },
   "publishConfig": {
     "main": "dist/index.cjs",
     "module": "dist/index.mjs",

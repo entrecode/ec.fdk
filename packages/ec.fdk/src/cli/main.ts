@@ -99,6 +99,7 @@ Commands:
   Type introspection:
     describe              Show return type for a command (use --resource for resource commands)
     typegen               Generate typed entry APIs (.d.ts) for a datamanager
+    record                Record fixture data (.ts) for a datamanager (--size N, default 5; for use with ec.fdk/testing)
 
 Options:
   -e, --env <env>       Environment: stage|live (default: stage)
@@ -296,6 +297,24 @@ async function main() {
       out: values.out || `./ec.fdk.generated.${values.dm}.d.ts`,
       token,
       models: values.models ? values.models.split(",").map((s) => s.trim()) : undefined,
+    });
+    return;
+  }
+
+  if (command === "record") {
+    if (!values.dm) error("--dm (short ID) is required for record");
+    if (!values.models) error("--models is required for record");
+    const { record } = await import("./record");
+    const sdk = new Fdk({ env: values.env as "stage" | "live", storageAdapter: fileStorageAdapter });
+    const token = sdk.getEcToken();
+    if (!token) error("You must be logged in to use record. Run: ec.fdk login");
+    await record({
+      dm: values.dm,
+      env: values.env as string,
+      out: values.out || `./ec.fdk.fixtures.${values.dm}.ts`,
+      token,
+      models: values.models.split(",").map((s) => s.trim()),
+      count: values.size ? Number(values.size) : 5,
     });
     return;
   }
