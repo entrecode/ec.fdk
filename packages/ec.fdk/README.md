@@ -456,16 +456,23 @@ ec.fdk record --dm <shortID> --models title,redirect --out src/ec.fdk.fixtures.t
 ec.fdk record --dm <shortID> --models title,redirect --size 10 --out src/ec.fdk.fixtures.ts
 ```
 
-The generated file is a plain `.ts` module with typed fixture arrays:
+The generated file is a plain `.ts` module with typed fixtures, schemas, and permissions:
 
 ```ts
 // ec.fdk.fixtures.ts (generated — safe to commit)
-import type { TypedEntry } from 'ec.fdk';
+import type { TypedEntry, EntrySchema } from 'ec.fdk';
 
 export const fixtures = {
   title: [...] as TypedEntry<'title'>[],
   redirect: [...] as TypedEntry<'redirect'>[],
 };
+
+export const schemas: Record<string, EntrySchema> = {
+  title: { name: { type: 'text', ... }, ... },
+  redirect: { route: { type: 'text', ... }, ... },
+};
+
+export const permissions: string[] = ['title:get,post,put,delete:*', ...];
 ```
 
 | Option | Description |
@@ -630,9 +637,13 @@ Returns an in-memory implementation of the ec.fdk model interface backed by reco
 
 ```ts
 import { createFdkMock } from 'ec.fdk/testing';
-import { fixtures } from './ec.fdk.fixtures';
+import { fixtures, schemas, permissions } from './ec.fdk.fixtures';
 
+// Minimal — only entries
 const mock = createFdkMock(fixtures);
+
+// With schemas + permissions (recorded by `ec.fdk record`)
+const mock2 = createFdkMock(fixtures, { schemas, permissions, dmShortID: '12042269' });
 
 // Inject at the dm level — cast is intentional, lives in test setup only
 // e.g. in a React context provider:
@@ -640,11 +651,20 @@ const mock = createFdkMock(fixtures);
 
 // Direct usage:
 const list = await mock.model('title').entryList();
-const entry = await mock.model('title').getEntry('Q5xDkSKPTd');
+const schema = await mock.model('title').getSchema();
+const perms = await mock.getPermissions();
 await mock.model('title').editEntry('Q5xDkSKPTd', { name: 'Dr.' });
 await mock.model('title').createEntry({ name: 'Prof.' });
 await mock.model('title').deleteEntry('Q5xDkSKPTd');
 ```
+
+Options:
+
+| Option | Default | Description |
+| ------ | ------- | ----------- |
+| `dmShortID` | `'mock'` | Used by `mock.config.dmShortID` (e.g. SWR cache keys). |
+| `schemas` | `{}` | Per-model schemas. `getSchema()` returns `{}` for unknown models. |
+| `permissions` | `['*']` | Strings returned by `getPermissions()`. Default is fully permissive. |
 
 ### `createMockFetcher` — for SSR apps
 
@@ -653,12 +673,15 @@ Returns a custom fetcher function backed by recorded fixture data. Drop-in for `
 ```ts
 import { fdk } from 'ec.fdk';
 import { createMockFetcher } from 'ec.fdk/testing';
-import { fixtures } from './ec.fdk.fixtures';
+import { fixtures, schemas, permissions } from './ec.fdk.fixtures';
 
-const api = fdk('stage').set({ fetcher: createMockFetcher(fixtures) });
+const api = fdk('stage').set({
+  fetcher: createMockFetcher(fixtures, { schemas, permissions }),
+});
 
 // All calls through api now use fixture data — no network
 const list = await api.dm('myShortID').model('title').entryList();
+const perms = await api.dm('myShortID').getPermissions();
 ```
 
 ### `FdkMockable<M>` — interface for typing test helpers

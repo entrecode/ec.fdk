@@ -3,22 +3,41 @@ import type { TypedEntry, TypedEntryList, EntrySchema } from "./types";
 export interface FdkMockable<M extends string = string> {
   model<N extends string>(name: N): FdkMockable<N>;
   entryList(options?: any): Promise<TypedEntryList<M>>;
+  mapEntries<T>(fn: (entry: TypedEntry<M>) => T): Promise<T[]>;
   getEntry(id: string): Promise<TypedEntry<M>>;
   createEntry(value: any): Promise<TypedEntry<M>>;
   editEntry(id: string, value: any): Promise<TypedEntry<M>>;
   deleteEntry(id: string): Promise<void>;
   getSchema(): Promise<EntrySchema>;
+  getPermissions(): Promise<string[]>;
   config: { dmShortID: string };
 }
 
 type Fixtures = Record<string, any[]>;
+type Schemas = Record<string, EntrySchema>;
+
+export interface CreateFdkMockOptions {
+  dmShortID?: string;
+  schemas?: Schemas;
+  /** Permissions returned by getPermissions(). Default: ["*"] (fully permissive). */
+  permissions?: string[];
+}
 
 /**
  * Creates an in-memory mock implementing FdkMockable, backed by recorded fixture data.
  * Inject at the dm level in tests: `<FdkContext.Provider value={createFdkMock(fixtures) as unknown as Fdk}>`
  * CRUD operations mutate an isolated in-memory copy — safe to call createFdkMock() fresh per test.
+ *
+ * Accepts a second arg as either a `dmShortID` string (legacy) or an options object with
+ * { dmShortID, schemas, permissions } — recorded via `ec.fdk record` alongside fixtures.
  */
-export function createFdkMock(fixtures: Fixtures, dmShortID = "mock"): FdkMockable {
+export function createFdkMock(
+  fixtures: Fixtures,
+  optionsOrDmShortID: string | CreateFdkMockOptions = {},
+): FdkMockable {
+  const options: CreateFdkMockOptions =
+    typeof optionsOrDmShortID === "string" ? { dmShortID: optionsOrDmShortID } : optionsOrDmShortID;
+  const { dmShortID = "mock", schemas = {}, permissions = ["*"] } = options;
   const store: Fixtures = structuredClone(fixtures);
 
   function makeModel<M extends string>(name: M): FdkMockable<M> {
@@ -30,6 +49,9 @@ export function createFdkMock(fixtures: Fixtures, dmShortID = "mock"): FdkMockab
       entryList: async (_options?) => {
         const all = items();
         return { items: all, total: all.length, count: all.length } as TypedEntryList<M>;
+      },
+      mapEntries: async (fn) => {
+        return items().map(fn);
       },
       getEntry: async (id) => {
         const entry = items().find((e) => e.id === id);
@@ -51,15 +73,18 @@ export function createFdkMock(fixtures: Fixtures, dmShortID = "mock"): FdkMockab
       deleteEntry: async (id) => {
         store[name] = items().filter((e) => e.id !== id);
       },
-      getSchema: async () => ({} as EntrySchema),
+      getSchema: async () => (schemas[name] ?? {}) as EntrySchema,
+      getPermissions: async () => permissions.slice(),
     };
   }
 
   return {
     config: { dmShortID },
     model: makeModel,
+    getPermissions: async () => permissions.slice(),
     // dm-level stubs — call .model() first
     entryList: async () => { throw new Error("[createFdkMock] call .model(name) first"); },
+    mapEntries: async () => { throw new Error("[createFdkMock] call .model(name) first"); },
     getEntry: async () => { throw new Error("[createFdkMock] call .model(name) first"); },
     createEntry: async () => { throw new Error("[createFdkMock] call .model(name) first"); },
     editEntry: async () => { throw new Error("[createFdkMock] call .model(name) first"); },
@@ -68,18 +93,37 @@ export function createFdkMock(fixtures: Fixtures, dmShortID = "mock"): FdkMockab
   };
 }
 
+export interface CreateMockFetcherOptions {
+  schemas?: Schemas;
+  /** Permissions returned by /_permissions. Default: ["*"] (fully permissive). */
+  permissions?: string[];
+}
+
 /**
  * Creates a fetcher function backed by recorded fixture data.
  * Use for SSR apps (e.g. mw): `fdk.set({ fetcher: createMockFetcher(fixtures) })`
- * Handles entryList, getEntry, createEntry, editEntry, deleteEntry URL patterns.
+ * Handles entryList, getEntry, createEntry, editEntry, deleteEntry, getSchema, getPermissions URL patterns.
  * Assets return a placeholder stub.
  */
-export function createMockFetcher(fixtures: Fixtures) {
+export function createMockFetcher(fixtures: Fixtures, options: CreateMockFetcherOptions = {}) {
+  const { schemas = {}, permissions = ["*"] } = options;
   const store: Fixtures = structuredClone(fixtures);
 
   return async function mockFetcher(url: string, _config?: any, _options?: any) {
     const parsed = new URL(url);
     const path = parsed.pathname;
+
+    // Permissions: /api/{shortID}/_permissions
+    if (/^\/api\/[^/]+\/_permissions$/.test(path)) {
+      return { permissions };
+    }
+
+    // Schema: /api/schema/{shortID}/{model}
+    const schemaMatch = path.match(/^\/api\/schema\/[^/]+\/([^/]+)$/);
+    if (schemaMatch) {
+      const [, model] = schemaMatch;
+      return schemas[model] ?? {};
+    }
 
     // Asset requests: /a/{shortID}/{assetGroup}
     if (/^\/a\/[^/]+\/[^/]+/.test(path)) {

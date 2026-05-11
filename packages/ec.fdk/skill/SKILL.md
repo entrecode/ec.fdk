@@ -255,31 +255,38 @@ ec.fdk record --dm <shortID> --models title,redirect --out src/ec.fdk.fixtures.t
 ec.fdk record --dm <shortID> --models title,redirect --size 10 --out src/ec.fdk.fixtures.ts
 ```
 
-Output is a plain `.ts` module — commit it alongside the typegen `.d.ts` file.
+Output is a plain `.ts` module with three exports — commit it alongside the typegen `.d.ts` file:
+
+- `fixtures` — recorded entries per model
+- `schemas` — recorded schemas per model (drives `getSchema()` in tests)
+- `permissions` — recorded permission strings (drives `getPermissions()` in tests)
 
 ## Testing — `ec.fdk/testing`
 
 Use recorded fixtures in tests via `ec.fdk/testing`. Two exports:
 
-**`createFdkMock(fixtures)`** — in-memory interface-level mock for React SPAs. Each call returns an isolated `structuredClone`; CRUD mutates it. Inject at the `dm` level in test setup:
+**`createFdkMock(fixtures, { schemas, permissions, dmShortID })`** — in-memory interface-level mock for React SPAs. Each call returns an isolated `structuredClone`; CRUD mutates it. Inject at the `dm` level in test setup:
 
 ```ts
 import { createFdkMock } from 'ec.fdk/testing';
-import { fixtures } from './ec.fdk.fixtures';
+import { fixtures, schemas, permissions } from './ec.fdk.fixtures';
 
-const mock = createFdkMock(fixtures);
+const mock = createFdkMock(fixtures, { schemas, permissions });
 // <FdkContext.Provider value={mock as unknown as Fdk}>
 const list = await mock.model('title').entryList();
+const perms = await mock.getPermissions(); // returns recorded permissions
 ```
 
-**`createMockFetcher(fixtures)`** — fetcher-level mock for SSR apps. Drop-in for `fdk.set({ fetcher: ... })`:
+Options default to `{ schemas: {}, permissions: ['*'], dmShortID: 'mock' }` — fully permissive permissions for tests that don't care.
+
+**`createMockFetcher(fixtures, { schemas, permissions })`** — fetcher-level mock for SSR apps. Drop-in for `fdk.set({ fetcher: ... })`:
 
 ```ts
 import { createMockFetcher } from 'ec.fdk/testing';
-const api = fdk('stage').set({ fetcher: createMockFetcher(fixtures) });
+const api = fdk('stage').set({ fetcher: createMockFetcher(fixtures, { schemas, permissions }) });
 ```
 
-**`FdkMockable<M>`** — the interface type both mocks satisfy; use for typing test helpers.
+**`FdkMockable<M>`** — the interface type both mocks satisfy; use for typing test helpers. Includes `entryList`, `mapEntries`, `getEntry`, `createEntry`, `editEntry`, `deleteEntry`, `getSchema`, `getPermissions`.
 
 ## Typegen — Typed Entry APIs
 
