@@ -9,7 +9,7 @@ export const schemaTypeToTS: Record<string, string> = {
   number: "number",
   decimal: "number",
   boolean: "boolean",
-  datetime: "Date",
+  datetime: "string",
   json: "unknown",
   object: "unknown",
   entry: "string",
