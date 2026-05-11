@@ -72,15 +72,18 @@ type ApplyOverrides<M extends string, T> =
 
 export type EntryResourceBase = {
   id: string;
-  _created: Date;
-  _creator: string;
+  _id: string;
+  _created: string;
+  _creator: string | null;
   _embedded?: Record<string, unknown>;
+  _entryTitle?: string;
   _links?: HalLinks;
   _modelTitle: string;
   _modelTitleField: string;
-  _modified: Date;
-  created: Date;
-  modified: Date;
+  _modified: string;
+  created: string;
+  modified: string;
+  private?: boolean;
 };
 
 export type EntryResource = EntryResourceBase & { [key: string]: unknown };
@@ -102,12 +105,18 @@ export type TypedEntryList<M extends string> = {
 };
 
 export type EntryFieldSchema = {
-  default: string | number | boolean | null;
-  description: string;
-  readOnly: boolean;
+  /** Default value. JSON/object fields may have `{}`; array fields may have `[]`. */
+  default?: unknown;
+  description?: string;
+  readOnly?: boolean;
   required: boolean;
   type: string;
-  resource: string | null;
+  /** Present on entry/entries/asset/assets fields — the linked model or asset group. */
+  resource?: string | null;
+  /** Present on array-typed fields (entries, assets). Describes the element schema. */
+  items?: { type?: string; resource?: string | null; title?: string; [key: string]: unknown };
+  /** Schema may carry extra metadata (multipleOf, format, validators, etc.). */
+  [key: string]: unknown;
 };
 
 export type EntrySchema = Record<string, EntryFieldSchema>;
