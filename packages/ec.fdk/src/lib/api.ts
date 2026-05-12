@@ -331,8 +331,9 @@ export class Fdk<TModel extends string = string, TResource extends string = stri
    * @example
    * const muffin = await fdk("stage").dm("83cc6374").model("muffin").getEntry("1gOtzWvrdq")
    * @example
+   * type LeveledMuffin = LeveledEntry<"muffin", { baker: TypedEntry<"baker"> }>;
    * const muffin = await fdk("stage").dm("83cc6374").model("muffin").levels(2)
-   *   .getEntry<ResolvedMuffin>("1gOtzWvrdq");
+   *   .getEntry<LeveledMuffin>("1gOtzWvrdq");
    */
   async getEntry<R = TypedEntry<TModel>>(entryID: string): Promise<R> {
     const token = await this.getBestToken();

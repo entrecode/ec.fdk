@@ -531,13 +531,21 @@ Without a generated file, everything falls back to the default `EntryResource` t
 
 #### Resolving nested references
 
-Call `.levels(n)` to resolve nested entry/asset references instead of getting back ID strings (server default: 1). Since generated types treat entry/asset fields as `string`, pass a resolved shape via the type parameter:
+Call `.levels(n)` to resolve nested entry/asset references instead of getting back ID strings (server default: 1). Since generated types treat entry/asset fields as `string`, override just the resolved fields with `LeveledEntry<M, Overrides>`:
 
 ```ts
-type ResolvedMuffin = EntryResourceBase & { name: string; baker: BakerEntry };
+import { fdk, type LeveledEntry, type TypedEntry, type AssetResource } from 'ec.fdk';
+
+type LeveledMuffin = LeveledEntry<'muffin', {
+  baker: TypedEntry<'baker'>;
+  photo: AssetResource;
+}>;
+
 const muffin = await fdk('stage').dm('<shortID>').model('muffin')
-  .levels(2).getEntry<ResolvedMuffin>('abc');
+  .levels(2).getEntry<LeveledMuffin>('abc');
 ```
+
+`LeveledEntry` is `Omit<TypedEntry<M>, keyof Overrides> & Overrides` — all other fields keep their generated types.
 
 | Option | Description |
 | ------ | ----------- |

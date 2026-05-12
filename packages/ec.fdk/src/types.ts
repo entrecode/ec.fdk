@@ -93,6 +93,21 @@ export type TypedEntry<M extends string> =
     ? EntryResourceBase & ApplyOverrides<M, ModelRegistry[M]>
     : EntryResource;
 
+/**
+ * Overrides specific fields on `TypedEntry<M>` without restating the full shape.
+ * Handy for `.levels(n).getEntry()` to type nested entry/asset fields as resolved
+ * objects instead of the generated `string` IDs. Pass multiple keys in `Overrides`
+ * to resolve several nested fields at once.
+ *
+ * @example
+ * type LeveledMuffin = LeveledEntry<'muffin', {
+ *   baker: TypedEntry<'baker'>;
+ *   photo: AssetResource;
+ * }>;
+ */
+export type LeveledEntry<M extends string, Overrides> =
+  Omit<TypedEntry<M>, keyof Overrides> & Overrides;
+
 export type EntryInput<M extends string> =
   M extends keyof ModelRegistry
     ? ApplyOverrides<M, ModelRegistry[M]>
