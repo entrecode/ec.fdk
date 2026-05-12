@@ -67,10 +67,12 @@ export async function entryList(config): Promise<EntryList> {
 
 /** @ignore */
 export function getEntry(config): Promise<EntryResource> {
-  const { env, dmShortID, model, entryID, token } = config;
+  const { env, dmShortID, model, entryID, token, levels } = config;
   expect({ env, dmShortID, model, entryID });
   const _fetch = config.fetcher || fetcher;
-  const q = query({ _id: entryID });
+  const params: Record<string, any> = { _id: entryID };
+  if (levels !== undefined) params._levels = levels;
+  const q = query(params);
   const url = apiURL(`api/${dmShortID}/${model}?${q}`, env);
   return _fetch(url, { token });
 }

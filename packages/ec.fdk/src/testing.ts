@@ -4,7 +4,7 @@ export interface FdkMockable<M extends string = string> {
   model<N extends string>(name: N): FdkMockable<N>;
   entryList(options?: any): Promise<TypedEntryList<M>>;
   mapEntries<T>(fn: (entry: TypedEntry<M>) => T): Promise<T[]>;
-  getEntry(id: string): Promise<TypedEntry<M>>;
+  getEntry<R = TypedEntry<M>>(id: string): Promise<R>;
   createEntry(value: any): Promise<TypedEntry<M>>;
   editEntry(id: string, value: any): Promise<TypedEntry<M>>;
   deleteEntry(id: string): Promise<void>;

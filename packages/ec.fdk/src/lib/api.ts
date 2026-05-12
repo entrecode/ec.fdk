@@ -128,7 +128,7 @@ type ActBase = { env?: string; token?: string; dmShortID: string };
 
 // --- Entry actions ---
 export function act<M extends string>(config: { action: 'entryList'; model: M; options?: EntryListOptions<M> } & ActBase): Promise<TypedEntryList<M>>;
-export function act<M extends string>(config: { action: 'getEntry'; model: M; entryID: string } & ActBase): Promise<TypedEntry<M>>;
+export function act<M extends string>(config: { action: 'getEntry'; model: M; entryID: string; levels?: number } & ActBase): Promise<TypedEntry<M>>;
 export function act<M extends string>(config: { action: 'createEntry'; model: M; value: EntryInput<M> } & ActBase): Promise<TypedEntry<M>>;
 export function act<M extends string>(config: { action: 'editEntry'; model: M; entryID: string; value: Partial<EntryInput<M>> } & ActBase): Promise<TypedEntry<M>>;
 export function act<M extends string>(config: { action: 'deleteEntry'; model: M; entryID: string } & ActBase): Promise<void>;
@@ -323,11 +323,18 @@ export class Fdk<TModel extends string = string, TResource extends string = stri
   /**
    * Loads a single entry. Expects `dmShortID` / `model` to be set.
    * If the model is not public, you also need to provide a `token`.
+   *
+   * Use `.levels(n)` to resolve nested references. Pass a resolved shape via the
+   * type parameter, since generated types treat entry/asset fields as `string`.
+   *
    * @category Entries
    * @example
    * const muffin = await fdk("stage").dm("83cc6374").model("muffin").getEntry("1gOtzWvrdq")
+   * @example
+   * const muffin = await fdk("stage").dm("83cc6374").model("muffin").levels(2)
+   *   .getEntry<ResolvedMuffin>("1gOtzWvrdq");
    */
-  async getEntry(entryID: string): Promise<TypedEntry<TModel>> {
+  async getEntry<R = TypedEntry<TModel>>(entryID: string): Promise<R> {
     const token = await this.getBestToken();
     return getEntry({ ...this.config, entryID, token }).then((r) => this.maybeClean(r));
   }
@@ -1015,6 +1022,17 @@ export class Fdk<TModel extends string = string, TResource extends string = stri
   /** @ignore */
   maybeClean(result: any) {
     return this.config._clean ? cleanResult(result) : result;
+  }
+  /**
+   * Sets `_levels` for entry requests. With `n > 1`, nested entry/asset references
+   * are resolved instead of returned as ID strings. Default: 1.
+   * @category Entries
+   * @example
+   * const muffin = await fdk("stage").dm("83cc6374").model("muffin")
+   *   .levels(2).getEntry("1gOtzWvrdq")
+   */
+  levels(n: number) {
+    return this.set({ levels: n });
   }
   /**
    * Sets the given model to use

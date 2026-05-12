@@ -94,6 +94,16 @@ describe("getEntry", () => {
       { token: "tok" },
     );
   });
+
+  it("passes _levels query param when levels is set", async () => {
+    await entries.getEntry({
+      env: "stage", dmShortID: "abc123", model: "muffin", entryID: "e-1", token: "tok", levels: 2,
+    });
+    expect(mockFetcher).toHaveBeenCalledWith(
+      `${DM}api/abc123/muffin?_id=e-1&_levels=2`,
+      { token: "tok" },
+    );
+  });
 });
 
 // --- createEntry ---
