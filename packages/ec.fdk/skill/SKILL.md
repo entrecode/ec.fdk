@@ -32,6 +32,9 @@ ec.fdk entryList -d <shortID> -m <model> -f "id=abc123,def456,ghi789"
 # Get a single entry
 ec.fdk getEntry -d <shortID> -m <model> -i <entryID>
 
+# Get a single entry with nested entry/asset refs resolved (default 1)
+ec.fdk getEntry -d <shortID> -m <model> -i <entryID> --levels 2
+
 # Get model schema (returns field names as top-level keys)
 ec.fdk getSchema -d <shortID> -m <model> | jq 'keys'
 
@@ -204,7 +207,7 @@ ec.fdk deleteToken --account-id <accountID> --rid <tokenID>
 | --- | --- |
 | **Entry** (require `--dm`, `--model`) | |
 | `entryList` | `--dm`, `--model` |
-| `getEntry` | `--dm`, `--model`, `--id` |
+| `getEntry` | `--dm`, `--model`, `--id` (optional `--levels` to resolve nested refs) |
 | `createEntry` | `--dm`, `--model`, `--data` |
 | `editEntry` | `--dm`, `--model`, `--id`, `--data` |
 | `deleteEntry` | `--dm`, `--model`, `--id` |

@@ -19,7 +19,7 @@ Commands:
 
   Entry commands (require --dm, --model):
     entryList             List entries
-    getEntry              Get a single entry (--id)
+    getEntry              Get a single entry (--id, optional --levels)
     createEntry           Create an entry (--data)
     editEntry             Edit an entry (--id, --data)
     deleteEntry           Delete an entry (--id)
@@ -119,6 +119,7 @@ Options:
   -f, --filter <k=v>   Filter for list (repeatable, e.g. -f title~=hello -f ageFrom=5)
                          Use -f "field=" for null, -f "field!=" for not null
   --raw                 Include _links and _embedded in output
+  --levels <n>          Resolve nested entry/asset references (getEntry, default: 1)
   --md                  Output entries as readable markdown
   --short               Only print the return type, omit referenced types (describe)
   --models <a,b,c>      Only generate types for these models (comma-separated, typegen only)
@@ -250,6 +251,7 @@ async function main() {
       resource: { type: "string" },
       subdomain: { type: "string" },
       raw: { type: "boolean", default: false },
+      levels: { type: "string" },
       md: { type: "boolean", default: false },
       password: { type: "boolean", default: false },
       file: { type: "string", multiple: true, default: [] },
@@ -542,7 +544,8 @@ async function main() {
           }
           case "getEntry": {
             if (!values.id) error("--id is required for getEntry");
-            result = await entryChain.getEntry(values.id);
+            const chain = values.levels ? entryChain.levels(Number(values.levels)) : entryChain;
+            result = await chain.getEntry(values.id);
             break;
           }
           case "createEntry": {

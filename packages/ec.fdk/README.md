@@ -143,7 +143,7 @@ ec.fdk <command> [options]
 | --- | --- | --- |
 | **Entries** | `--dm` = shortID, `--model` required | |
 | `entryList` | List entries | `--dm`, `--model` |
-| `getEntry` | Get a single entry | `--dm`, `--model`, `--id` |
+| `getEntry` | Get a single entry | `--dm`, `--model`, `--id` (optional `--levels` to resolve nested refs) |
 | `createEntry` | Create an entry | `--dm`, `--model`, `--data` |
 | `editEntry` | Edit an entry | `--dm`, `--model`, `--id`, `--data` |
 | `deleteEntry` | Delete an entry | `--dm`, `--model`, `--id` |
@@ -323,6 +323,9 @@ ec.fdk entryList -d <shortID> -m muffin -s 10 -p 2
 
 # Get a single entry
 ec.fdk getEntry -d <shortID> -m muffin -i <entryID>
+
+# Get a single entry with nested entry/asset references resolved
+ec.fdk getEntry -d <shortID> -m muffin -i <entryID> --levels 2
 
 # Create an entry
 ec.fdk createEntry -d <shortID> -m muffin --data '{"name":"new muffin","amazement_factor":10}'
@@ -525,6 +528,16 @@ await fdk('stage').dm('<shortID>').model('muffin').editEntry('abc', {
 ```
 
 Without a generated file, everything falls back to the default `EntryResource` type with `[key: string]: unknown` — fully backwards-compatible.
+
+#### Resolving nested references
+
+Call `.levels(n)` to resolve nested entry/asset references instead of getting back ID strings (server default: 1). Since generated types treat entry/asset fields as `string`, pass a resolved shape via the type parameter:
+
+```ts
+type ResolvedMuffin = EntryResourceBase & { name: string; baker: BakerEntry };
+const muffin = await fdk('stage').dm('<shortID>').model('muffin')
+  .levels(2).getEntry<ResolvedMuffin>('abc');
+```
 
 | Option | Description |
 | ------ | ----------- |
