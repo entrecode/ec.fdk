@@ -160,6 +160,31 @@ describe("createAssets", () => {
     });
     expect(result).toEqual([{ assetID: "a-1" }]);
   });
+
+  it("sends a string as a `url` field (backend fetches it) + forwards options", async () => {
+    mockFetcher.mockResolvedValue({ _embedded: { "ec:dm-asset": [{ assetID: "a-1" }] } });
+    await assets.createAssets({
+      env: "stage", dmShortID: "abc123", assetGroup: "images",
+      files: ["https://example.com/pic.png"],
+      options: { deduplicate: true, preserveFilenames: true }, token: "tok",
+    });
+    const body = mockFetcher.mock.calls[0][2].body as FormData;
+    expect(body.get("url")).toBe("https://example.com/pic.png");
+    expect(body.get("file")).toBeNull();
+    expect(body.get("deduplicate")).toBe("true");
+    expect(body.get("preserveFilenames")).toBe("true");
+  });
+
+  it("supports mixed Blob + URL files", async () => {
+    mockFetcher.mockResolvedValue({ _embedded: { "ec:dm-asset": [{ assetID: "a-1" }, { assetID: "a-2" }] } });
+    await assets.createAssets({
+      env: "stage", dmShortID: "abc123", assetGroup: "images",
+      files: [new Blob(["f1"]), "https://example.com/pic.png"], options: undefined, token: "tok",
+    });
+    const body = mockFetcher.mock.calls[0][2].body as FormData;
+    expect(body.getAll("file")).toHaveLength(1);
+    expect(body.get("url")).toBe("https://example.com/pic.png");
+  });
 });
 
 // --- deleteAsset ---

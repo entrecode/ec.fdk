@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+presentation_de.html
+presentation_slim.html
+presentation.html
+dailynator.md

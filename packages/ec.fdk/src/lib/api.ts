@@ -407,7 +407,7 @@ export class Fdk<TModel extends string = string, TResource extends string = stri
    * .createAsset({ file, name: "venndiagram.png" });
    */
   async createAsset(config: {
-    file: Blob;
+    file: Blob | string;
     name: string;
     options: AssetCreateOptions;
   }) {
@@ -434,7 +434,7 @@ export class Fdk<TModel extends string = string, TResource extends string = stri
    * .assetgroup("test")
    * .createAsset({ files });
    */
-  async createAssets(config: { files: Blob[]; options: AssetCreateOptions }) {
+  async createAssets(config: { files: (Blob | string)[]; options: AssetCreateOptions }) {
     const { files, options } = config;
     const token = await this.getBestToken();
     return createAssets({ ...this.config, files, options, token });

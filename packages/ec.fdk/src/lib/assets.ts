@@ -30,6 +30,19 @@ export async function assetList(config): Promise<AssetList> {
 /**
  * @ignore
  */
+function appendAssetFile(formData: FormData, file: Blob | string, name?: string) {
+  if (typeof file === "string") {
+    formData.append("url", file);
+  } else if (name === undefined) {
+    formData.append("file", file);
+  } else {
+    formData.append("file", file, name);
+  }
+}
+
+/**
+ * @ignore
+ */
 export async function createAsset(config): Promise<AssetResource> {
   const { env, dmShortID, assetGroup, token, file, name, options } = config;
   expect({ env, dmShortID, assetGroup, file });
@@ -37,7 +50,7 @@ export async function createAsset(config): Promise<AssetResource> {
 
   const url = apiURL(`a/${dmShortID}/${assetGroup}`, env);
   const formData = new FormData();
-  formData.append("file", file, name);
+  appendAssetFile(formData, file, name);
   if (options) {
     Object.keys(options).forEach((key) => {
       formData.append(key, options[key]);
@@ -64,9 +77,7 @@ export async function createAssets(config): Promise<AssetResource[]> {
   const _fetch = config.fetcher || fetcher;
   const url = apiURL(`a/${dmShortID}/${assetGroup}`, env);
   const formData = new FormData();
-  files.forEach((file: any) => {
-    formData.append("file", file /* , name */);
-  });
+  files.forEach((file: Blob | string) => appendAssetFile(formData, file));
   if (options) {
     Object.keys(options).forEach((key) => {
       formData.append(key, options[key]);
