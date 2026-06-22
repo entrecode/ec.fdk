@@ -334,17 +334,25 @@ async function main() {
     const token = sdk.getEcToken();
     const rt = fileStorageAdapter.get(`${env}_refresh`);
     if (token && rt) {
+      let expired = false;
       try {
         const payload = JSON.parse(Buffer.from(token.split(".")[1], "base64url").toString());
-        if (payload.exp && payload.exp * 1000 < Date.now()) {
+        expired = !!payload.exp && payload.exp * 1000 < Date.now();
+      } catch {
+        // malformed token, leave handling to the command
+      }
+      if (expired) {
+        try {
           const tokens = await refreshAccessToken(env, rt);
           sdk.setEcToken(tokens.access_token);
           if (tokens.refresh_token) {
             fileStorageAdapter.set(`${env}_refresh`, tokens.refresh_token);
           }
+        } catch (e: any) {
+          process.stderr.write(
+            `Session for ${env} expired and could not be refreshed (${e.message}). Run: ec.fdk login\n`
+          );
         }
-      } catch {
-        // refresh failed, continue with existing token
       }
     }
   }
@@ -382,8 +390,16 @@ async function main() {
       if (payload.email) info.email = payload.email;
       if (payload.sub) info.accountID = payload.sub;
       if (payload.iss) info.issuer = payload.iss;
-      if (payload.exp) info.expires = new Date(payload.exp * 1000).toISOString();
+      const expired = payload.exp ? payload.exp * 1000 < Date.now() : false;
+      if (payload.exp) {
+        info.expires = new Date(payload.exp * 1000).toISOString();
+        info.expired = expired;
+      }
       process.stdout.write(JSON.stringify(info, null, 2) + "\n");
+      if (expired) {
+        process.stderr.write(`Token for ${env} is expired. Run: ec.fdk login\n`);
+        process.exit(1);
+      }
     } catch {
       error("Could not decode token");
     }
