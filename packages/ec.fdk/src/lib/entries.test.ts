@@ -363,6 +363,27 @@ describe("sdkOptions", () => {
     expect(entries.sdkOptions({ id: { any: ["a", "b"] } })).toEqual({ id: "a,b" });
   });
 
+  it("handles sort as a top-level option (string or array)", () => {
+    expect(entries.sdkOptions({ sort: "name" })).toEqual({ sort: "name" });
+    expect(entries.sdkOptions({ sort: ["name", "-created"] })).toEqual({ sort: "name,-created" });
+  });
+
+  it("treats a bare array value as an any-of match, NOT a sort", () => {
+    // regression: an array's truthy `.sort` method used to make this emit `sort=a,b`
+    expect(entries.sdkOptions({ tags: ["a", "b"] })).toEqual({ tags: "a,b" });
+  });
+
+  it("drops an empty array value (no bogus sort= / field=)", () => {
+    // regression: `_fields:[]` used to become `sort=` → DM 400
+    expect(entries.sdkOptions({ _fields: [] })).toEqual({});
+    expect(entries.sdkOptions({ id: { any: [] } })).toEqual({});
+  });
+
+  it("does not crash on a null value", () => {
+    // regression: null is typeof 'object', so `null.sort` used to throw
+    expect(() => entries.sdkOptions({ field: null })).not.toThrow();
+  });
+
   it("filterOptions is alias for sdkOptions", () => {
     expect(entries.filterOptions).toBe(entries.sdkOptions);
   });

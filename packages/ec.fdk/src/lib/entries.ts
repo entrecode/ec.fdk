@@ -288,15 +288,26 @@ export type SdkFilterOptions = {
 export function sdkOptions(options) {
   return Object.entries(options)
     .map(([key, o]: [string, any]) => {
-      if (typeof o !== "object") {
+      // `sort` is a top-level option (a field name, or an array of them), NOT a
+      // per-field modifier. Handle it by key — otherwise an array VALUE on any
+      // other key falls into the old `o.sort` branch (an array's `.sort` method
+      // is truthy), producing a bogus `sort=` param: `{tags:['a','b']}` → `sort=a,b`,
+      // and `{_fields:[]}` → `sort=` which the DM rejects with a 400.
+      if (key === "sort") {
+        return { sort: Array.isArray(o) ? o.join(",") : String(o) };
+      }
+      if (o === null || typeof o !== "object") {
         return { [key]: String(o) };
       }
+      // A bare array value = "any of" match, comma-joined (empty array = no filter).
+      if (Array.isArray(o)) {
+        return o.length ? { [key]: o.join(",") } : {};
+      }
       return {
-        ...(o.sort && { sort: Array.isArray(o) ? o.join(",") : o }),
         ...(o.search && { [key + "~"]: o.search }),
         ...(o.notNull && { [key + "!"]: "" }),
         ...(o.null && { [key]: "" }),
-        ...(o.any && { [key]: o.any.join(",") }),
+        ...(o.any?.length && { [key]: o.any.join(",") }),
         ...(o.from && { [key + "From"]: o.from }),
         ...(o.to && { [key + "To"]: o.to }),
       };
