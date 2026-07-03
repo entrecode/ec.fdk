@@ -132,11 +132,16 @@ export function fileVariant(asset: AssetResource, size: number, thumb = false) {
   let best, bestDiff;
   const variants = thumb ? asset?.thumbnails : asset?.fileVariants
   variants?.forEach(variant => {
-    const {
-      resolution: { width, height },
-    } = variant;
-    const diff = Math.abs(Math.max(width, height) - size);
-    if (!bestDiff || diff < bestDiff) {
+    // fileVariants carry `resolution: {width, height}`; thumbnails only carry a square
+    // `dimension` — destructuring `resolution` unconditionally crashed the thumb path.
+    const dimension = variant.resolution
+      ? Math.max(variant.resolution.width, variant.resolution.height)
+      : variant.dimension;
+    if (dimension === undefined) return;
+    const diff = Math.abs(dimension - size);
+    // bestDiff === undefined, not !bestDiff — an exact match (diff 0) is falsy and would
+    // otherwise be overwritten by the next variant.
+    if (bestDiff === undefined || diff < bestDiff) {
       bestDiff = diff;
       best = variant;
     }

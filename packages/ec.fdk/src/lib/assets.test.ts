@@ -212,9 +212,11 @@ describe("fileVariant", () => {
       { url: "https://example.com/512.jpg", resolution: { width: 512, height: 384 } },
       { url: "https://example.com/1024.jpg", resolution: { width: 1024, height: 768 } },
     ],
+    // real DM thumbnails carry a square `dimension`, NOT `resolution` — the old fixture
+    // had the wrong shape, which is how the thumb-path crash survived this test
     thumbnails: [
-      { url: "https://example.com/t64.jpg", resolution: { width: 64, height: 64 } },
-      { url: "https://example.com/t128.jpg", resolution: { width: 128, height: 128 } },
+      { url: "https://example.com/t64.jpg", dimension: 64 },
+      { url: "https://example.com/t128.jpg", dimension: 128 },
     ],
   } as any;
 
@@ -222,8 +224,17 @@ describe("fileVariant", () => {
     expect(assets.fileVariant(asset, 500)).toBe("https://example.com/512.jpg");
   });
 
-  it("returns closest thumbnail when thumb=true", () => {
+  it("returns closest thumbnail when thumb=true (dimension shape)", () => {
+    // regression: destructuring `resolution` unconditionally threw
+    // "Cannot read properties of undefined (reading 'width')" for thumbnails
     expect(assets.fileVariant(asset, 100, true)).toBe("https://example.com/t128.jpg");
+  });
+
+  it("keeps an exact-size match (diff 0 is not 'unset')", () => {
+    // regression: `!bestDiff` treated a perfect match (diff 0) as unset, so the
+    // next (worse) variant overwrote it
+    expect(assets.fileVariant(asset, 256)).toBe("https://example.com/256.jpg");
+    expect(assets.fileVariant(asset, 64, true)).toBe("https://example.com/t64.jpg");
   });
 
   it("returns original URL when no variants", () => {
