@@ -23,7 +23,7 @@ import {
   TokenResource,
   HistoryList,
 } from "../types";
-import { expect, query, apiURL, fetcher } from "./util";
+import { expect, query, dropUndefined, apiURL, fetcher } from "./util";
 
 const jsonHeaders = { "Content-Type": "application/json" };
 
@@ -47,7 +47,7 @@ export async function dmList(config: AdminListConfig): Promise<DatamanagerList> 
   // https://datamanager.cachena.entrecode.de/?_list=true&page=1&size=25
   let { env, options = {} } = config;
   expect({ env });
-  options = { size: 25, page: 1, _list: true, ...options };
+  options = dropUndefined({ size: 25, page: 1, _list: true, ...options });
   // name~ = search
   const q = query(options);
   const url = apiURL(`?${q}`, env);
@@ -62,7 +62,7 @@ export async function modelList(config: AdminDmListConfig): Promise<ModelList> {
   // https://datamanager.cachena.entrecode.de/model?dataManagerID=254a03f1-cb76-4f1e-a52a-bbd4180ca10c&_list=true&size=0
   let { env, dmID, options = {} } = config;
   expect({ env, dmID });
-  options = { size: 25, dataManagerID: dmID, page: 1, _list: true, ...options };
+  options = dropUndefined({ size: 25, dataManagerID: dmID, page: 1, _list: true, ...options });
   const q = query(options);
   const url = apiURL(`model?${q}`, env);
   const { count, total, _embedded } = await fetcher(url, config);
@@ -76,7 +76,7 @@ export async function resourceList(config: AdminResourceListConfig): Promise<Res
   // https://<subdomain>.cachena.entrecode.de/<resource>?_list=true&size=0
   let { env, resource, options = {}, subdomain = "datamanager" } = config;
   expect({ env, subdomain, resource });
-  options = { size: 25, page: 1, _list: true, ...options };
+  options = dropUndefined({ size: 25, page: 1, _list: true, ...options });
   const q = query(options);
   const path = resourcePathMap[resource] ?? resource;
   const url = apiURL(`${path}?${q}`, env, subdomain);
@@ -162,7 +162,7 @@ export async function raw<T = any>(
   // https://<subdomain>.cachena.entrecode.de/<route>?<options>
   let { env, route, options = {}, subdomain = "datamanager" } = config;
   expect({ env, subdomain, route });
-  options = { ...options };
+  options = dropUndefined({ ...options });
   const q = query(options);
   const url = apiURL(`${route}?${q}`, env, subdomain);
   return fetcher(url, config, fetchOptions);
@@ -432,7 +432,7 @@ export async function getStats(config: AdminListConfig): Promise<any> {
 export async function getHistory(config: AdminListConfig): Promise<HistoryList> {
   let { env, token, options = {} } = config;
   expect({ env });
-  const q = query(options);
+  const q = query(dropUndefined(options));
   const url = apiURL(`entries?${q}`, env, "dm-history");
   return fetcher(url, { token });
 }

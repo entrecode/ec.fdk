@@ -6,7 +6,7 @@ import {
   GenericListOptions,
   PublicApiRoot,
 } from "../types";
-import { apiURL, apis, expect, fetcher, query } from "./util";
+import { apiURL, apis, dropUndefined, expect, fetcher, query } from "./util";
 
 let systemFields = [
   "created",
@@ -54,7 +54,7 @@ export async function entryList(config): Promise<EntryList> {
   let { env, dmShortID, model, options = {} } = config;
   expect({ env, dmShortID, model });
   const _fetch = config.fetcher || fetcher;
-  options = { size: 50, page: 1, _list: true, ...options };
+  options = dropUndefined({ size: 50, page: 1, _list: true, ...options });
   // name~ = search
   const q = query(options);
   const url = apiURL(`api/${dmShortID}/${model}?${q}`, env);
@@ -287,6 +287,11 @@ export type SdkFilterOptions = {
  */
 export function sdkOptions(options) {
   return Object.entries(options)
+    // `undefined` = "no filter for this key" (`{ type: cond ? 'article' : undefined }`) —
+    // ec.sdk skipped these; stringifying them sends the literal `type=undefined`, which
+    // the DM rejects with a 400. NOTE: bare `null` is still stringified (`key=null`) —
+    // use the `{ null: true }` modifier for an is-null filter.
+    .filter(([, o]) => o !== undefined)
     .map(([key, o]: [string, any]) => {
       // `sort` is a top-level option (a field name, or an array of them), NOT a
       // per-field modifier. Handle it by key — otherwise an array VALUE on any
@@ -308,6 +313,10 @@ export function sdkOptions(options) {
         ...(o.notNull && { [key + "!"]: "" }),
         ...(o.null && { [key]: "" }),
         ...(o.any?.length && { [key]: o.any.join(",") }),
+        // not / notAny mirror ec.sdk's `!` modifiers: `state!=finished` excludes a value,
+        // `state!=a,b` excludes any of them.
+        ...(o.not !== undefined && o.not !== null && { [key + "!"]: String(o.not) }),
+        ...(o.notAny?.length && { [key + "!"]: o.notAny.join(",") }),
         ...(o.from && { [key + "From"]: o.from }),
         ...(o.to && { [key + "To"]: o.to }),
       };

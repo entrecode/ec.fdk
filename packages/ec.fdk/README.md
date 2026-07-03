@@ -816,6 +816,8 @@ const entryList = await fdk('stage')
   .entryList(filterOptions({ created: { to: '2021-01-18T09:13:47.605Z' } }));
 ```
 
+Supported object modifiers: `search` (`key~=`), `from`/`to` (`keyFrom=`/`keyTo=`), `any` (comma any-of), `not`/`notAny` (`key!=` exclusion), `null`/`notNull` (is-/is-not-empty). `undefined`-valued keys are dropped ("no filter for this key"), matching ec.sdk — the same applies to plain `entryList`/`assetList` options without `filterOptions`.
+
 ### Asset List
 
 ```js

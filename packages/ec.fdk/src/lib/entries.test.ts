@@ -55,6 +55,19 @@ describe("entryList", () => {
     );
   });
 
+  it("drops undefined-valued options from the query", async () => {
+    // `undefined` = "no filter for this key" — used to hit the wire as the literal
+    // string `type=undefined`, which the DM rejects with a 400 (ec.sdk dropped these)
+    await entries.entryList({
+      env: "stage", dmShortID: "abc123", model: "muffin",
+      options: { type: undefined, active: true },
+    });
+    expect(mockFetcher).toHaveBeenCalledWith(
+      `${DM}api/abc123/muffin?_list=true&active=true&page=1&size=50`,
+      expect.objectContaining({ dmShortID: "abc123", model: "muffin" }),
+    );
+  });
+
   it("returns items from _embedded", async () => {
     mockFetcher.mockResolvedValue({
       count: 2, total: 2,
@@ -382,6 +395,22 @@ describe("sdkOptions", () => {
   it("does not crash on a null value", () => {
     // regression: null is typeof 'object', so `null.sort` used to throw
     expect(() => entries.sdkOptions({ field: null })).not.toThrow();
+  });
+
+  it("drops undefined values (the 'no filter for this key' sentinel)", () => {
+    // regression: used to stringify to the literal `type=undefined` → DM 400
+    expect(entries.sdkOptions({ type: undefined, active: true })).toEqual({ active: "true" });
+    expect(entries.sdkOptions({ type: undefined })).toEqual({});
+  });
+
+  it("converts not filter to the ! wire key", () => {
+    expect(entries.sdkOptions({ state: { not: "finished" } })).toEqual({ "state!": "finished" });
+  });
+
+  it("converts notAny filter to a comma-joined ! wire key", () => {
+    expect(entries.sdkOptions({ type: { notAny: ["wellpass", "hansefit"] } }))
+      .toEqual({ "type!": "wellpass,hansefit" });
+    expect(entries.sdkOptions({ type: { notAny: [] } })).toEqual({});
   });
 
   it("filterOptions is alias for sdkOptions", () => {

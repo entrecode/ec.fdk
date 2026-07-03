@@ -1,5 +1,5 @@
 import { AssetList, AssetResource } from "../types";
-import { apiURL, expect, fetcher, query } from "./util";
+import { apiURL, dropUndefined, expect, fetcher, query } from "./util";
 
 /** @ignore */
 export async function getAsset(config): Promise<AssetResource> {
@@ -17,7 +17,7 @@ export async function assetList(config): Promise<AssetList> {
   let { env, dmShortID, assetGroup, token, options = {} } = config;
   expect({ env, dmShortID, assetGroup });
   const _fetch = config.fetcher || fetcher;
-  options = { size: 50, page: 1, _list: true, ...options };
+  options = dropUndefined({ size: 50, page: 1, _list: true, ...options });
   // name~ = search
   const q = query(options);
   const url = apiURL(`a/${dmShortID}/${assetGroup}?${q}`, env);

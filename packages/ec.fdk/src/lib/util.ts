@@ -86,6 +86,23 @@ export function query(params, sort = true) {
     .join("&");
 }
 
+/**
+ * Removes `undefined`-valued keys from a list-options object. `undefined` is the
+ * idiomatic "no filter for this key" sentinel (`{ type: cond ? 'article' : undefined }`);
+ * without this, `query()` template-stringifies it into the literal `type=undefined`,
+ * which the DM rejects with a 400 "Invalid format for property". ec.sdk's
+ * `optionsToQuery` skipped undefined values the same way.
+ *
+ * Deliberately NOT applied to get/edit/delete-by-id query building — there a missing
+ * id must keep failing loudly instead of silently widening the match.
+ * @ignore
+ */
+export function dropUndefined(params: Record<string, any>): Record<string, any> {
+  return Object.entries(params)
+    .filter(([, value]) => value !== undefined)
+    .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
+}
+
 /** @ignore */
 export function expect(obj) {
   Object.entries(obj).forEach(([key, value]) => {
