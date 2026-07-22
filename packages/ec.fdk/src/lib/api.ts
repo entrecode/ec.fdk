@@ -74,6 +74,7 @@ const {
   editModel,
   deleteModel,
   createTemplate,
+  getTemplateDataManagers,
   createAssetGroup,
   editAssetGroup,
   editAsset,
@@ -165,6 +166,7 @@ export function act(config: { action: 'createModel'; value: Partial<ModelResourc
 export function act(config: { action: 'editModel'; modelID: string; value: Partial<ModelResource> } & AdminDmConfig): Promise<ModelResource>;
 export function act(config: { action: 'deleteModel'; modelID: string } & AdminDmConfig): Promise<Response>;
 export function act(config: { action: 'createTemplate'; value: Partial<TemplateResource> } & AdminConfig): Promise<TemplateResource>;
+export function act(config: { action: 'getTemplateDataManagers'; templateID: string; env: string; token?: string }): Promise<string[]>;
 export function act(config: { action: 'createAssetGroup'; value: Partial<AssetGroupResource> } & AdminDmConfig): Promise<AssetGroupResource>;
 export function act(config: { action: 'editAssetGroup'; assetGroupID: string; value: Partial<AssetGroupResource> } & AdminDmConfig): Promise<AssetGroupResource>;
 export function act(config: { action: 'editAsset'; dmShortID: string; assetGroup: string; assetID: string; value: Partial<AssetResource> } & AdminConfig): Promise<AssetResource>;
@@ -641,6 +643,24 @@ export class Fdk<TModel extends string = string, TResource extends string = stri
   async createTemplate(value: object) {
     const token = await this.getBestToken();
     return createTemplate({ ...this.config, token, value });
+  }
+
+  /**
+   * Returns the `dataManagerIDs` of all datamanagers created from the given template.
+   *
+   * Use this to resolve template-based permissions: a grant of the form
+   * `dm:template-<templateID>:<rest>` applies to every datamanager listed here, as if
+   * `dm:<dataManagerID>:<rest>` had been granted for each. Any valid token of the
+   * environment works (signature check only, no permission required). For a ready-made
+   * expansion of a whole permission array, see `expandTemplatePermissions`.
+   *
+   * @category Admin
+   * @example
+   * const dmIDs = await fdk("stage").token(token).getTemplateDataManagers("<templateID>")
+   */
+  async getTemplateDataManagers(templateID: string): Promise<string[]> {
+    const token = await this.getBestToken();
+    return getTemplateDataManagers({ ...this.config, token, templateID });
   }
 
   // --- Asset Group ---
@@ -1120,6 +1140,10 @@ export class Fdk<TModel extends string = string, TResource extends string = stri
    * this datamanager. Expects `dmShortID` to be set; pass a `token` for
    * non-anonymous results. Pair the returned array with `shiro-trie` (or any
    * matcher) on the consumer side to evaluate concrete checks.
+   *
+   * When template-based grants may be present, run raw account permissions through
+   * `expandTemplatePermissions` first: it rewrites `dm:template-<templateID>:<rest>`
+   * entries into concrete `dm:<dataManagerID>:<rest>` permissions before you match.
    *
    * @category Entries
    * @example

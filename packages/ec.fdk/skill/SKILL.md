@@ -39,6 +39,9 @@ ec.fdk getEntry -d <shortID> -m <model> -i <entryID> --levels 2
 ec.fdk getSchema -d <shortID> -m <model> | jq 'keys'
 
 # Get current token's shiro-style permission strings on a DM (empty array if anonymous)
+# Raw data — match consumer-side with shiro-trie. If template-based grants
+# (dm:template-<templateID>:<rest>) may be present, expand them first via the
+# expandTemplatePermissions() library helper (see Permissions below).
 ec.fdk getPermissions -d <shortID>
 
 # Create an entry
@@ -154,6 +157,10 @@ ec.fdk getHistory -f shortID=<shortID> -s 10
 # Template
 ec.fdk createTemplate --data '{"name":"My Template","collection":{"id":"<collectionID>","name":"my-collection","order":[],"requests":[]}}'
 
+# List the dataManagerIDs of all datamanagers created from a template.
+# Backs template-based permissions (dm:template-<templateID>:<rest>).
+ec.fdk template-dms <templateID>
+
 # Asset group
 ec.fdk createAssetGroup --id <dataManagerID> --data '{"assetGroupID":"photos"}'
 ec.fdk editAssetGroup --id <dataManagerID> --rid <assetGroup> --data '{"public":true}'
@@ -245,6 +252,22 @@ ec.fdk deleteToken --account-id <accountID> --rid <tokenID>
 | `record` | `--dm`, `--models` (optional `--size`, `--out`) |
 | `install-skill` | — (optional `--dir <path>`) |
 | `update` | — |
+
+## Permissions
+
+`getPermissions()` returns **raw** shiro-style strings; the fdk never matches them itself — pair the array with `shiro-trie` (or any matcher) on the consumer side.
+
+The datamanager can grant **template-based** permissions of the form `dm:template-<templateID>:<rest>`, which act like `dm:<dataManagerID>:<rest>` for every datamanager created from that template. They are **not** expanded server-side (to keep permission lists small). Before matching raw permissions that may contain them, expand locally with the library helper:
+
+```ts
+import { fdk, expandTemplatePermissions } from 'ec.fdk';
+
+const raw = await fdk('stage').token(token).dm('<shortID>').getPermissions();
+const perms = await expandTemplatePermissions({ env: 'stage', token }, raw);
+// perms now has concrete dm:<dataManagerID>:<rest> entries — feed into shiro-trie
+```
+
+`expandTemplatePermissions` replaces each template entry with one concrete permission per datamanager (looked up via `getTemplateDataManagers` / the `template-dms` CLI command, cached ~5 min), deduplicates, and is fail-closed: invalid template UUIDs and failed lookups leave entries untouched instead of throwing. Call `clearTemplatePermissionCache()` to force a refresh.
 
 ## Record — Fixture Snapshots for Testing
 

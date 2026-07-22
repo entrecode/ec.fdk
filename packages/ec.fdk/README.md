@@ -162,6 +162,7 @@ ec.fdk <command> [options]
 | `deleteModel` | Delete a model | `--id`, `--rid` |
 | **Templates** | | |
 | `createTemplate` | Create a template | `--data` |
+| `template-dms` | List dataManagerIDs created from a template | `template-dms <templateID>` |
 | **Asset Groups** | `--id` = DM UUID | |
 | `createAssetGroup` | Create an asset group | `--id`, `--data` |
 | `editAssetGroup` | Edit an asset group | `--id`, `--rid`, `--data` |
@@ -647,6 +648,47 @@ The `-f` flag maps directly to [entrecode filter query params](https://doc.entre
 | (none)     | Exact match          | `-f amazement_factor=10`       |
 
 Status/error messages go to stderr, data goes to stdout — so piping always works cleanly.
+
+## Permissions
+
+ec.fdk returns permissions as **raw shiro-style strings** and never evaluates them itself (no `shiro-trie`, no `dm:` parsing). You match them on the consumer side with `shiro-trie` (or any matcher):
+
+```ts
+import { fdk } from 'ec.fdk';
+const perms = await fdk('stage').token(token).dm('83cc6374').getPermissions();
+// perms = ["entry:muffin:read", "entry:muffin:write", ...]
+```
+
+### Template-based permissions
+
+The datamanager can grant permissions of the form `dm:template-<templateID>:<rest>`. These act like `dm:<dataManagerID>:<rest>` for **every** datamanager created from that template — a compact way to grant access across many datamanagers at once. Because the datamanager deliberately does **not** expand them server-side (to keep permission lists small), a consumer that matches raw account permissions has to resolve them locally.
+
+Two dependency-free building blocks handle this:
+
+- **`getTemplateDataManagers(templateID)`** — returns the `dataManagerIDs` of all datamanagers created from a template. Any valid token of the environment works (signature check only, no permission required).
+
+  ```ts
+  const dmIDs = await fdk('stage').token(token).getTemplateDataManagers('<templateID>');
+  ```
+
+  From the CLI:
+
+  ```bash
+  ec.fdk template-dms <templateID>
+  # → ["<dataManagerID>", ...]
+  ```
+
+- **`expandTemplatePermissions(config, permissions)`** — rewrites a whole permission array, replacing each `dm:template-<templateID>:<rest>` entry with concrete `dm:<dataManagerID>:<rest>` permissions (one per datamanager), deduplicated. All other strings pass through unchanged. Run raw account permissions through it **before** matching whenever template grants may be present:
+
+  ```ts
+  import { fdk, expandTemplatePermissions } from 'ec.fdk';
+
+  const raw = await fdk('stage').token(token).dm('83cc6374').getPermissions();
+  const perms = await expandTemplatePermissions({ env: 'stage', token }, raw);
+  // now feed `perms` into shiro-trie (or your matcher)
+  ```
+
+  The mapping is cached per `templateID` for ~5 min (clients get no invalidation events, so the TTL is the freshness source); call `clearTemplatePermissionCache()` to force a refresh. Expansion is **fail-closed**: entries with an invalid template UUID are left untouched, and if the lookup route fails for a template its entries stay as the raw `dm:template-…` string instead of throwing — a transient outage never silently widens or drops access.
 
 ## Testing
 

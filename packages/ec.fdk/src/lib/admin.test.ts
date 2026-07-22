@@ -194,6 +194,49 @@ describe("Template CRUD", () => {
 
 });
 
+// --- Template DataManagers ---
+
+describe("getTemplateDataManagers", () => {
+  it("fetches the template datamanagers route with token (stage)", async () => {
+    mockFetcher.mockResolvedValueOnce({
+      templateID: "tpl-1",
+      dataManagerIDs: ["dm-a", "dm-b"],
+    });
+    const ids = await admin.getTemplateDataManagers({
+      env: "stage",
+      templateID: "tpl-1",
+      token: "tok",
+    });
+    expect(mockFetcher).toHaveBeenCalledWith(
+      `${DM}template/tpl-1/datamanagers`,
+      { token: "tok" },
+    );
+    expect(ids).toEqual(["dm-a", "dm-b"]);
+  });
+
+  it("builds the live URL", async () => {
+    mockFetcher.mockResolvedValueOnce({ templateID: "tpl-1", dataManagerIDs: [] });
+    await admin.getTemplateDataManagers({ env: "live", templateID: "tpl-1", token: "tok" });
+    expect(mockFetcher).toHaveBeenCalledWith(
+      `https://datamanager.entrecode.de/template/tpl-1/datamanagers`,
+      { token: "tok" },
+    );
+  });
+
+  it("returns [] when the response has no dataManagerIDs", async () => {
+    mockFetcher.mockResolvedValueOnce(undefined);
+    const ids = await admin.getTemplateDataManagers({ env: "stage", templateID: "tpl-1" });
+    expect(ids).toEqual([]);
+  });
+
+  it("throws when templateID is missing", async () => {
+    await expect(
+      // @ts-expect-error intentionally missing templateID
+      admin.getTemplateDataManagers({ env: "stage", token: "tok" }),
+    ).rejects.toThrow(/templateID/);
+  });
+});
+
 // --- Asset Group ---
 
 describe("Asset Group", () => {

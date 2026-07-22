@@ -49,6 +49,7 @@ Commands:
 
   Template:
     createTemplate        Create a template (--data)
+    template-dms          List dataManagerIDs created from a template (template-dms <templateID>)
 
   Asset Group (--id = DM UUID):
     createAssetGroup      Create an asset group (--data)
@@ -539,6 +540,12 @@ async function main() {
       case "getPermissions": {
         if (!values.dm) error("--dm is required");
         result = await sdk.dm(values.dm as string).getPermissions();
+        break;
+      }
+      case "template-dms": {
+        const templateID = positionals[1];
+        if (!templateID) error("template-dms requires a <templateID> argument");
+        result = await sdk.getTemplateDataManagers(templateID);
         break;
       }
 

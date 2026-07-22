@@ -7,6 +7,7 @@ export * from "./lib/api";
 export * from "./lib/util";
 export * from "./lib/actions";
 export { filterOptions } from "./lib/entries";
+export { expandTemplatePermissions, clearTemplatePermissionCache } from "./lib/permissions";
 export * from "./types";
 
 /**

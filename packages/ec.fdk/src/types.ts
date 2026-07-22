@@ -494,6 +494,36 @@ export type AdminEditConfig<K extends string, T = Record<string, unknown>> = Adm
 
 export type AdminDeleteConfig<K extends string> = AdminConfig & { [P in K]: string };
 
+// --- Template-based permissions ---
+
+/**
+ * Response of `GET <datamanagerURL>/template/<templateID>/datamanagers`, the route
+ * backing template-based permissions (`dm:template-<templateID>:<rest>`).
+ */
+export type TemplateDataManagersResponse = {
+  templateID: string;
+  dataManagerIDs: string[];
+};
+
+/**
+ * Config for `getTemplateDataManagers`. Any valid access token of the environment is
+ * accepted (the route only checks the token signature, no permission required), so
+ * `token` is optional. Inject `fetcher` for testing.
+ */
+export type TemplateDataManagersConfig = {
+  env: string;
+  templateID: string;
+  token?: string;
+  fetcher?: Fetcher;
+};
+
+/** Config for `expandTemplatePermissions`. */
+export type ExpandTemplatePermissionsConfig = {
+  env: string;
+  token?: string;
+  fetcher?: Fetcher;
+};
+
 // --- List types ---
 
 export type AssetGroupList = {

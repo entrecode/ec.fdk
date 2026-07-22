@@ -19,6 +19,8 @@ import {
   ResourceList,
   RoleResource,
   TemplateResource,
+  TemplateDataManagersConfig,
+  TemplateDataManagersResponse,
   TokenList,
   TokenResource,
   HistoryList,
@@ -271,6 +273,33 @@ export async function createTemplate(
     body: JSON.stringify(value),
     headers: jsonHeaders,
   });
+}
+
+// --- Template DataManagers (template-based permissions) ---
+
+/**
+ * Returns the `dataManagerIDs` of all datamanagers created from the given template.
+ *
+ * This backs the resolution of template-based permissions of the form
+ * `dm:template-<templateID>:<rest>`, which act like `dm:<dataManagerID>:<rest>` for
+ * every datamanager whose `template` equals `<templateID>`. Any valid access token of
+ * the environment is accepted (the route only checks the token signature, no
+ * permission required); anonymous callers get an empty array.
+ *
+ * See {@link expandTemplatePermissions} for a ready-made helper that rewrites raw
+ * permission arrays using this mapping.
+ *
+ * @ignore
+ */
+export async function getTemplateDataManagers(
+  config: TemplateDataManagersConfig,
+): Promise<string[]> {
+  const { env, templateID, token } = config;
+  expect({ env, templateID });
+  const _fetch = config.fetcher || fetcher;
+  const url = apiURL(`template/${templateID}/datamanagers`, env);
+  const res: TemplateDataManagersResponse = await _fetch(url, { token });
+  return res?.dataManagerIDs ?? [];
 }
 
 // --- Asset Group ---

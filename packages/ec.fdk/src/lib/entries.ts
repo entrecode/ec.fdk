@@ -187,6 +187,10 @@ export async function mapEntries<R = EntryResource>(
  * matcher) on the consumer side to evaluate concrete checks. Anonymous callers
  * get an empty array.
  *
+ * When template-based grants may be present, run raw account permissions through
+ * `expandTemplatePermissions` first: it rewrites `dm:template-<templateID>:<rest>`
+ * entries into concrete `dm:<dataManagerID>:<rest>` permissions before you match.
+ *
  * @ignore
  */
 export async function getPermissions(config): Promise<string[]> {
