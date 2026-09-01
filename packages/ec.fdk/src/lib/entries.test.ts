@@ -386,10 +386,16 @@ describe("sdkOptions", () => {
     expect(entries.sdkOptions({ tags: ["a", "b"] })).toEqual({ tags: "a,b" });
   });
 
-  it("drops an empty array value (no bogus sort= / field=)", () => {
+  it("drops an empty bare array value (no bogus sort= / field=)", () => {
     // regression: `_fields:[]` used to become `sort=` → DM 400
     expect(entries.sdkOptions({ _fields: [] })).toEqual({});
-    expect(entries.sdkOptions({ id: { any: [] } })).toEqual({});
+  });
+
+  it("an empty any list matches nothing, not everything", () => {
+    // regression: 0.9.44–0.9.46 dropped `any: []` entirely ("no filter"), silently
+    // returning ALL entries where the caller expected none (dsb.mw resolveActiveConfigs).
+    // `key=` matches nothing — ec.sdk optionsToQuery parity. `undefined` = no filter.
+    expect(entries.sdkOptions({ id: { any: [] } })).toEqual({ id: "" });
   });
 
   it("does not crash on a null value", () => {

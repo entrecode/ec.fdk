@@ -308,7 +308,9 @@ export function sdkOptions(options) {
       if (o === null || typeof o !== "object") {
         return { [key]: String(o) };
       }
-      // A bare array value = "any of" match, comma-joined (empty array = no filter).
+      // A bare array value = "any of" match, comma-joined. An EMPTY bare array is
+      // dropped — bare arrays double as list options (`_fields: []` must not emit
+      // `_fields=` → DM 400), so they can't carry match-nothing semantics.
       if (Array.isArray(o)) {
         return o.length ? { [key]: o.join(",") } : {};
       }
@@ -316,7 +318,13 @@ export function sdkOptions(options) {
         ...(o.search && { [key + "~"]: o.search }),
         ...(o.notNull && { [key + "!"]: "" }),
         ...(o.null && { [key]: "" }),
-        ...(o.any?.length && { [key]: o.any.join(",") }),
+        // The explicit `any` modifier IS a filter, so `any: []` = match nothing
+        // (`key=`) — "any of nothing" is false, like SQL's `IN ()`, and matches
+        // ec.sdk's optionsToQuery. 0.9.44–0.9.46 treated it as "no filter" (match
+        // everything), silently inverting queries whose id list came up empty
+        // (e.g. dsb.mw resolveActiveConfigs). Use `undefined` for "no filter".
+        // `notAny: []` stays dropped — excluding nothing is truly no constraint.
+        ...(o.any && { [key]: o.any.join(",") }),
         // not / notAny mirror ec.sdk's `!` modifiers: `state!=finished` excludes a value,
         // `state!=a,b` excludes any of them.
         ...(o.not !== undefined && o.not !== null && { [key + "!"]: String(o.not) }),
