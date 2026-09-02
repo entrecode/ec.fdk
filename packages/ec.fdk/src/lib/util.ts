@@ -7,12 +7,16 @@ export async function fetcher(
   options: RequestInit = {}
 ) {
   const { token, rawRes } = config;
-  if (token) {
-    options.headers = {
-      ...(options.headers || {}),
-      Authorization: `Bearer ${token}`,
-    };
+  // Headers normalizes plain objects, Headers instances and [key, value] arrays
+  const headers = new Headers(options.headers);
+  // always ask for JSON: some APIs (e.g. appserver) content-negotiate and return HTML for */*
+  if (!headers.has("Accept")) {
+    headers.set("Accept", "application/json");
   }
+  if (token) {
+    headers.set("Authorization", `Bearer ${token}`);
+  }
+  options.headers = headers;
   const res = await fetch(url, options);
   //console.log("fetch", url, options);
   if (!res.ok) {
