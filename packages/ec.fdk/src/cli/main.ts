@@ -14,6 +14,7 @@ Commands:
   login                 Login via browser (OIDC). Use --password for email/password prompt.
   logout                Logout and remove stored token
   whoami                Show current logged-in user
+  token                 Print the stored auth token for the env (fails if missing/expired)
   install-skill         Install Claude Code skill (default: ~/.claude/skills, or --dir <path>)
   update                Self-update ec.fdk and re-install skill
 
@@ -404,6 +405,25 @@ async function main() {
     } catch {
       error("Could not decode token");
     }
+    return;
+  }
+
+  if (command === "token") {
+    const token = sdk.getEcToken();
+    if (!token) {
+      process.stderr.write(`Not logged in to ${env}. Run: ec.fdk login -e ${env}\n`);
+      process.exit(1);
+    }
+    try {
+      const payload = JSON.parse(Buffer.from(token.split(".")[1], "base64url").toString());
+      if (payload.exp && payload.exp * 1000 < Date.now()) {
+        process.stderr.write(`Token for ${env} is expired. Run: ec.fdk login -e ${env}\n`);
+        process.exit(1);
+      }
+    } catch {
+      // not decodable as JWT — print anyway, expiry can't be checked
+    }
+    process.stdout.write(token + "\n");
     return;
   }
 

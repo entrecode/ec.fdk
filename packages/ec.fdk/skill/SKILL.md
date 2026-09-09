@@ -151,6 +151,11 @@ ec.fdk logout -e stage
 # Show current user
 ec.fdk whoami -e stage
 
+# Print the stored auth token for an env (fails with exit 1 if missing or expired).
+# Use this for Bearer auth against entrecode services (e.g. dsb-layer) — never read ~/.ec-fdk/auth.json directly.
+ec.fdk token -e live
+curl -H "Authorization: Bearer $(ec.fdk token -e live)" https://dsb-layer.entrecode.de/...
+
 # dm-history (requires shortID filter)
 ec.fdk getHistory -f shortID=<shortID> -s 10
 
@@ -247,6 +252,7 @@ ec.fdk deleteToken --account-id <accountID> --rid <tokenID>
 | `login` | — (add `--password` for email/password prompt) |
 | `logout` | — |
 | `whoami` | — |
+| `token` | — (prints raw token; exit 1 if missing/expired) |
 | `describe` | `<command>` |
 | `typegen` | `--dm` (optional `--models`, `--out`) |
 | `record` | `--dm`, `--models` (optional `--size`, `--out`) |
