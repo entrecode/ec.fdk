@@ -3,6 +3,13 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
+# 0. Make sure we're logged in to npm (avoids failing at the very end)
+if ! npm whoami >/dev/null 2>&1; then
+  echo "Not logged in to npm, running npm login..."
+  npm login
+fi
+echo "Publishing as npm user: $(npm whoami)"
+
 # 1. Bump version
 CURRENT=$(node -p "require('./package.json').version")
 echo "Current version: $CURRENT"
