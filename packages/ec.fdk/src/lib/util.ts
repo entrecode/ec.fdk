@@ -82,11 +82,19 @@ export function apiURL(route, env = "stage", subdomain = "datamanager") {
   return base + route;
 }
 
-/** @ignore */
+/**
+ * Builds a query string from a params object. Keys and values are URL-encoded with
+ * `encodeURIComponent` (ec.sdk did the same in its `optionsToQuery`). Without encoding,
+ * a value containing `&`, `+`, `#` or `%` corrupts the query: `{ tag: "Fitness & Gesundheit" }`
+ * became `tag=Fitness & Gesundheit`, which the DM reads as `tag=Fitness ` plus a bogus
+ * param — the exact-match lookup silently returned 0 results (DAILY-3038).
+ * Filter modifier suffixes on keys (`name~`, `state!`) are untouched by `encodeURIComponent`.
+ * @ignore
+ */
 export function query(params, sort = true) {
   return Object.entries(params)
     .sort((a, b) => a[0].localeCompare(b[0]))
-    .map(([key, value]) => `${key}=${value}`)
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`)
     .join("&");
 }
 
