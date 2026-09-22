@@ -614,13 +614,23 @@ export type DmClientList = {
   items: DmClientResource[];
 };
 
+/**
+ * One field of a history event. `entryCreated` carries only `newValue`, `entryDeleted` only
+ * `oldValue`, `entryUpdated` both.
+ */
+export type HistoryChange = {
+  field: string;
+  oldValue?: unknown;
+  newValue?: unknown;
+};
+
 export type HistoryResource = {
-  type: string;
+  type: "entryCreated" | "entryUpdated" | "entryDeleted" | (string & {});
   entryID: string;
   modelID: string;
   shortID: string;
   timestamp: string;
-  data: unknown;
+  data: HistoryChange[];
   user: { accountID: string; userType: string };
   [key: string]: unknown;
 };

@@ -364,8 +364,10 @@ ec.fdk entryList -d <shortID> -m muffin | jq '.items | length'
 # Datamanager stats
 ec.fdk getStats
 
-# dm-history (requires shortID filter)
+# dm-history (requires shortID filter; shape: ec.fdk describe getHistory)
 ec.fdk getHistory -f shortID=<shortID> -s 10
+# one entry: entryID only works together with modelID (modelTitle is ignored)
+ec.fdk getHistory -f shortID=<shortID> -f modelID=<modelID> -f entryID=<entryID> -s 100
 
 # List any resource type
 ec.fdk resourceList --resource template -s 5

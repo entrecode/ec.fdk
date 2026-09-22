@@ -90,7 +90,7 @@ ec.fdk getStats
 # List models of a datamanager
 ec.fdk modelList --id <dataManagerID> | jq '[.items[].title]'
 
-# Search models by name
+# Search models by name (lists page at 25 — pass -s 100 before filtering with jq)
 ec.fdk modelList --id <dataManagerID> -f title~=muffin | jq '[.items[].title]'
 
 # Create a model
@@ -156,8 +156,10 @@ ec.fdk whoami -e stage
 ec.fdk token -e live
 curl -H "Authorization: Bearer $(ec.fdk token -e live)" https://dsb-layer.entrecode.de/...
 
-# dm-history (requires shortID filter)
+# dm-history (requires shortID filter; shape: ec.fdk describe getHistory)
 ec.fdk getHistory -f shortID=<shortID> -s 10
+# one entry: entryID only works together with modelID (modelTitle is ignored)
+ec.fdk getHistory -f shortID=<shortID> -f modelID=<modelID> -f entryID=<entryID> -s 100
 
 # Template
 ec.fdk createTemplate --data '{"name":"My Template","collection":{"id":"<collectionID>","name":"my-collection","order":[],"requests":[]}}'
