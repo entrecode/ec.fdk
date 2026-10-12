@@ -1,5 +1,39 @@
 export type { Fetcher } from "../types";
 
+/**
+ * Thrown for every non-2xx API response. `message` is unchanged (`title\ndetail\nverbose` of the
+ * ec error body), on top it carries the HTTP `status`, the ec error `code` (e.g. 2112) and the
+ * parsed error body as `info`.
+ *
+ * @example
+ * try {
+ *   await fdk("stage").dm("83cc6374").model("muffin").editEntrySafe(id, { name: "x", _modified });
+ * } catch (err) {
+ *   if (isStaleWriteError(err)) { ... } // someone else saved in between
+ * }
+ */
+export class FdkError extends Error {
+  status: number;
+  code?: number;
+  info?: any;
+  constructor(message: string, status: number, info?: any) {
+    super(message);
+    this.name = "FdkError";
+    this.status = status;
+    this.code = info?.code;
+    this.info = info;
+  }
+}
+
+/**
+ * True if a safe put (`editEntrySafe`) was rejected because the entry changed after `_modified`
+ * (HTTP 412, ec code 2112 "Somebody else changed the resource"). Checks the fields, not
+ * `instanceof`, so it also works when two copies of ec.fdk are bundled.
+ */
+export function isStaleWriteError(error: unknown): boolean {
+  return (error as FdkError)?.status === 412;
+}
+
 /** @ignore */
 export async function fetcher(
   url,
@@ -23,9 +57,9 @@ export async function fetcher(
     if (res.headers.get("content-type")?.includes("application/json")) {
       const error = await res.json();
       const message = `${error.title}\n${error.detail}\n${error.verbose}`;
-      throw new Error(message);
+      throw new FdkError(message, res.status, error);
     }
-    throw new Error(`unexpected fetch error: ${res.statusText}`);
+    throw new FdkError(`unexpected fetch error: ${res.statusText}`, res.status);
   }
   if (rawRes) {
     return res;

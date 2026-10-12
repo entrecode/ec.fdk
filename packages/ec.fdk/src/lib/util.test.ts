@@ -1,5 +1,47 @@
-import { describe, it, expect } from "vitest";
-import { query } from "./util";
+import { describe, it, expect, vi, afterEach } from "vitest";
+import { query, fetcher, FdkError, isStaleWriteError } from "./util";
+
+describe("fetcher errors", () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  // body as returned by the stage DM for a stale If-Unmodified-Since
+  const stale = {
+    status: 412,
+    code: 2112,
+    title: "Somebody else changed the resource",
+    detail: "Resource was modified after Mon, 12 Oct 2026 15:01:27 GMT",
+    verbose: "Mon, 12 Oct 2026 15:02:27 GMT",
+  };
+
+  it("throws FdkError with status, code and body, message unchanged", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(Response.json(stale, { status: 412 })));
+    const err = await fetcher("https://x/api").catch((e) => e);
+    expect(err).toBeInstanceOf(FdkError);
+    expect(err).toBeInstanceOf(Error);
+    expect(err.message).toBe(`${stale.title}\n${stale.detail}\n${stale.verbose}`);
+    expect(err.status).toBe(412);
+    expect(err.code).toBe(2112);
+    expect(err.info).toEqual(stale);
+    expect(isStaleWriteError(err)).toBe(true);
+  });
+
+  it("keeps the status for non-JSON errors", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("<html>", { status: 502, statusText: "Bad Gateway" })));
+    const err = await fetcher("https://x/api").catch((e) => e);
+    expect(err.message).toBe("unexpected fetch error: Bad Gateway");
+    expect(err.status).toBe(502);
+    expect(err.code).toBeUndefined();
+    expect(isStaleWriteError(err)).toBe(false);
+  });
+
+  it("isStaleWriteError is false for other errors and non-errors", () => {
+    expect(isStaleWriteError(new FdkError("nope", 404, { code: 2102 }))).toBe(false);
+    expect(isStaleWriteError(new Error("Somebody else changed the resource"))).toBe(false);
+    expect(isStaleWriteError(undefined)).toBe(false);
+    // duck-typed: a copy from a second bundled ec.fdk still counts
+    expect(isStaleWriteError({ status: 412 })).toBe(true);
+  });
+});
 
 describe("query", () => {
   it("joins sorted key=value pairs", () => {

@@ -120,6 +120,26 @@ The `Fetcher` type is exported for convenience:
 import type { Fetcher } from 'ec.fdk';
 ```
 
+## Errors and safe puts
+
+Failed API calls throw an `FdkError`. Its `message` is `title\ndetail\nverbose` of the ec error body; it also carries the HTTP `status`, the ec error `code` and the parsed body as `info`.
+
+`editEntry` overwrites whatever is stored. `editEntrySafe` sends `If-Unmodified-Since` from the `_modified` you pass, so the DataManager rejects the write if someone else saved in between (412, code 2112). Use it for every write based on a loaded copy, and keep the returned `_modified` for the next save:
+
+```js
+import { fdk, isStaleWriteError } from 'ec.fdk';
+
+try {
+  const saved = await api.dm('83cc6374').model('muffin').editEntrySafe(entry.id, { name: 'x', _modified: entry._modified });
+  entry._modified = saved._modified;
+} catch (err) {
+  if (isStaleWriteError(err)) {
+    // someone else changed the entry: reload, don't overwrite
+  }
+  throw err;
+}
+```
+
 ## CLI
 
 ec.fdk also ships a CLI for quick shell-based interaction with entrecode APIs. Output is JSON, so you can pipe it into `jq` and friends.
